@@ -46,17 +46,7 @@ public class DiscountPromotion {
         product.setSellingPrice(discountedPrice);
     }
 
-    // Apply discount to all products in a category
-    public void applyDiscountToCategory(Category category) {
-        if (category == null || !isActive || !isPromotionActive()) {
-            return;
-        }
 
-        ArrayList<Product> productsInCategory = category.getProductsInCategory();
-        for (Product product : productsInCategory) {
-            applyDiscountToProduct(product);
-        }
-    }
 
     // Check if promotion is currently active based on date
     public boolean isPromotionActive() {

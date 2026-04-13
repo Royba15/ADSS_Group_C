@@ -27,6 +27,7 @@ public class Product {
         this.promotion = null;
     }
 
+
     // Check if product is below minimum threshold
     public boolean checkMinThreshold() {
         if (inventory == null) {
@@ -43,14 +44,17 @@ public class Product {
         }
     }
 
-    // Remove promotion from this product
-    public void removePromotion() {
-        this.promotion = null;
-    }
-
     // Check if product has an active promotion
     public boolean hasActivePromotion() {
         return promotion != null && promotion.isActive() && promotion.isPromotionActive();
+    }
+
+    // Update selling price
+    public void setSellingPrice(double sellingPrice) {
+        if (sellingPrice < 0) {
+            throw new IllegalArgumentException("Selling price cannot be negative");
+        }
+        this.sellingPrice = sellingPrice;
     }
 
 
@@ -80,6 +84,14 @@ public class Product {
         return details.toString();
     }
 
+    // Get a concise summary
+    public String getSummary() {
+        if (inventory != null) {
+            return name + " (ID: " + productID + ") - " + inventory.getTotalQuantity() +
+                    " units @ $" + String.format("%.2f", sellingPrice);
+        }
+        return name + " (ID: " + productID + ") - $" + String.format("%.2f", sellingPrice);
+    }
 
     // Getters
     public int getProductID() {
