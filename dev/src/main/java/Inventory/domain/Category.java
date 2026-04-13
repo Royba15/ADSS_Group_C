@@ -1,93 +1,92 @@
 package Inventory.domain;
 
-import java.util.ArrayList;
-
 public class Category {
-    private String categoryName;
-    private int level; //level 0 = root, level 1 = sub-category
-    private ArrayList<Product> products = new ArrayList<>();
-    private ArrayList<Category> subCategories = new ArrayList<>(); //allows categories to have nested sub-categories
+    private String main;
+    private String sub;
+    private String subsub;
 
-    // Constructor
-    public Category(String categoryName, int level) {
-        this.categoryName = categoryName;
-        this.level = level;
+    // Constructor - all three levels
+    public Category(String main, String sub, String subsub) {
+        this.main = main;
+        this.sub = sub;
+        this.subsub = subsub;
+    }
+
+    // Constructor - main and sub only
+    public Category(String main, String sub) {
+        this.main = main;
+        this.sub = sub;
+        this.subsub = null;
+    }
+
+    // Constructor - main only
+    public Category(String main) {
+        this.main = main;
+        this.sub = null;
+        this.subsub = null;
+    }
+
+    // Get the full category path
+    public String getFullPath() {
+        StringBuilder path = new StringBuilder();
+        path.append(main);
+
+        if (sub != null && !sub.isEmpty()) {
+            path.append(" > ").append(sub);
+        }
+
+        if (subsub != null && !subsub.isEmpty()) {
+            path.append(" > ").append(subsub);
+        }
+
+        return path.toString();
+    }
+
+    // Get category name (full path for display)
+    public String getCategoryName() {
+        return getFullPath();
     }
 
     // Getters
-    public String getCategoryName() {
-        return categoryName;
+    public String getMain() {
+        return main;
     }
 
-    public int getLevel() {
-        return level;
+    public String getSub() {
+        return sub;
     }
 
-    public ArrayList<Product> getProducts() {
-        return products;
-    }
-
-    public ArrayList<Category> getSubCategories() {
-        return subCategories;
+    public String getSubsub() {
+        return subsub;
     }
 
     // Setters
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    // Add a sub-category
-    public void addSubCategory(Category sub) {
-        if (sub != null && sub.getLevel() == this.level + 1) {
-            subCategories.add(sub);
+    public void setMain(String main) {
+        if (main != null && !main.isEmpty()) {
+            this.main = main;
         }
     }
 
-    // Add a product to this category
-    public void addProduct(Product product) {
-        if (product != null && !products.contains(product)) {
-            products.add(product);
-        }
+    public void setSub(String sub) {
+        this.sub = sub;
     }
 
-    // Remove a product from this category
-    public void removeProduct(Product product) {
-        if (product != null) {
-            products.remove(product);
-        }
+    public void setSubsub(String subsub) {
+        this.subsub = subsub;
     }
 
-    // Get all products in this category and sub-categories (recursive)
-    public ArrayList<Product> getProductsInCategory() {
-        ArrayList<Product> allProducts = new ArrayList<>(products);
-
-        // Recursively add products from all sub-categories
-        for (Category subCategory : subCategories) {
-            allProducts.addAll(subCategory.getProductsInCategory());
-        }
-
-        return allProducts;
+    // Get category summary
+    public String getDetails() {
+        StringBuilder details = new StringBuilder();
+        details.append("Main: ").append(main);
+        if (sub != null) details.append(" | Sub: ").append(sub);
+        if (subsub != null) details.append(" | Subsub: ").append(subsub);
+        return details.toString();
     }
 
-    // Get only products directly in this category (not in sub-categories)
-    public ArrayList<Product> getDirectProducts() {
-        return new ArrayList<>(products);
-    }
-
-    // Check if this category has sub-categories
-    public boolean hasSubCategories() {
-        return !subCategories.isEmpty();
-    }
-
-    // Get category hierarchy as string for display
     @Override
     public String toString() {
-        return categoryName + " (Level: " + level + ", Products: " + products.size() +
-                ", SubCategories: " + subCategories.size() + ")";
+        return getFullPath();
     }
-}
 
+}

@@ -8,11 +8,13 @@ public class Product {
     private double sellingPrice;
     private String supplierCatalogID;
     private int minimumThreshold;
+    private Category category;
     private InventoryLevel inventory;
-    private DiscountPromotion promotion;  // Each product can have ONE active promotion
+    private DiscountPromotion promotion;
 
     // Constructor
-    public Product(int id, String name, int manufacturerID, double cost, double selling, String catalogID, int minimumThreshold, InventoryLevel inventory) {
+    public Product(int id, String name, int manufacturerID, double cost, double selling,
+                   String catalogID, int minimumThreshold, Category category, InventoryLevel inventory) {
         this.productID = id;
         this.name = name;
         this.manufacturerID = manufacturerID;
@@ -20,6 +22,7 @@ public class Product {
         this.sellingPrice = selling;
         this.supplierCatalogID = catalogID;
         this.minimumThreshold = minimumThreshold;
+        this.category = category;
         this.inventory = inventory;
         this.promotion = null;
     }
@@ -32,7 +35,7 @@ public class Product {
         return inventory.getTotalQuantity() < minimumThreshold;
     }
 
-    // Assign a promotion to this product (promotion pointer)
+    // Assign a promotion to this product
     public void assignPromotion(DiscountPromotion promotion) {
         this.promotion = promotion;
         if (promotion != null) {
@@ -50,27 +53,13 @@ public class Product {
         return promotion != null && promotion.isActive() && promotion.isPromotionActive();
     }
 
-    // Update selling price (called by DiscountPromotion when applying a sale)
-    public void setSellingPrice(double sellingPrice) {
-        if (sellingPrice < 0) {
-            throw new IllegalArgumentException("Selling price cannot be negative");
-        }
-        this.sellingPrice = sellingPrice;
-    }
-
-    // Update cost price
-    public void updateCostPrice(double cost) {
-        if (cost < 0) {
-            throw new IllegalArgumentException("Cost price cannot be negative");
-        }
-        this.costPrice = cost;
-    }
 
     // Get detailed product information
     public String getDetails() {
         StringBuilder details = new StringBuilder();
         details.append("ID: ").append(productID)
                 .append(" | Name: ").append(name)
+                .append(" | Category: ").append(category != null ? category.getCategoryName() : "N/A")
                 .append(" | Manufacturer: ").append(manufacturerID)
                 .append(" | Selling Price: $").append(String.format("%.2f", sellingPrice));
 
@@ -82,22 +71,15 @@ public class Product {
 
         if (inventory != null) {
             details.append(" | Location: ").append(inventory.getLocation())
-                    .append(" | Storage Qty: ").append(inventory.getWarehouseQuantity())
-                    .append(" | Shelf Qty: ").append(inventory.getShelfQuantity())
-                    .append(" | Total Qty: ").append(inventory.getTotalQuantity())
+                    .append(" | Shelf: ").append(inventory.getShelfQuantity())
+                    .append(" | Warehouse: ").append(inventory.getWarehouseQuantity())
+                    .append(" | Total: ").append(inventory.getTotalQuantity())
                     .append(" | Status: ").append(checkMinThreshold() ? "BELOW THRESHOLD" : "OK");
         }
 
         return details.toString();
     }
 
-    // Get a concise summary
-    public String getSummary() {
-        if (inventory != null) {
-            return name + " (ID: " + productID + ") - " + inventory.getTotalQuantity() + " units @ $" + String.format("%.2f", sellingPrice);
-        }
-        return name + " (ID: " + productID + ") - $" + String.format("%.2f", sellingPrice);
-    }
 
     // Getters
     public int getProductID() {
@@ -126,6 +108,10 @@ public class Product {
 
     public int getMinimumThreshold() {
         return minimumThreshold;
+    }
+
+    public Category getCategory() {
+        return category;
     }
 
     public InventoryLevel getInventory() {
@@ -161,6 +147,10 @@ public class Product {
         if (threshold > 0) {
             this.minimumThreshold = threshold;
         }
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public void setInventory(InventoryLevel inventory) {
