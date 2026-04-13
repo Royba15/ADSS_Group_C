@@ -8,7 +8,7 @@ public class Category {
     private ArrayList<Product> products = new ArrayList<>();
 
     public void addSubCategory(Category sub){
-/// hii baroy!
+
     }
 
     public ArrayList<Product> getProductsInCategory(){
