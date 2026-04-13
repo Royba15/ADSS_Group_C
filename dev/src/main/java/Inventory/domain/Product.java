@@ -82,8 +82,8 @@ public class Product {
 
         if (inventory != null) {
             details.append(" | Location: ").append(inventory.getLocation())
-                    .append(" | Storage Qty: ").append(inventory.getQuantityInStorage())
-                    .append(" | Shelf Qty: ").append(inventory.getQuantityInShelf())
+                    .append(" | Storage Qty: ").append(inventory.getWarehouseQuantity())
+                    .append(" | Shelf Qty: ").append(inventory.getShelfQuantity())
                     .append(" | Total Qty: ").append(inventory.getTotalQuantity())
                     .append(" | Status: ").append(checkMinThreshold() ? "BELOW THRESHOLD" : "OK");
         }

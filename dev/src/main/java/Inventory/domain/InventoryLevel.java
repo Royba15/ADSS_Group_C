@@ -154,7 +154,7 @@ public class InventoryLevel {
                 .append(" | Warehouse: ").append(warehouseQuantity)
                 .append(" | Threshold: ").append(minQuantityThreshold)
                 .append(" | Max Capacity: ").append(maxCapacity)
-                .append(" | Status: ").append(isBelowThreshold() ? "⚠️ BELOW THRESHOLD" : "✓ OK");
+                .append(" | Status: ").append(isBelowThreshold() ? "BELOW THRESHOLD" : "OK");
         return summary.toString();
     }
 
