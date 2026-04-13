@@ -1,107 +1,174 @@
 package Inventory.domain;
 
-public class InventoryLevel {
-    private int shelfQuantity;
-    private int warehouseQuantity;
-    private int minQuantityThreshold;
-    private final String location;
+public class Product {
+    private int productID;
+    private String name;
+    private int manufacturerID;
+    private double costPrice;
+    private double sellingPrice;
+    private String supplierCatalogID;
+    private int minimumThreshold;
+    private InventoryLevel inventory;
+    private DiscountPromotion promotion;  // Each product can have ONE active promotion
 
     // Constructor
-    public InventoryLevel(int shelfQuantity, int warehouseQuantity, int minQuantityThreshold, String location) {
-        if (shelfQuantity < 0 || warehouseQuantity < 0) {
-            throw new IllegalArgumentException("Quantities cannot be negative");
+    public Product(int id, String name, int manufacturerID, double cost, double selling, String catalogID, int minimumThreshold, InventoryLevel inventory) {
+        this.productID = id;
+        this.name = name;
+        this.manufacturerID = manufacturerID;
+        this.costPrice = cost;
+        this.sellingPrice = selling;
+        this.supplierCatalogID = catalogID;
+        this.minimumThreshold = minimumThreshold;
+        this.inventory = inventory;
+        this.promotion = null;
+    }
+
+    // Check if product is below minimum threshold
+    public boolean checkMinThreshold() {
+        if (inventory == null) {
+            return false;
         }
-        if (minQuantityThreshold < 0) {
-            throw new IllegalArgumentException("Minimum threshold cannot be negative");
+        return inventory.getTotalQuantity() < minimumThreshold;
+    }
+
+    // Assign a promotion to this product (promotion pointer)
+    public void assignPromotion(DiscountPromotion promotion) {
+        this.promotion = promotion;
+        if (promotion != null) {
+            promotion.applyDiscountToProduct(this);
+        }
+    }
+
+    // Remove promotion from this product
+    public void removePromotion() {
+        this.promotion = null;
+    }
+
+    // Check if product has an active promotion
+    public boolean hasActivePromotion() {
+        return promotion != null && promotion.isActive() && promotion.isPromotionActive();
+    }
+
+    // Update selling price (called by DiscountPromotion when applying a sale)
+    public void setSellingPrice(double sellingPrice) {
+        if (sellingPrice < 0) {
+            throw new IllegalArgumentException("Selling price cannot be negative");
+        }
+        this.sellingPrice = sellingPrice;
+    }
+
+    // Update cost price
+    public void updateCostPrice(double cost) {
+        if (cost < 0) {
+            throw new IllegalArgumentException("Cost price cannot be negative");
+        }
+        this.costPrice = cost;
+    }
+
+    // Get detailed product information
+    public String getDetails() {
+        StringBuilder details = new StringBuilder();
+        details.append("ID: ").append(productID)
+                .append(" | Name: ").append(name)
+                .append(" | Manufacturer: ").append(manufacturerID)
+                .append(" | Selling Price: $").append(String.format("%.2f", sellingPrice));
+
+        if (hasActivePromotion()) {
+            details.append(" | PROMOTION: ").append(promotion.getSummary());
         }
 
-        this.shelfQuantity = shelfQuantity;
-        this.warehouseQuantity = warehouseQuantity;
-        this.minQuantityThreshold = minQuantityThreshold;
-        this.location = location;
-    }
+        details.append(" | Min Threshold: ").append(minimumThreshold);
 
-    // ===== SHELF OPERATIONS =====
-
-    // Get shelf quantity
-    public int getShelfQuantity() {
-        return shelfQuantity;
-    }
-
-    // Set shelf quantity directly
-    public void setShelfQuantity(int quantity) {
-        if (quantity < 0) {
-            throw new IllegalArgumentException("Quantity cannot be negative");
+        if (inventory != null) {
+            details.append(" | Location: ").append(inventory.getLocation())
+                    .append(" | Storage Qty: ").append(inventory.getQuantityInStorage())
+                    .append(" | Shelf Qty: ").append(inventory.getQuantityInShelf())
+                    .append(" | Total Qty: ").append(inventory.getTotalQuantity())
+                    .append(" | Status: ").append(checkMinThreshold() ? "BELOW THRESHOLD" : "OK");
         }
-        this.shelfQuantity = quantity;
+
+        return details.toString();
     }
 
-    // ===== WAREHOUSE OPERATIONS =====
-
-
-    // Get warehouse quantity
-    public int getWarehouseQuantity() {
-        return warehouseQuantity;
-    }
-
-    // Set warehouse quantity directly
-    public void setWarehouseQuantity(int quantity) {
-        if (quantity < 0) {
-            throw new IllegalArgumentException("Quantity cannot be negative");
+    // Get a concise summary
+    public String getSummary() {
+        if (inventory != null) {
+            return name + " (ID: " + productID + ") - " + inventory.getTotalQuantity() + " units @ $" + String.format("%.2f", sellingPrice);
         }
-        this.warehouseQuantity = quantity;
+        return name + " (ID: " + productID + ") - $" + String.format("%.2f", sellingPrice);
     }
 
-    // Calculate total quantity (shelf + warehouse)
-    public int getTotalQuantity() {
-        return shelfQuantity + warehouseQuantity;
+    // Getters
+    public int getProductID() {
+        return productID;
     }
 
-    // ===== THRESHOLD OPERATIONS =====
-
-    // Check if total quantity is below minimum threshold
-    public boolean isBelowThreshold() {
-        return getTotalQuantity() < minQuantityThreshold;
+    public String getProductName() {
+        return name;
     }
 
-    // Get how much below/above threshold
-    public int getThresholdDifference() {
-        return getTotalQuantity() - minQuantityThreshold;
+    public int getManufacturerID() {
+        return manufacturerID;
     }
 
-    // Update threshold
-    public void setThreshold(int min) {
-        if (min < 0) {
-            throw new IllegalArgumentException("Threshold cannot be negative");
+    public double getCostPrice() {
+        return costPrice;
+    }
+
+    public double getSellingPrice() {
+        return sellingPrice;
+    }
+
+    public String getSupplierCatalogID() {
+        return supplierCatalogID;
+    }
+
+    public int getMinimumThreshold() {
+        return minimumThreshold;
+    }
+
+    public InventoryLevel getInventory() {
+        return inventory;
+    }
+
+    public DiscountPromotion getPromotion() {
+        return promotion;
+    }
+
+    // Setters
+    public void setProductID(int productID) {
+        this.productID = productID;
+    }
+
+    public void setProductName(String name) {
+        if (name != null && !name.isEmpty()) {
+            this.name = name;
         }
-        this.minQuantityThreshold = min;
     }
 
-    public int getMinQuantityThreshold() {
-        return minQuantityThreshold;
+    public void setManufacturerID(int manufacturerID) {
+        this.manufacturerID = manufacturerID;
     }
 
-    // ===== LOCATION =====
-
-    public String getLocation() {
-        return location;
+    public void setSupplierCatalogID(String catalogID) {
+        if (catalogID != null && !catalogID.isEmpty()) {
+            this.supplierCatalogID = catalogID;
+        }
     }
 
-    // ===== SUMMARY =====
+    public void setMinimumThreshold(int threshold) {
+        if (threshold > 0) {
+            this.minimumThreshold = threshold;
+        }
+    }
 
-    public String getInventorySummary() {
-        StringBuilder summary = new StringBuilder();
-        summary.append("Location: ").append(location)
-                .append(" | Total: ").append(getTotalQuantity())
-                .append(" | Shelf: ").append(shelfQuantity)
-                .append(" | Warehouse: ").append(warehouseQuantity)
-                .append(" | Threshold: ").append(minQuantityThreshold)
-                .append(" | Status: ").append(isBelowThreshold() ? "BELOW THRESHOLD" : "OK");
-        return summary.toString();
+    public void setInventory(InventoryLevel inventory) {
+        this.inventory = inventory;
     }
 
     @Override
     public String toString() {
-        return getInventorySummary();
+        return getDetails();
     }
 }
