@@ -7,22 +7,27 @@ public class Product {
     private double costPrice;
     private double sellingPrice;
     private String supplierCatalogID;
-    private int minimumThreshold;
     private Category category;
     private InventoryLevel inventory;
     private DiscountPromotion promotion;
+    private Category mainCategory;
+    private Category subCategory;
+    private Category subSubCategory;
 
     // Constructor
     public Product(int id, String name, int manufacturerID, double cost, double selling,
-                   String catalogID, int minimumThreshold, Category category, InventoryLevel inventory) {
+                   String catalogID,
+                   Category mainCategory, Category subCategory, Category subSubCategory,
+                   InventoryLevel inventory) {
         this.productID = id;
         this.name = name;
         this.manufacturerID = manufacturerID;
         this.costPrice = cost;
         this.sellingPrice = selling;
         this.supplierCatalogID = catalogID;
-        this.minimumThreshold = minimumThreshold;
-        this.category = category;
+        this.mainCategory = mainCategory;
+        this.subCategory = subCategory;
+        this.subSubCategory = subSubCategory;
         this.inventory = inventory;
         this.promotion = null;
     }
@@ -33,7 +38,7 @@ public class Product {
         if (inventory == null) {
             return false;
         }
-        return inventory.getTotalQuantity() < minimumThreshold;
+        return inventory.getTotalQuantity() < inventory.getMinQuantityThreshold();
     }
 
     // Assign a promotion to this product
@@ -63,7 +68,9 @@ public class Product {
         StringBuilder details = new StringBuilder();
         details.append("ID: ").append(productID)
                 .append(" | Name: ").append(name)
-                .append(" | Category: ").append(category != null ? category.getCategoryName() : "N/A")
+                .append(" | Main: ").append(mainCategory.getName())
+                .append(" | Sub: ").append(subCategory.getName())
+                .append(" | SubSub: ").append(subSubCategory.getName())
                 .append(" | Manufacturer: ").append(manufacturerID)
                 .append(" | Selling Price: $").append(String.format("%.2f", sellingPrice));
 
@@ -71,7 +78,7 @@ public class Product {
             details.append(" | PROMOTION: ").append(promotion.getSummary());
         }
 
-        details.append(" | Min Threshold: ").append(minimumThreshold);
+        details.append(" | Min Threshold: ").append(inventory.getMinQuantityThreshold());
 
         if (inventory != null) {
             details.append(" | Location: ").append(inventory.getLocation())
@@ -119,7 +126,7 @@ public class Product {
     }
 
     public int getMinimumThreshold() {
-        return minimumThreshold;
+        return inventory.getMinQuantityThreshold();
     }
 
     public Category getCategory() {
@@ -155,12 +162,6 @@ public class Product {
         }
     }
 
-    public void setMinimumThreshold(int threshold) {
-        if (threshold > 0) {
-            this.minimumThreshold = threshold;
-        }
-    }
-
     public void setCategory(Category category) {
         this.category = category;
     }
@@ -172,5 +173,20 @@ public class Product {
     @Override
     public String toString() {
         return getDetails();
+    }
+
+
+    public Category getMainCategory() { return mainCategory; }
+    public Category getSubCategory() { return subCategory; }
+    public Category getSubSubCategory() { return subSubCategory; }
+
+    public void setMainCategory(Category c) { this.mainCategory = c; }
+    public void setSubCategory(Category c) { this.subCategory = c; }
+    public void setSubSubCategory(Category c) { this.subSubCategory = c; }
+
+    public boolean belongsToCategory(String categoryName) {
+        return mainCategory.getName().equals(categoryName) ||
+                subCategory.getName().equals(categoryName) ||
+                subSubCategory.getName().equals(categoryName);
     }
 }

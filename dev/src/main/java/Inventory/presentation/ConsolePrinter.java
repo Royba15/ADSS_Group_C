@@ -1,8 +1,8 @@
 package Inventory.presentation;
 
-import Inventory.domain.DefectiveItem;
-import Inventory.domain.Product;
+import Inventory.domain.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConsolePrinter {
@@ -32,13 +32,13 @@ public class ConsolePrinter {
         System.out.print("Choose an option: ");
     }
     // print all the defective products with all the details
-    public void printDefectiveItemList(List<DefectiveItem> items) {
+    public void printDefectiveReport(DefectiveReport report) {
         printHeader("DEFECTIVE ITEMS REPORT");
-        if (items.isEmpty()) {
+        if (report.getDefectiveItems().isEmpty()) {
             System.out.println("No defective items found.");
             return;
         }
-        for (DefectiveItem item : items) {
+        for (DefectiveItem item : report.getDefectiveItems()) {
             System.out.println("- " + item.getProduct().getProductName()
                     + " | Reason: " + item.getReason()
                     + " | Qty: " + item.getQuantity()
@@ -60,29 +60,40 @@ public class ConsolePrinter {
         System.out.println("Min Threshold: " + p.getMinimumThreshold());
     }
     // Print all products
-    public void printOrderReport(List<Product> itemsToOrder) {
+    public void printOrderReport(OrderReport report) {
         printHeader("ORDER REPORT");
-        if (itemsToOrder.isEmpty()) {
+        if (report.getProductsToOrder().isEmpty()) {
             System.out.println("No items need to be ordered.");
             return;
         }
-        for (Product p : itemsToOrder) {
+        for (Product p : report.getProductsToOrder()) {
             System.out.println("- " + p.getProductName()
                     + " | Current: " + p.getInventory().getTotalQuantity()
                     + " | Minimum: " + p.getMinimumThreshold());
         }
     }
     // Print all products by category
-    public void printInventoryReport(List<Product> products, List<String> categoryNames) {
-        printHeader("INVENTORY REPORT - " + String.join(", ", categoryNames));
-        if (products.isEmpty()) {
+    public void printCategoryReport(CategoryReport report) {
+        printHeader("INVENTORY REPORT");
+        if (report.getProducts().isEmpty()) {
             System.out.println("No products found in these categories.");
             return;
         }
-        for (Product p : products) {
-            System.out.println("- " + p.getProductName()
-                    + " | Qty: " + p.getInventory().getTotalQuantity()
-                    + " | Location: " + p.getInventory().getLocation());
+        // track printed products to avoid duplicates
+        List<Integer> printed = new ArrayList<>();
+        for (String catName : report.getCategoryNames()) {
+            System.out.println("\n--- Category: " + catName + " ---");
+            boolean found = false;
+            for (Product p : report.getProducts()) {
+                if (p.belongsToCategory(catName) && !printed.contains(p.getProductID())) {
+                    System.out.println("  - " + p.getProductName()
+                            + " | Qty: " + p.getInventory().getTotalQuantity()
+                            + " | Location: " + p.getInventory().getLocation());
+                    printed.add(p.getProductID());
+                    found = true;
+                }
+            }
+            if (!found) System.out.println("  No products found.");
         }
     }
 
