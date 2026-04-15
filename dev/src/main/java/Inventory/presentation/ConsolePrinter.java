@@ -24,6 +24,7 @@ public class ConsolePrinter {
         System.out.println("0. Exit");
         System.out.print("Choose an option: ");
     }
+
     // Report Menu
     public void printReportsMenu() {
         printHeader("REPORTS");
@@ -33,6 +34,17 @@ public class ConsolePrinter {
         System.out.println("0. Back");
         System.out.print("Choose an option: ");
     }
+
+    // Discount menu
+    public void printDiscountMenu() {
+        printHeader("APPLY DISCOUNT");
+        System.out.println("1. Apply Discount to Product by ID");
+        System.out.println("2. Apply Discount to Category");
+        System.out.println("0. Back");
+        System.out.print("Choose an option: ");
+    }
+
+
     // print all the defective products with all the details
     public void printDefectiveReport(DefectiveReport report) {
         printHeader("DEFECTIVE ITEMS REPORT");
@@ -61,6 +73,7 @@ public class ConsolePrinter {
         System.out.println("Sell Price:    " + p.getSellingPrice());
         System.out.println("Min Threshold: " + p.getMinimumThreshold());
     }
+
     // Print all products
     public void printOrderReport(OrderReport report) {
         printHeader("ORDER REPORT");
@@ -109,18 +122,37 @@ public class ConsolePrinter {
         }
     }
 
-    public void printDiscountMenu() {
-        printHeader("APPLY DISCOUNT");
-        System.out.println("1. Apply Discount to Product by ID");
-        System.out.println("2. Apply Discount to Category");
-        System.out.println("0. Back");
-        System.out.print("Choose an option: ");
+    // Prompts for prints
+    public void promptForProductId() {
+        System.out.print("Enter Product ID: ");
     }
-
+    public void promptForQuantity(String type) {
+        System.out.print("Enter new " + type + " Quantity: ");
+    }
+    public void promptForPromoName() {
+        System.out.print("Enter promotion name: ");
+    }
+    public void promptForDiscount() {
+        System.out.print("Enter discount percentage (0-100): ");
+    }
+    public void promptForCategoryName() {
+        System.out.print("Enter Category Name: ");
+    }
+    public void promptForDate(String label) {
+        System.out.print("Enter " + label + " date (e.g. 15.04.2026): ");
+    }
+    public void promptForCategoryList() {
+        System.out.print("Enter category names (comma separated): ");
+    }
+    public void promptForReason() {
+        System.out.print("Enter reason for defect: ");
+    }
+    public void printExitMessage() {
+        System.out.println("Exiting Super-Li System. Goodbye!");
+    }
     public void printSuccess(String msg) {
         System.out.println("[OK] " + msg);
     }
-
     public void printError(String msg) {
         System.out.println("[ERROR] " + msg);
     }

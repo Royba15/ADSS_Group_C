@@ -4,11 +4,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class DiscountPromotion {
-    private int promotionID;
-    private String promotionName;
-    private double discountPercentage;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private final int promotionID;
+    private final String promotionName;
+    private final double discountPercentage;
+    private final LocalDateTime startDate;
+    private final LocalDateTime endDate;
     private boolean isActive;
 
     // Constructor
@@ -40,13 +40,10 @@ public class DiscountPromotion {
         if (product == null || !isActive || !isPromotionActive()) {
             return;
         }
-
         double originalPrice = product.getSellingPrice();
         double discountedPrice = calculateFinalPrice(originalPrice);
         product.setSellingPrice(discountedPrice);
     }
-
-
 
     // Check if promotion is currently active based on date
     public boolean isPromotionActive() {
@@ -54,10 +51,36 @@ public class DiscountPromotion {
         return isActive && now.isAfter(startDate) && now.isBefore(endDate);
     }
 
-    // Deactivate the promotion
+    // Deactivate the promotion (not in use currently)
     public void deactivatePromotion() {
         this.isActive = false;
     }
+
+    // Getters
+    public int getPromotionID() {
+        return promotionID;
+    }
+    public String getPromotionName() {
+        return promotionName;
+    }
+    public double getDiscountPercentage() {
+        return discountPercentage;
+    }
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+    public boolean isActive() {
+        return isActive;
+    }
+
+    // Get a concise summary
+    public String getSummary() {
+        return promotionName + " - " + String.format("%.1f", discountPercentage) + "% off";
+    }
+
 
     // Get promotion details
     public String getPromotionDetails() {
@@ -69,61 +92,6 @@ public class DiscountPromotion {
                 .append(" | Valid: ").append(startDate)
                 .append(" to ").append(endDate);
         return details.toString();
-    }
-
-    // Get a concise summary
-    public String getSummary() {
-        return promotionName + " - " + String.format("%.1f", discountPercentage) + "% off";
-    }
-
-    // Getters
-    public int getPromotionID() {
-        return promotionID;
-    }
-
-    public String getPromotionName() {
-        return promotionName;
-    }
-
-    public double getDiscountPercentage() {
-        return discountPercentage;
-    }
-
-    public LocalDateTime getStartDate() {
-        return startDate;
-    }
-
-    public LocalDateTime getEndDate() {
-        return endDate;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    // Setters
-    public void setPromotionName(String promotionName) {
-        if (promotionName != null && !promotionName.isEmpty()) {
-            this.promotionName = promotionName;
-        }
-    }
-
-    public void setDiscountPercentage(double discountPercentage) {
-        if (discountPercentage >= 0 && discountPercentage <= 100) {
-            this.discountPercentage = discountPercentage;
-        }
-    }
-
-    public void setStartDate(LocalDateTime startDate) {
-        if (startDate != null) {
-            this.startDate = startDate;
-        }
-    }
-
-    public void setEndDate(LocalDateTime endDate) {
-        if (endDate != null) {
-            this.endDate = endDate;
-        }
     }
 
     @Override

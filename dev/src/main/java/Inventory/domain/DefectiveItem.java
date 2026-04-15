@@ -4,11 +4,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class DefectiveItem {
-    private int recordID;
-    private Product product;
-    private LocalDateTime reportDateTime;
-    private String reason;
-    private int quantity;
+    private final int recordID;
+    private final Product product;
+    private final LocalDateTime reportDateTime;
+    private final String reason;
+    private final int quantity;
 
     // Constructor
     public DefectiveItem(int recordID, Product product, int quantity, String reason) {
@@ -19,19 +19,23 @@ public class DefectiveItem {
         this.reportDateTime = LocalDateTime.now();
     }
 
-    // Report defective items
-    public void reportDefective(int qty, String reason) {
-        if (qty <= 0) {
-            throw new IllegalArgumentException("Quantity must be greater than 0");
-        }
-        if (reason == null || reason.isEmpty()) {
-            throw new IllegalArgumentException("Reason cannot be empty");
-        }
-
-        this.quantity = qty;
-        this.reason = reason;
-        this.reportDateTime = LocalDateTime.now();
+    // Getters
+    public int getRecordID() {
+        return recordID;
     }
+    public Product getProduct() {
+        return product;
+    }
+    public LocalDateTime getReportDateTime() {
+        return reportDateTime;
+    }
+    public String getReason() {
+        return reason;
+    }
+    public int getQuantity() {
+        return quantity;
+    }
+
 
     // Get detailed information about the defective item
     public String getDefectiveDetails() {
@@ -43,49 +47,6 @@ public class DefectiveItem {
                 .append(" | Qty: ").append(quantity);
         return details.toString();
     }
-
-    // Getters
-    public int getRecordID() {
-        return recordID;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public LocalDateTime getReportDateTime() {
-        return reportDateTime;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    // Setters
-    public void setRecordID(int recordID) {
-        this.recordID = recordID;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public void setReason(String reason) {
-        if (reason != null && !reason.isEmpty()) {
-            this.reason = reason;
-        }
-    }
-
-    public void setQuantity(int quantity) {
-        if (quantity > 0) {
-            this.quantity = quantity;
-        }
-    }
-
     @Override
     public String toString() {
         return getDefectiveDetails();

@@ -4,8 +4,8 @@ package Inventory.domain;
 import java.util.List;
 
 public class CategoryReport extends InventoryReport {
-    private List<String> categoryNames;
-    private List<Product> products;
+    private final List<String> categoryNames;
+    private final List<Product> products;
 
     public CategoryReport(List<String> categoryNames, List<Product> products) {
         super();
@@ -13,9 +13,7 @@ public class CategoryReport extends InventoryReport {
         this.products = products;
     }
 
+    // Getters
     public List<String> getCategoryNames() { return categoryNames; }
     public List<Product> getProducts() { return products; }
-
-    @Override
-    public String getReportType() { return "Category Report"; }
 }

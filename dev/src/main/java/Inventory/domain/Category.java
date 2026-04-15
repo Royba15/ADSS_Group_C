@@ -4,15 +4,17 @@ public class Category {
     private String name;  // primary key
     private int level;    // 0=main, 1=sub, 2=subsub
 
+    // Constructor
     public Category(String name, int level) {
         this.name = name;
         this.level = level;
     }
 
+    // Set & Get
     public String getName() { return name; }
     public int getLevel() { return level; }
-    public void setName(String name) { this.name = name; }
     public void setLevel(int level) { this.level = level; }
+
 
     @Override
     public String toString() { return name; }

@@ -1,13 +1,10 @@
 package Inventory.presentation;
 
-
 import Inventory.domain.Category;
 import Inventory.domain.Datainit;
 import Inventory.domain.InventoryLevel;
 import Inventory.service.InventoryService;
 import Inventory.domain.Product;
-
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
@@ -45,7 +42,7 @@ public class InventoryMenu {
                 printer.printError("Invalid input. Please enter a number.");
             }
         }
-        System.out.println("Exiting Super-Li System. Goodbye!");
+        printer.printExitMessage();
     }
 
     private void handleMainChoice(int choice) {
@@ -79,11 +76,11 @@ public class InventoryMenu {
     // check the number from employer and call to update function from service
     private void updateInventoryFlow() {
         try {
-            System.out.print("Enter Product ID: ");
+            printer.promptForProductId();
             int id = Integer.parseInt(scanner.nextLine());
-            System.out.print("Enter new Shelf Quantity: ");
+            printer.promptForQuantity("shelf");
             int shelf = Integer.parseInt(scanner.nextLine());
-            System.out.print("Enter new Warehouse Quantity: ");
+            printer.promptForQuantity("warehouse");
             int warehouse = Integer.parseInt(scanner.nextLine());
 
             if (service.updateInventory(id, shelf, warehouse)) {
@@ -98,7 +95,7 @@ public class InventoryMenu {
 
     // display product by id
     private void viewProductFlow() {
-        System.out.print("Enter Product ID: ");
+        printer.promptForProductId();
         try {
             int id = Integer.parseInt(scanner.nextLine());
             Product p = service.getProductByID(id);
@@ -159,16 +156,16 @@ public class InventoryMenu {
 
     private void applyDiscountToProductFlow() {
         try {
-            System.out.print("Enter Product ID: ");
+            printer.promptForProductId();
             int id = Integer.parseInt(scanner.nextLine());
-            System.out.print("Enter promotion name: ");
+            printer.promptForPromoName();
             String promoName = scanner.nextLine();
-            System.out.print("Enter discount percentage (0-100): ");
+            printer.promptForDiscount();
             double discount = Double.parseDouble(scanner.nextLine());
-            System.out.print("Enter start date (e.g. 31.12.2000): ");
+            printer.promptForDate("start");
             LocalDate startDate = LocalDate.parse(scanner.nextLine(), DATE_FORMAT);
             LocalDateTime start = startDate.atStartOfDay();
-            System.out.print("Enter end date (e.g. 31.12.2000): ");
+            printer.promptForDate("end");
             LocalDate endDate = LocalDate.parse(scanner.nextLine(), DATE_FORMAT);
             LocalDateTime end = endDate.atTime(23, 59);
 
@@ -186,16 +183,16 @@ public class InventoryMenu {
 
         private void applyDiscountToCategoryFlow () {
             try {
-                System.out.print("Enter category name: ");
+                printer.promptForCategoryName();
                 String catName = scanner.nextLine();
-                System.out.print("Enter promotion name: ");
+                printer.promptForPromoName();
                 String promoName = scanner.nextLine();
-                System.out.print("Enter discount percentage (0-100): ");
+                printer.promptForDiscount();
                 double discount = Double.parseDouble(scanner.nextLine());
-                System.out.print("Enter start date (e.g. 31.12.2000): ");
+                printer.promptForDate("start");
                 LocalDate startDate = LocalDate.parse(scanner.nextLine(), DATE_FORMAT);
                 LocalDateTime start = startDate.atStartOfDay();
-                System.out.print("Enter end date (e.g. 31.12.2000): ");
+                printer.promptForDate("end");
                 LocalDate endDate = LocalDate.parse(scanner.nextLine(), DATE_FORMAT);
                 LocalDateTime end = endDate.atTime(23, 59);
 
@@ -213,7 +210,7 @@ public class InventoryMenu {
 
 
     private void categoryReportFlow() {
-        System.out.print("Enter category names (comma separated): ");
+        printer.promptForCategoryList();
         String input = scanner.nextLine();
         List<String> categoryNames = Arrays.asList(input.split("\\s*,\\s*"));
         printer.printCategoryReport(service.generateCategoryReport(categoryNames));
@@ -221,7 +218,7 @@ public class InventoryMenu {
 
     private void reportDefectiveFlow() {
         try {
-            System.out.print("Enter Product ID: ");
+            printer.promptForProductId();
             int productID = Integer.parseInt(scanner.nextLine());
 
             Product product = service.getProductByID(productID);
@@ -230,10 +227,10 @@ public class InventoryMenu {
                 return;
             }
 
-            System.out.print("Enter quantity of defective items: ");
+            printer.promptForQuantity("quantity of defective items");
             int quantity = Integer.parseInt(scanner.nextLine());
 
-            System.out.print("Enter reason for defect: ");
+            printer.promptForReason();
             String reason = scanner.nextLine().trim();
 
             if (reason.isEmpty()) {

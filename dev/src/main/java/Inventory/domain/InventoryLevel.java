@@ -8,8 +8,7 @@ public class InventoryLevel {
     private final String location;
 
     // Constructor
-    public InventoryLevel(int shelfQuantity, int warehouseQuantity,
-                          int minQuantityThreshold, String location) {
+    public InventoryLevel(int shelfQuantity, int warehouseQuantity, int minQuantityThreshold, String location) {
         if (minQuantityThreshold < 0) {
             throw new IllegalArgumentException("Minimum threshold cannot be negative");
         }
@@ -33,38 +32,9 @@ public class InventoryLevel {
         this.totalQuantity = newTotal;
     }
 
-    // Reduce quantity (when items are sold or removed)
-    public boolean reduceQuantity(int quantity) {
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be greater than 0");
-        }
-        if (quantity > totalQuantity) {
-            throw new IllegalArgumentException("Not enough items. Available: " + totalQuantity);
-        }
-
-        // Reduce from shelf first, then warehouse
-        if (quantity <= shelfQuantity) {
-            shelfQuantity -= quantity;
-        } else {
-            int remainingAfterShelf = quantity - shelfQuantity;
-            shelfQuantity = 0;
-            warehouseQuantity -= remainingAfterShelf;
-        }
-        totalQuantity = shelfQuantity + warehouseQuantity;
-        return true;
-    }
-
     // Check if below minimum threshold
     public boolean isBelowThreshold() {
         return totalQuantity < minQuantityThreshold;
-    }
-
-    // Update threshold
-    public void setThreshold(int min) {
-        if (min < 0) {
-            throw new IllegalArgumentException("Threshold cannot be negative");
-        }
-        this.minQuantityThreshold = min;
     }
 
     // Get inventory summary
@@ -83,21 +53,25 @@ public class InventoryLevel {
     public int getTotalQuantity() {
         return totalQuantity;
     }
-
     public int getShelfQuantity() {
         return shelfQuantity;
     }
-
     public int getWarehouseQuantity() {
         return warehouseQuantity;
     }
-
     public int getMinQuantityThreshold() {
         return minQuantityThreshold;
     }
-
     public String getLocation() {
         return location;
+    }
+
+    // Update threshold
+    public void setThreshold(int min) {
+        if (min < 0) {
+            throw new IllegalArgumentException("Threshold cannot be negative");
+        }
+        this.minQuantityThreshold = min;
     }
 
     @Override
