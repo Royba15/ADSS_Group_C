@@ -55,6 +55,9 @@ public class InventoryMenu {
             case 4:
                 handleReportsMenu();
                 break;
+            case 6:
+                reportDefectiveFlow();
+                break;
             case 0: {}
             break;
             default:
@@ -129,6 +132,60 @@ public class InventoryMenu {
         List<String> categoryNames = Arrays.asList(input.split("\\s*,\\s*"));
         printer.printCategoryReport(service.generateCategoryReport(categoryNames));
     }
+
+    private void reportDefectiveFlow() {
+        try {
+            System.out.print("Enter Product ID: ");
+            int productID = Integer.parseInt(scanner.nextLine());
+
+            Product product = service.getProductByID(productID);
+            if (product == null) {
+                printer.printError("Product not found.");
+                return;
+            }
+
+            System.out.print("Enter quantity of defective items: ");
+            int quantity = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("Enter reason for defect: ");
+            String reason = scanner.nextLine().trim();
+
+            if (reason.isEmpty()) {
+                printer.printError("Reason cannot be empty.");
+                return;
+            }
+
+            if (quantity <= 0) {
+                printer.printError("Quantity must be greater than 0.");
+                return;
+            }
+
+            // Get total defective items already reported for this product
+            int totalDefectiveReported = service.getTotalDefectiveCountForProduct(productID);
+            int totalInventory = product.getInventory().getTotalQuantity();
+
+            // Validate that total defective (already reported + new report) doesn't exceed inventory
+            if (totalDefectiveReported + quantity > totalInventory) {
+                printer.printError("Cannot report " + quantity + " defective items. "
+                        + "Total defective would be " + (totalDefectiveReported + quantity)
+                        + " but only " + totalInventory + " total items available. "
+                        + "Already reported defective: " + totalDefectiveReported);
+                return;
+            }
+
+            // Report the defective item
+            service.reportDefectiveItem(productID, quantity, reason);
+            printer.printSuccess("Defective item reported successfully. "
+                    + quantity + " units of " + product.getProductName() + " marked as defective.");
+
+        } catch (NumberFormatException e) {
+            printer.printError("Invalid input. Please enter valid numbers.");
+        } catch (Exception e) {
+            printer.printError("Error reporting defective item: " + e.getMessage());
+        }
+    }
+
+
     // function init all the data
     public void initializeData() {
         // Categories
