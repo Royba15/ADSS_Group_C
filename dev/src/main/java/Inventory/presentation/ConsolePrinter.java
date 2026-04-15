@@ -45,20 +45,6 @@ public class ConsolePrinter {
     }
 
 
-    // print all the defective products with all the details
-    public void printDefectiveReport(DefectiveReport report) {
-        printHeader("DEFECTIVE ITEMS REPORT");
-        if (report.getDefectiveItems().isEmpty()) {
-            System.out.println("No defective items found.");
-            return;
-        }
-        for (DefectiveItem item : report.getDefectiveItems()) {
-            System.out.println("- " + item.getProduct().getProductName()
-                    + " | Reason: " + item.getReason()
-                    + " | Qty: " + item.getQuantity()
-                    + " | Date: " + item.getReportDateTime());
-        }
-    }
     // Print product
     public void printProduct(Product p) {
         printHeader("PRODUCT DETAILS");
@@ -74,7 +60,7 @@ public class ConsolePrinter {
         System.out.println("Min Threshold: " + p.getMinimumThreshold());
     }
 
-    // Print all products
+    // Print products below threshold
     public void printOrderReport(OrderReport report) {
         printHeader("ORDER REPORT");
         if (report.getProductsToOrder().isEmpty()) {
@@ -107,7 +93,20 @@ public class ConsolePrinter {
             }
         }
     }
-
+    // print all the defective products with all the details
+    public void printDefectiveReport(DefectiveReport report) {
+        printHeader("DEFECTIVE ITEMS REPORT");
+        if (report.getDefectiveItems().isEmpty()) {
+            System.out.println("No defective items found.");
+            return;
+        }
+        for (DefectiveItem item : report.getDefectiveItems()) {
+            System.out.println("- " + item.getProduct().getProductName()
+                    + " | Reason: " + item.getReason()
+                    + " | Qty: " + item.getQuantity()
+                    + " | Date: " + item.getReportDateTime());
+        }
+    }
     // Print all the products that below the threshold
     public void printAlerts(List<Product> lowStockProducts) {
         printHeader("LOW STOCK ALERTS");

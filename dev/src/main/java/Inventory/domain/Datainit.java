@@ -177,7 +177,7 @@ public class Datainit {
         service.addProduct(p8);
 
         // Product 9: Almond Nuts 500g (Snacks > Nuts > Roasted)
-        InventoryLevel inv9 = new InventoryLevel(7, 8, 4, "Aisle 7");
+        InventoryLevel inv9 = new InventoryLevel(7, 8, 16, "Aisle 7");
         Product p9 = new Product(9, "Almond Nuts 500g", 107, 25.0, 39.9,
                 "CAT-009", snacks, nuts, roasted, inv9);
         service.addProduct(p9);
@@ -189,7 +189,7 @@ public class Datainit {
         service.addProduct(p10);
 
         // Product 11: Brown Bread Whole Wheat (Bread > Brown Bread > Wheat)
-        InventoryLevel inv11 = new InventoryLevel(15, 12, 7, "Aisle 8");
+        InventoryLevel inv11 = new InventoryLevel(15, 12, 30, "Aisle 8");
         Product p11 = new Product(11, "Brown Bread Whole Wheat", 109, 5.0, 7.9,
                 "CAT-011", bread, brownB, wheatB, inv11);
         service.addProduct(p11);
@@ -225,7 +225,7 @@ public class Datainit {
         service.addProduct(p16);
 
         // Product 17: Cashew Nuts 400g (Snacks > Nuts > Roasted [different product, same categories as p9])
-        InventoryLevel inv17 = new InventoryLevel(5, 7, 3, "Aisle 7");
+        InventoryLevel inv17 = new InventoryLevel(5, 7, 15, "Aisle 7");
         Product p17 = new Product(17, "Cashew Nuts 400g", 115, 30.0, 45.9,
                 "CAT-017", snacks, nuts, roasted, inv17);
         service.addProduct(p17);

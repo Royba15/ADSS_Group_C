@@ -108,7 +108,7 @@ public class InventoryMenu {
             printer.printError("Invalid ID format.");
         }
     }
-    //
+    // display report menu
     private void handleReportsMenu() {
         printer.printReportsMenu();
         try {
@@ -132,7 +132,7 @@ public class InventoryMenu {
             printer.printError("Input error.");
         }
     }
-
+    // display discount menu
     private void handleDiscountMenu() {
         printer.printDiscountMenu();
         try {
@@ -153,7 +153,7 @@ public class InventoryMenu {
             printer.printError("Input error.");
         }
     }
-
+    // create discount by id product
     private void applyDiscountToProductFlow() {
         try {
             printer.promptForProductId();
@@ -181,34 +181,35 @@ public class InventoryMenu {
         }
     }
 
-        private void applyDiscountToCategoryFlow () {
-            try {
-                printer.promptForCategoryName();
-                String catName = scanner.nextLine();
-                printer.promptForPromoName();
-                String promoName = scanner.nextLine();
-                printer.promptForDiscount();
-                double discount = Double.parseDouble(scanner.nextLine());
-                printer.promptForDate("start");
-                LocalDate startDate = LocalDate.parse(scanner.nextLine(), DATE_FORMAT);
-                LocalDateTime start = startDate.atStartOfDay();
-                printer.promptForDate("end");
-                LocalDate endDate = LocalDate.parse(scanner.nextLine(), DATE_FORMAT);
-                LocalDateTime end = endDate.atTime(23, 59);
+    // create discount by category
+    private void applyDiscountToCategoryFlow () {
+        try {
+            printer.promptForCategoryName();
+            String catName = scanner.nextLine();
+            printer.promptForPromoName();
+            String promoName = scanner.nextLine();
+            printer.promptForDiscount();
+            double discount = Double.parseDouble(scanner.nextLine());
+            printer.promptForDate("start");
+            LocalDate startDate = LocalDate.parse(scanner.nextLine(), DATE_FORMAT);
+            LocalDateTime start = startDate.atStartOfDay();
+            printer.promptForDate("end");
+            LocalDate endDate = LocalDate.parse(scanner.nextLine(), DATE_FORMAT);
+            LocalDateTime end = endDate.atTime(23, 59);
 
-                if (service.applyDiscountToCategory(catName, promoName, discount, start, end)) {
-                    printer.printSuccess("Discount applied!");
-                } else {
-                    printer.printError("Category not found.");
-                }
-            } catch (DateTimeParseException e) {
-                printer.printError("Invalid format! Use dd.MM.yyyy (e.g., 31.12.2000).");
-            } catch (Exception e) {
-                printer.printError("Error: " + e.getMessage());
+            if (service.applyDiscountToCategory(catName, promoName, discount, start, end)) {
+                printer.printSuccess("Discount applied!");
+            } else {
+                printer.printError("Category not found.");
             }
+        } catch (DateTimeParseException e) {
+            printer.printError("Invalid format! Use dd.MM.yyyy (e.g., 31.12.2000).");
+        } catch (Exception e) {
+            printer.printError("Error: " + e.getMessage());
         }
+    }
 
-
+    // create category report
     private void categoryReportFlow() {
         printer.promptForCategoryList();
         String input = scanner.nextLine();
@@ -216,6 +217,7 @@ public class InventoryMenu {
         printer.printCategoryReport(service.generateCategoryReport(categoryNames));
     }
 
+    // create defective report
     private void reportDefectiveFlow() {
         try {
             printer.promptForProductId();
@@ -267,7 +269,6 @@ public class InventoryMenu {
             printer.printError("Error reporting defective item: " + e.getMessage());
         }
     }
-
 
     // function init all the data
     public void initializeData() {
