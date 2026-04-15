@@ -8,7 +8,7 @@ import Inventory.service.InventoryService;
  * Contains 18 grocery products across multiple categories
  */
 public class Datainit {
-    private InventoryService service;
+    private final InventoryService service;
 
     public Datainit(InventoryService service) {
         this.service = service;

@@ -1,8 +1,6 @@
 package Inventory.presentation;
 
 import Inventory.domain.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class ConsolePrinter {
