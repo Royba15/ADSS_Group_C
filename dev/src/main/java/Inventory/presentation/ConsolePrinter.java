@@ -20,6 +20,7 @@ public class ConsolePrinter {
         System.out.println("3. Alerts");
         System.out.println("4. Reports");
         System.out.println("5. Apply Discount");
+        System.out.println("6. Report Defective Product");
         System.out.println("0. Exit");
         System.out.print("Choose an option: ");
     }

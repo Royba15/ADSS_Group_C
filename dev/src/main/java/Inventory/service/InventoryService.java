@@ -97,7 +97,16 @@ public class InventoryService {
         int newID = defectiveItems.size() + 1;
         DefectiveItem item = new DefectiveItem(newID, p, quantity, reason);
         defectiveItems.add(item);
-        p.getInventory().reduceQuantity(quantity);
+    }
+
+    public int getTotalDefectiveCountForProduct(int productID) {
+        int totalDefective = 0;
+        for (DefectiveItem item : defectiveItems) {
+            if (item.getProduct().getProductID() == productID) {
+                totalDefective += item.getQuantity();
+            }
+        }
+        return totalDefective;
     }
 
     public CategoryReport generateCategoryReport(List<String> categoryNames) {
