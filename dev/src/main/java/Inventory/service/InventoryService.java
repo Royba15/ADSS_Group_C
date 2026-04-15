@@ -2,6 +2,7 @@ package Inventory.service;
 
 import Inventory.domain.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -120,5 +121,25 @@ public class InventoryService {
             if (p.checkMinThreshold()) toOrder.add(p);
         }
         return new OrderReport(toOrder);
+    }
+
+    public boolean applyDiscountToProduct(int productID, String promoName, double discount, LocalDateTime start, LocalDateTime end) {
+        Product p = getProductByID(productID);
+        if (p == null) return false;
+        int newID = products.indexOf(p) + 1;
+        DiscountPromotion promo = new DiscountPromotion(newID, promoName, discount, start, end);
+        p.assignPromotion(promo);
+        return true;
+    }
+
+    public boolean applyDiscountToCategory(String categoryName, String promoName, double discount, LocalDateTime start, LocalDateTime end) {
+        Category key = new Category(categoryName, 0);
+        if (!categoryToProducts.containsKey(key)) return false;
+        int newID = categoryName.hashCode();
+        DiscountPromotion promo = new DiscountPromotion(newID, promoName, discount, start, end);
+        for (Product p : categoryToProducts.get(key)) {
+            p.assignPromotion(promo);
+        }
+        return true;
     }
 }

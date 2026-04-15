@@ -19,6 +19,7 @@ public class ConsolePrinter {
         System.out.println("2. View Product by ID");
         System.out.println("3. Alerts");
         System.out.println("4. Reports");
+        System.out.println("5. Apply Discount");
         System.out.println("0. Exit");
         System.out.print("Choose an option: ");
     }
@@ -105,6 +106,14 @@ public class ConsolePrinter {
                     + " | Current: " + p.getInventory().getTotalQuantity()
                     + " | Minimum: " + p.getMinimumThreshold());
         }
+    }
+
+    public void printDiscountMenu() {
+        printHeader("APPLY DISCOUNT");
+        System.out.println("1. Apply Discount to Product by ID");
+        System.out.println("2. Apply Discount to Category");
+        System.out.println("0. Back");
+        System.out.print("Choose an option: ");
     }
 
     public void printSuccess(String msg) {

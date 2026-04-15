@@ -6,6 +6,11 @@ import Inventory.domain.InventoryLevel;
 import Inventory.service.InventoryService;
 import Inventory.domain.Product;
 
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -14,6 +19,7 @@ public class InventoryMenu {
     private final InventoryService service;
     private final ConsolePrinter printer;
     private final Scanner scanner;
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     public InventoryMenu() {
         this.service = new InventoryService();
@@ -54,6 +60,9 @@ public class InventoryMenu {
                 break;
             case 4:
                 handleReportsMenu();
+                break;
+            case 5:
+                handleDiscountMenu();
                 break;
             case 0: {}
             break;
@@ -122,6 +131,82 @@ public class InventoryMenu {
             printer.printError("Input error.");
         }
     }
+
+    private void handleDiscountMenu() {
+        printer.printDiscountMenu();
+        try {
+            int choice = Integer.parseInt(scanner.nextLine());
+            switch (choice) {
+                case 1:
+                    applyDiscountToProductFlow();
+                    break;
+                case 2:
+                    applyDiscountToCategoryFlow();
+                    break;
+                case 0: break;
+                default:
+                    printer.printError("Invalid option.");
+                    break;
+            }
+        } catch (Exception e) {
+            printer.printError("Input error.");
+        }
+    }
+
+    private void applyDiscountToProductFlow() {
+        try {
+            System.out.print("Enter Product ID: ");
+            int id = Integer.parseInt(scanner.nextLine());
+            System.out.print("Enter promotion name: ");
+            String promoName = scanner.nextLine();
+            System.out.print("Enter discount percentage (0-100): ");
+            double discount = Double.parseDouble(scanner.nextLine());
+            System.out.print("Enter start date (e.g. 31.12.2000): ");
+            LocalDate startDate = LocalDate.parse(scanner.nextLine(), DATE_FORMAT);
+            LocalDateTime start = startDate.atStartOfDay();
+            System.out.print("Enter end date (e.g. 31.12.2000): ");
+            LocalDate endDate = LocalDate.parse(scanner.nextLine(), DATE_FORMAT);
+            LocalDateTime end = endDate.atTime(23, 59);
+
+            if (service.applyDiscountToProduct(id, promoName, discount, start, end)) {
+                printer.printSuccess("Discount applied!");
+            } else {
+                printer.printError("Product ID not found.");
+            }
+        } catch (DateTimeParseException e) {
+            printer.printError("Invalid format! Use dd.MM.yyyy (e.g., 31.12.2000).");
+        } catch (Exception e) {
+            printer.printError("Error: " + e.getMessage());
+        }
+    }
+
+        private void applyDiscountToCategoryFlow () {
+            try {
+                System.out.print("Enter category name: ");
+                String catName = scanner.nextLine();
+                System.out.print("Enter promotion name: ");
+                String promoName = scanner.nextLine();
+                System.out.print("Enter discount percentage (0-100): ");
+                double discount = Double.parseDouble(scanner.nextLine());
+                System.out.print("Enter start date (e.g. 31.12.2000): ");
+                LocalDate startDate = LocalDate.parse(scanner.nextLine(), DATE_FORMAT);
+                LocalDateTime start = startDate.atStartOfDay();
+                System.out.print("Enter end date (e.g. 31.12.2000): ");
+                LocalDate endDate = LocalDate.parse(scanner.nextLine(), DATE_FORMAT);
+                LocalDateTime end = endDate.atTime(23, 59);
+
+                if (service.applyDiscountToCategory(catName, promoName, discount, start, end)) {
+                    printer.printSuccess("Discount applied!");
+                } else {
+                    printer.printError("Category not found.");
+                }
+            } catch (DateTimeParseException e) {
+                printer.printError("Invalid format! Use dd.MM.yyyy (e.g., 31.12.2000).");
+            } catch (Exception e) {
+                printer.printError("Error: " + e.getMessage());
+            }
+        }
+
 
     private void categoryReportFlow() {
         System.out.print("Enter category names (comma separated): ");

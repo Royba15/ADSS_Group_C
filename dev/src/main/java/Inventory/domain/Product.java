@@ -6,6 +6,7 @@ public class Product {
     private int manufacturerID;
     private double costPrice;
     private double sellingPrice;
+    private double originalSellingPrice;
     private String supplierCatalogID;
     private Category category;
     private InventoryLevel inventory;
@@ -24,6 +25,7 @@ public class Product {
         this.manufacturerID = manufacturerID;
         this.costPrice = cost;
         this.sellingPrice = selling;
+        this.originalSellingPrice = selling;
         this.supplierCatalogID = catalogID;
         this.mainCategory = mainCategory;
         this.subCategory = subCategory;
@@ -45,8 +47,16 @@ public class Product {
     public void assignPromotion(DiscountPromotion promotion) {
         this.promotion = promotion;
         if (promotion != null) {
+            this.sellingPrice = originalSellingPrice;
             promotion.applyDiscountToProduct(this);
+        } else {
+            this.sellingPrice = originalSellingPrice;
         }
+    }
+
+    public void removePromotion() {
+        this.promotion = null;
+        this.sellingPrice = originalSellingPrice;
     }
 
     // Check if product has an active promotion
@@ -140,6 +150,8 @@ public class Product {
     public DiscountPromotion getPromotion() {
         return promotion;
     }
+
+    public double getOriginalSellingPrice() { return originalSellingPrice; }
 
     // Setters
     public void setProductID(int productID) {
