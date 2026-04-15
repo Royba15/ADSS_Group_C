@@ -79,21 +79,17 @@ public class ConsolePrinter {
             System.out.println("No products found in these categories.");
             return;
         }
-        // track printed products to avoid duplicates
-        List<Integer> printed = new ArrayList<>();
-        for (String catName : report.getCategoryNames()) {
-            System.out.println("\n--- Category: " + catName + " ---");
-            boolean found = false;
-            for (Product p : report.getProducts()) {
-                if (p.belongsToCategory(catName) && !printed.contains(p.getProductID())) {
-                    System.out.println("  - " + p.getProductName()
-                            + " | Qty: " + p.getInventory().getTotalQuantity()
-                            + " | Location: " + p.getInventory().getLocation());
-                    printed.add(p.getProductID());
-                    found = true;
-                }
+
+        // Track printed products to avoid duplicates
+        java.util.Set<Integer> printedProductIds = new java.util.HashSet<>();
+
+        for (Product p : report.getProducts()) {
+            if (!printedProductIds.contains(p.getProductID())) {
+                System.out.println("- " + p.getProductName()
+                        + " | Qty: " + p.getInventory().getTotalQuantity()
+                        + " | Location: " + p.getInventory().getLocation());
+                printedProductIds.add(p.getProductID());
             }
-            if (!found) System.out.println("  No products found.");
         }
     }
 
