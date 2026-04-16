@@ -39,14 +39,22 @@ public class Product {
     }
 
     // Assign a promotion to this product
-    public void assignPromotion(DiscountPromotion promotion) {
-        this.promotion = promotion;
-        if (promotion != null) {
+    public void assignPromotion(DiscountPromotion newPromotion) {
+        if (newPromotion == null) {
+            this.promotion = null;
             this.sellingPrice = originalSellingPrice;
-            promotion.applyDiscountToProduct(this);
-        } else {
-            this.sellingPrice = originalSellingPrice;
+            return;
         }
+
+        if (this.promotion != null && this.promotion.isPromotionActive()) {
+            if (this.promotion.getDiscountPercentage() >= newPromotion.getDiscountPercentage()) {
+                return;
+            }
+        }
+
+        this.promotion = newPromotion;
+        this.sellingPrice = originalSellingPrice;
+        newPromotion.applyDiscountToProduct(this);
     }
 
     // Check if product has an active promotion
