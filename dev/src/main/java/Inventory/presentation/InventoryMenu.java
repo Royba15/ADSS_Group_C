@@ -23,6 +23,10 @@ public class InventoryMenu {
         this.scanner = new Scanner(System.in);
     }
 
+    public void initializeData() {
+        service.initializeData();
+    }
+
     public static void main(String[] args) {
         InventoryMenu menu = new InventoryMenu();
         menu.initializeData();
@@ -268,10 +272,6 @@ public class InventoryMenu {
         }
     }
 
-    // function init all the data
-    public void initializeData() {
-        Datainit initializer = new Datainit(service);
-        initializer.initializeData();
-    }
+
 
 }

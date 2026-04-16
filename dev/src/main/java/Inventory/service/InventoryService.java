@@ -22,6 +22,12 @@ public class InventoryService {
         this.categoryToProducts = new HashMap<>();
     }
 
+    // function init all the data
+    public void initializeData() {
+        Datainit initializer = new Datainit(this);
+        initializer.initializeData();
+    }
+
     // add to lists (prod, map)
     public void addProduct(Product p) {
         if (p == null) return;
@@ -127,7 +133,7 @@ public class InventoryService {
     public OrderReport generateOrderReport() {
         List<Product> toOrder = new ArrayList<>();
         for (Product p : products) {
-            if (p.checkMinThreshold()) toOrder.add(p);
+            if (p.getInventory().getTotalQuantity()==0) toOrder.add(p);
         }
         return new OrderReport(toOrder);
     }

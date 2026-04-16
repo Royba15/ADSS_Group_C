@@ -128,7 +128,7 @@ public class Datainit {
         service.addProduct(p2);
 
         // Product 3: Tnuva Cream Cheese 500ml (Dairy > Cream > Butter)
-        InventoryLevel inv3 = new InventoryLevel(10, 10, 3, "Aisle 1");
+        InventoryLevel inv3 = new InventoryLevel(0, 0, 3, "Aisle 1");
         Product p3 = new Product(3, "Tnuva Cream Cheese 500ml", 101, 20.5, 30.9,
                 "CAT-003", dairy, cream, butter, inv3);
         service.addProduct(p3);
@@ -158,7 +158,7 @@ public class Datainit {
         service.addProduct(p7);
 
         // Product 8: Nestlé Popcorn (Snacks > Popcorn > Buttered)
-        InventoryLevel inv8 = new InventoryLevel(18, 12, 8, "Aisle 6");
+        InventoryLevel inv8 = new InventoryLevel(0, 0, 8, "Aisle 6");
         Product p8 = new Product(8, "Nestlé Popcorn 150g", 106, 6.0, 9.9,
                 "CAT-008", snacks, popcorn, buttered, inv8);
         service.addProduct(p8);
@@ -182,7 +182,7 @@ public class Datainit {
         service.addProduct(p11);
 
         // Product 12: Palmolive Liquid Soap (Toiletries > Soap > Body Soap)
-        InventoryLevel inv12 = new InventoryLevel(14, 16, 8, "Aisle 3");
+        InventoryLevel inv12 = new InventoryLevel(0, 0, 8, "Aisle 3");
         Product p12 = new Product(12, "Palmolive Liquid Soap 500ml", 110, 7.5, 11.9,
                 "CAT-012", toiletries, soap, bodySoap, inv12);
         service.addProduct(p12);
