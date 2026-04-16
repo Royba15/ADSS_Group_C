@@ -1,7 +1,7 @@
 package Inventory.service;
 
 import Inventory.domain.*;
-import Inventory.init.Datainit;
+import Inventory.DB.Datainit;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

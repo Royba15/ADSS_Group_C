@@ -1,4 +1,4 @@
-package Inventory.init;
+package Inventory.DB;
 
 import Inventory.domain.Category;
 import Inventory.domain.InventoryLevel;
