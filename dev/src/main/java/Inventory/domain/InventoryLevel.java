@@ -66,7 +66,7 @@ public class InventoryLevel {
         return location;
     }
 
-    // Update threshold
+    // Update threshold (not use currently)
     public void setThreshold(int min) {
         if (min < 0) {
             throw new IllegalArgumentException("Threshold cannot be negative");

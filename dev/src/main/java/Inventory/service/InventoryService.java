@@ -1,6 +1,7 @@
 package Inventory.service;
 
 import Inventory.domain.*;
+import Inventory.init.Datainit;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,10 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 public class InventoryService {
-    private List<Product> products;
-    private List<DefectiveItem> defectiveItems;
-    private List<Category> categories;
-    private Map<Category, List<Product>> categoryToProducts;
+    private final List<Product> products;
+    private final List<DefectiveItem> defectiveItems;
+    private final List<Category> categories;
+    private final Map<Category, List<Product>> categoryToProducts;
 
     // constructor
     public InventoryService() {
@@ -83,17 +84,6 @@ public class InventoryService {
     // Defective items report
     public List<DefectiveItem> getDefectiveItems() {
         return new ArrayList<>(defectiveItems);
-    }
-
-    // Order report — products below threshold
-    public List<Product> getProductsToOrder() {
-        List<Product> toOrder = new ArrayList<>();
-        for (Product p : products) {
-            if (p.checkMinThreshold()) {
-                toOrder.add(p);
-            }
-        }
-        return toOrder;
     }
 
     // Report Defective Product

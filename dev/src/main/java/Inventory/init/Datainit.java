@@ -1,5 +1,8 @@
-package Inventory.domain;
+package Inventory.init;
 
+import Inventory.domain.Category;
+import Inventory.domain.InventoryLevel;
+import Inventory.domain.Product;
 import Inventory.service.InventoryService;
 
 

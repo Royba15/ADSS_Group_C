@@ -1,7 +1,7 @@
 package Inventory.domain;
 
 public class Category {
-    private String name;  // primary key
+    private final String name;  // primary key
     private int level;    // 0=main, 1=sub, 2=subsub
 
     // Constructor
@@ -13,7 +13,6 @@ public class Category {
     // Set & Get
     public String getName() { return name; }
     public int getLevel() { return level; }
-    public void setLevel(int level) { this.level = level; }
 
 
     @Override

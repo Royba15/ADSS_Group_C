@@ -1,7 +1,6 @@
 package Inventory.domain;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 public class DiscountPromotion {
     private final int promotionID;

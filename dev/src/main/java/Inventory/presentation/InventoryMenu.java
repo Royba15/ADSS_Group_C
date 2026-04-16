@@ -1,6 +1,5 @@
 package Inventory.presentation;
 
-import Inventory.domain.Datainit;
 import Inventory.service.InventoryService;
 import Inventory.domain.Product;
 import java.time.LocalDate;

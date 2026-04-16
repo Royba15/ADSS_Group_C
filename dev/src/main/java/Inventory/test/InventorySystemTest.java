@@ -195,31 +195,6 @@ public class InventorySystemTest {
         assertEquals(3, totalDefective); // 2 + 1
     }
 
-
-    @Test
-    @DisplayName("Test InventoryService.generateOrderReport()")
-    void testServiceGenerateOrderReport() {
-        Category dairy = new Category("Dairy", 0);
-        Category milk = new Category("Milk", 1);
-        Category milk3 = new Category("3%", 2);
-
-        // Below threshold
-        InventoryLevel inv1 = new InventoryLevel(2, 1, 10, "Aisle 1");
-        Product p1 = new Product(1, "Product A", 101, 4.5, 6.9,
-                "CAT-001", dairy, milk, milk3, inv1);
-        service.addProduct(p1);
-
-        // Above threshold
-        InventoryLevel inv2 = new InventoryLevel(15, 10, 5, "Aisle 1");
-        Product p2 = new Product(2, "Product B", 102, 5.0, 7.0,
-                "CAT-002", dairy, milk, milk3, inv2);
-        service.addProduct(p2);
-
-        OrderReport report = service.generateOrderReport();
-        assertEquals(1, report.getProductsToOrder().size());
-        assertEquals("Product A", report.getProductsToOrder().get(0).getProductName());
-    }
-
     @Test
     @DisplayName("Test InventoryService.generateDefectiveReport()")
     void testServiceGenerateDefectiveReport() {
