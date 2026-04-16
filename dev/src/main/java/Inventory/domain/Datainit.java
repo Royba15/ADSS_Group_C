@@ -2,11 +2,7 @@ package Inventory.domain;
 
 import Inventory.service.InventoryService;
 
-/**
- * DataInitializer - Responsible for initializing all test/default data
- * Part of the Domain layer - handles data setup
- * Contains 18 grocery products across multiple categories
- */
+
 public class Datainit {
     private final InventoryService service;
 
@@ -14,19 +10,14 @@ public class Datainit {
         this.service = service;
     }
 
-    /**
-     * Initialize all categories and products
-     * Call this once at application startup
-     */
+
     public void initializeData() {
         initializeCategories();
         initializeProducts();
         initializeDefectiveItems();
     }
 
-    /**
-     * Create and add all product categories
-     */
+
     private void initializeCategories() {
         // Dairy Category
         Category dairy = new Category("Dairy", 0);
@@ -85,10 +76,6 @@ public class Datainit {
         service.addCategory(brownB);
     }
 
-    /**
-     * Create and add all products (18 products total)
-     * Each product has 3 unique category levels (main, sub, sub-sub) - NO duplicates
-     */
     private void initializeProducts() {
         // Get categories for products
         Category dairy = new Category("Dairy", 0);
@@ -237,9 +224,7 @@ public class Datainit {
         service.addProduct(p18);
     }
 
-    /**
-     * Initialize defective items for testing
-     */
+
     private void initializeDefectiveItems() {
         // Report some defective items for testing
         service.reportDefectiveItem(1, 2, "Expired");
