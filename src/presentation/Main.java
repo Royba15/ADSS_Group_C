@@ -3,7 +3,6 @@ package presentation;
 import domain.*;
 import service.*;
 
-import javax.management.relation.Role;
 import java.util.*;
 import java.time.*;
 
@@ -50,10 +49,16 @@ public class Main {
             System.out.println("Which menu would you like to use?");
             System.out.println("1 - HR Manager");
             System.out.println("2 - Employee");
+            System.out.println("3 - Exit System");
             System.out.println("Please enter your choice");
 
 
             int choice = scanner.nextInt();
+
+            if (choice == 3) {
+                System.out.println("Goodbye!");
+                break;
+            }
 
             // HR Manager flow
             if (choice == 1) {
@@ -83,7 +88,8 @@ public class Main {
                     System.out.println("7 - Close week and start new one");
                     System.out.println("8 - Fire an employee");
                     System.out.println("9 - Manage role");
-                    System.out.println("10 - Exit");
+                    System.out.println("10 - Block shift");
+                    System.out.println("11 - Exit");
 
                     int hrChoice = scanner.nextInt();
 
@@ -269,8 +275,8 @@ public class Main {
                                 day = DayOfWeek.FRIDAY;
                                 break;
                             case 7:
-                                day = DayOfWeek.SATURDAY;
-                                break;
+                                System.out.println("The branch is closed on Saturday!");
+                                continue;
                             default:
                                 System.out.println("Invalid day");
                                 continue;
@@ -283,6 +289,11 @@ public class Main {
 
                         ShiftSlot slot = new ShiftSlot(day, type);
                         Shift shift = schedule.getShift(slot);
+
+                        if (shift.isBlocked()) {
+                            System.out.println("Branch is closed in this shift. Cannot assign employees.");
+                            continue;
+                        }
 
                         // Show available employees
                         Map<String, List<Employee>> available =
@@ -302,6 +313,8 @@ public class Main {
 
                             Map<String, Integer> remaining = shift.getRemainingRoles();
 
+                            System.out.println("Required employees that still missing:");
+
                             for (String r : remaining.keySet()) {
                                 System.out.println(r + ": " + remaining.get(r));
                             }
@@ -318,25 +331,16 @@ public class Main {
                             System.out.println("2 - Assign shift manager");
                             System.out.println("3 - Change required roles");
                             System.out.println("4 - Swap employees");
-                            System.out.println("5 - Block shift");
-                            System.out.println("6 - Exceptional assignment");
-                            System.out.println("7 - Back");
+                            System.out.println("5 - Exceptional assignment");
+                            System.out.println("6 - Back");
 
                             int assignChoice = scanner.nextInt();
 
                             if (assignChoice == 2) {
 
                                 // Get all employees
-                                Collection<Employee> allEmployees = manager.getAllEmployees();
-
-                                // Filter shift managers
-                                List<Employee> managers = new ArrayList<>();
-
-                                for (Employee e : allEmployees) {
-                                    if (e.getRoles().contains("SHIFT_MANAGER") && e.isActive()) {
-                                        managers.add(e);
-                                    }
-                                }
+                                Map<String, List<Employee>> availableEmployees = manager.getAvailableEmployees(slot);
+                                List<Employee> managers = availableEmployees.getOrDefault("SHIFT_MANAGER", new ArrayList<>());
 
                                 // If none found
                                 if (managers.isEmpty()) {
@@ -344,53 +348,70 @@ public class Main {
                                     continue;
                                 }
 
-                                // Print managers
+                                //Print managers
                                 System.out.println("Available Shift Managers:");
                                 for (Employee e : managers) {
                                     System.out.println("  - " + e.getId() + " " + e.getName());
                                 }
 
-                                // Choose manager
+                                //Choose manager
                                 System.out.print("Enter manager ID: ");
                                 String managerId = scanner.next();
 
                                 Employee m = manager.getEmployee(managerId);
 
-                                // Validate choice
+                                //Validate choice
                                 if (m == null || !managers.contains(m)) {
                                     System.out.println("Invalid manager!");
                                     continue;
                                 }
 
-                                // Assign manager (only here!)
-                                shift.setManager(m);
-
-                                System.out.println("Manager assigned!");
+                                // Assign manager
+                                if (shift.setManager(m)) {
+                                    System.out.println("Manager assigned!");
+                                } else {
+                                    System.out.println("Manager assignment failed!");
+                                }
                                 continue;
                             }
 
-                            if (assignChoice == 7) {
+                            if (assignChoice == 6) {
                                 break;
                             }
 
                             if (assignChoice == 3) {
 
-                                System.out.println("Choose role to change:");
-                                System.out.println("1 - Cashier");
-                                System.out.println("2 - Stocker");
+                                System.out.println("Choose role:");
+
+                                List<String> rolesList = new ArrayList<>();
+
+                                for (String r : RoleRegistry.getRoles()) {
+                                    if (!r.equals("SHIFT_MANAGER")) {
+                                        rolesList.add(r);
+                                    }
+                                }
+
+                                Collections.sort(rolesList);
+
+                                for (int i = 0; i < rolesList.size(); i++) {
+                                    System.out.println((i + 1) + " - " + rolesList.get(i));
+                                }
+
+                                System.out.println((rolesList.size() + 1) + " - Back");
 
                                 int roleChoice = scanner.nextInt();
 
-                                String role;
+                                if (roleChoice == rolesList.size() + 1) {
+                                    continue;
+                                }
 
-                                if (roleChoice == 1) {
-                                    role = "CASHIER";
-                                } else if (roleChoice == 2) {
-                                    role = "STOCKER";
-                                } else {
+                                if (roleChoice < 1 || roleChoice > rolesList.size()) {
                                     System.out.println("Invalid role");
                                     continue;
                                 }
+
+                                String role = rolesList.get(roleChoice - 1);
+
 
                                 System.out.print("Enter required amount: ");
                                 int amount = scanner.nextInt();
@@ -481,26 +502,36 @@ public class Main {
 
                                 // Role selection with back option
                                 System.out.println("Choose role:");
-                                System.out.println("1 - Cashier");
-                                System.out.println("2 - Stocker");
-                                System.out.println("3 - Back");
+
+                                List<String> rolesList = new ArrayList<>();
+
+                                for (String r : RoleRegistry.getRoles()) {
+                                    if (!r.equals("SHIFT_MANAGER")) {
+                                        rolesList.add(r);
+                                    }
+                                }
+
+                                Collections.sort(rolesList);
+
+                                for (int i = 0; i < rolesList.size(); i++) {
+                                    System.out.println((i + 1) + " - " + rolesList.get(i));
+                                }
+
+                                System.out.println((rolesList.size() + 1) + " - Back");
 
                                 int roleChoice = scanner.nextInt();
 
-                                if (roleChoice == 3) {
+                                if (roleChoice == rolesList.size() + 1) {
                                     continue;
                                 }
 
-                                String role;
-
-                                if (roleChoice == 1) {
-                                    role = "CASHIER";
-                                } else if (roleChoice == 2) {
-                                    role = "STOCKER";
-                                } else {
+                                if (roleChoice < 1 || roleChoice > rolesList.size()) {
                                     System.out.println("Invalid role");
                                     continue;
                                 }
+
+                                String role = rolesList.get(roleChoice - 1);
+
 
                                 // Assign employee
                                 if (shift.addEmployee(emp, role)) {
@@ -510,15 +541,7 @@ public class Main {
                                 }
                             }
 
-                            if (assignChoice == 5) {
-
-                                shift.setBlocked(true);
-
-                                System.out.println("Shift blocked successfully!");
-                                break;
-                            }
-
-                            else if (assignChoice == 6) {
+                            else if (assignChoice == 5) {
 
                                 System.out.print("Enter employee ID: ");
                                 String id = scanner.next();
@@ -563,8 +586,6 @@ public class Main {
                         schedule.printSchedule();
                     }
 
-
-
                     // Close week and start new one
                     else if (hrChoice == 7) {
 
@@ -577,6 +598,14 @@ public class Main {
                         history.addWeek(LocalDate.now(), schedule);
                         manager.resetAllEmployeesAvailability();
                         schedule = new WeeklySchedule();
+
+                        for (String role : RoleRegistry.getRoles()) {
+                            if (!role.equals("SHIFT_MANAGER")) {
+                                for (Shift shift : schedule.getAllShifts()) {
+                                    shift.setRequiredRole(role, 1);
+                                }
+                            }
+                        }
 
                         System.out.println("Week saved and new week started!");
                     }
@@ -624,7 +653,15 @@ public class Main {
 
                             RoleRegistry.addRole(role);
 
+                            if (!role.equals("SHIFT_MANAGER")) {
+                                for (Shift shift : schedule.getAllShifts()) {
+                                    shift.setRequiredRole(role, 1);
+                                }
+                            }
+
                             System.out.println("Role " + role + " added successfully!");
+
+
                         }
 
                         // ===== Add role to employee =====
@@ -682,10 +719,55 @@ public class Main {
                         }
                     }
 
+                    else if (hrChoice == 10) {
+
+                        System.out.println("Enter day (1=Sunday ... 7=Friday):");
+                        int dayInput = scanner.nextInt();
+
+                        DayOfWeek day;
+
+                        switch (dayInput) {
+                            case 1: day = DayOfWeek.SUNDAY; break;
+                            case 2: day = DayOfWeek.MONDAY; break;
+                            case 3: day = DayOfWeek.TUESDAY; break;
+                            case 4: day = DayOfWeek.WEDNESDAY; break;
+                            case 5: day = DayOfWeek.THURSDAY; break;
+                            case 6: day = DayOfWeek.FRIDAY; break;
+                            default:
+                                System.out.println("Invalid day");
+                                continue;
+                        }
+
+                        System.out.println("Enter shift type (1=Morning, 2=Evening):");
+                        int typeInput = scanner.nextInt();
+
+                        ShiftType type;
+
+                        if (typeInput == 1) {
+                            type = ShiftType.MORNING;
+                        } else if (typeInput == 2) {
+                            type = ShiftType.EVENING;
+                        } else {
+                            System.out.println("Invalid shift type");
+                            continue;
+                        }
+
+                        ShiftSlot slot = new ShiftSlot(day, type);
+                        Shift shift = schedule.getShift(slot);
+
+                        if (shift == null) {
+                            System.out.println("Shift not found!");
+                            continue;
+                        }
+
+                        shift.setBlocked(true);
+
+                        System.out.println("Shift blocked successfully!");
+                    }
 
 
                     // Exit HR menu
-                    else if (hrChoice == 10) {
+                    else if (hrChoice == 11) {
                         break;
                     }
 
@@ -760,7 +842,9 @@ public class Main {
                                 case 4: day = DayOfWeek.WEDNESDAY; break;
                                 case 5: day = DayOfWeek.THURSDAY; break;
                                 case 6: day = DayOfWeek.FRIDAY; break;
-                                case 7: day = DayOfWeek.SATURDAY; break;
+                                case 7:
+                                    System.out.println("The branch is closed on Saturday!");
+                                    continue;
                                 default:
                                     System.out.println("Invalid day");
                                     continue;
@@ -773,15 +857,29 @@ public class Main {
                             ShiftType type = (typeInput == 1) ? ShiftType.MORNING : ShiftType.EVENING;
 
 
-                        ShiftSlot slot = new ShiftSlot(day, type);
-                        employee.setSubmittedAvailability(true);
-                        // Add availability
-                        employee.addAvailableShift(slot);
+                            ShiftSlot slot = new ShiftSlot(day, type);
+                            Shift shift = schedule.getShift(slot);
 
-                        System.out.println("Availability added!");
+                            if (shift == null) {
+                                System.out.println("Shift not found!");
+                                continue;
+                            }
 
-                    }
+                            if (shift.isBlocked()) {
+                                System.out.println("Branch is closed in this shift. Cannot submit availability.");
+                                continue;
+                            }
+
+                            employee.setSubmittedAvailability(true);
+
+                            // Add availability
+                            employee.addAvailableShift(slot);
+
+                            System.out.println("Availability added!");
+
+
                         }
+                }
 
                     // Exit employee menu
                     else if (empChoice == 2) {

@@ -1,5 +1,6 @@
-package domain;
+package presentation;
 
+import domain.*;
 import service.EmployeeManager;
 import service.RoleRegistry;
 import service.ShiftHistory;

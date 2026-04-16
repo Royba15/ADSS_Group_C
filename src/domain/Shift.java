@@ -53,7 +53,7 @@ public class Shift {
         }
 
         // Check if employee is available for this shift
-        if (!e.getAvailableShifts().contains(slot)) {
+        if (e.hasSubmittedAvailability() && !e.getAvailableShifts().contains(slot)) {
             return false;
         }
         if (!e.isActive()) {
@@ -90,7 +90,7 @@ public class Shift {
         }
 
         // Check if employee is available for this shift
-        if (!e.getAvailableShifts().contains(slot)) {
+        if (e.hasSubmittedAvailability() && !e.getAvailableShifts().contains(slot)) {
             return false;
         }
 

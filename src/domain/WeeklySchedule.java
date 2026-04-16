@@ -1,6 +1,7 @@
 package domain;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.LocalDateTime;
 
@@ -44,22 +45,18 @@ public class WeeklySchedule {
     }
 
     public boolean canSubmit(LocalDateTime currentTime) {
+        LocalDateTime now = currentTime;
 
-        DayOfWeek currentDay = currentTime.getDayOfWeek();
-        LocalTime currentHour = currentTime.toLocalTime();
+        int currentDayIndex = now.getDayOfWeek().getValue() % 7;      // Sunday=0 ... Saturday=6
+        int submissionDayIndex = submissionDay.getValue() % 7;        // Sunday=0 ... Saturday=6
 
-        // Before deadline day
-        if (currentDay.getValue() < submissionDay.getValue()) {
-            return true;
-        }
+        LocalDate startOfWeek = now.toLocalDate().minusDays(currentDayIndex);
+        LocalDate deadlineDate = startOfWeek.plusDays(submissionDayIndex);
+        LocalDateTime deadlineDateTime = LocalDateTime.of(deadlineDate, submissionTime);
 
-        // On the same day
-        if (currentDay == submissionDay && currentHour.isBefore(submissionTime)) {
-            return true;
-        }
-
-        return false;
+        return now.isBefore(deadlineDateTime);
     }
+
     // Prints all shifts in the week in correct order (Sunday → Friday)
     public void printSchedule() {
 
