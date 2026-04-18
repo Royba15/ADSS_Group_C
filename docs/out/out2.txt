@@ -1,0 +1,293 @@
+=================================
+   Welcome to SuperLi System
+=================================
+Start system with sample data?
+1 - Yes
+2 - No
+System loaded with sample data!
+Which menu would you like to use?
+1 - HR Manager
+2 - Employee
+3 - Exit System
+Please enter your choice
+Enter password: Welcome HR Manager!
+
+=========== HR MENU ===========
+1 - Change submission deadline
+2 - Add employee
+3 - View all employees
+4 - Manage shift history
+5 - Manage shifts
+6 - View Current weekly schedule
+7 - Close week and start new one
+8 - Fire an employee
+9 - Manage role
+10 - Block shift
+11 - Exit
+1 - Omer
+2 - Dana
+3 - Yossi
+4 - Noa
+5 - Amit
+
+=========== HR MENU ===========
+1 - Change submission deadline
+2 - Add employee
+3 - View all employees
+4 - Manage shift history
+5 - Manage shifts
+6 - View Current weekly schedule
+7 - Close week and start new one
+8 - Fire an employee
+9 - Manage role
+10 - Block shift
+11 - Exit
+
+------ ROLE MANAGEMENT ------
+1 - Add new role to system
+2 - Add role to employee
+3 - Back
+Enter new role name: Role BAGGER added successfully!
+
+=========== HR MENU ===========
+1 - Change submission deadline
+2 - Add employee
+3 - View all employees
+4 - Manage shift history
+5 - Manage shifts
+6 - View Current weekly schedule
+7 - Close week and start new one
+8 - Fire an employee
+9 - Manage role
+10 - Block shift
+11 - Exit
+Enter ID: Enter name: Assign roles:
+1 - BAGGER
+2 - CASHIER
+3 - SHIFT_MANAGER
+4 - STOCKER
+Choose role: Role added: BAGGER
+Employee added!
+
+=========== HR MENU ===========
+1 - Change submission deadline
+2 - Add employee
+3 - View all employees
+4 - Manage shift history
+5 - Manage shifts
+6 - View Current weekly schedule
+7 - Close week and start new one
+8 - Fire an employee
+9 - Manage role
+10 - Block shift
+11 - Exit
+1 - Omer
+2 - Dana
+3 - Yossi
+4 - Noa
+5 - Amit
+6 - Yuval
+
+=========== HR MENU ===========
+1 - Change submission deadline
+2 - Add employee
+3 - View all employees
+4 - Manage shift history
+5 - Manage shifts
+6 - View Current weekly schedule
+7 - Close week and start new one
+8 - Fire an employee
+9 - Manage role
+10 - Block shift
+11 - Exit
+Enter day (1=Sunday ... 7=Saturday):
+Enter hour (0-23):
+Deadline updated to: SUNDAY at 00:00
+
+=========== HR MENU ===========
+1 - Change submission deadline
+2 - Add employee
+3 - View all employees
+4 - Manage shift history
+5 - Manage shifts
+6 - View Current weekly schedule
+7 - Close week and start new one
+8 - Fire an employee
+9 - Manage role
+10 - Block shift
+11 - Exit
+Enter day (1=Sunday ... 7=Saturday):
+Enter shift type (1=Morning, 2=Evening):
+SHIFT_MANAGER:
+  - 1 Omer
+  - 5 Amit
+CASHIER:
+  - 1 Omer
+  - 3 Yossi
+STOCKER:
+  - 2 Dana
+  - 4 Noa
+BAGGER:
+  - 6 Yuval
+Required employees that still missing:
+CASHIER: 1
+STOCKER: 1
+BAGGER: 1
+SHIFT_MANAGER: missing
+1 - Assign employee
+2 - Assign shift manager
+3 - Change required roles
+4 - Swap employees
+5 - Exceptional assignment
+6 - Back
+Enter employee ID: Choose role:
+1 - BAGGER
+2 - CASHIER
+3 - STOCKER
+4 - Back
+Employee assigned!
+Required employees that still missing:
+CASHIER: 1
+STOCKER: 1
+BAGGER: 0
+SHIFT_MANAGER: missing
+1 - Assign employee
+2 - Assign shift manager
+3 - Change required roles
+4 - Swap employees
+5 - Exceptional assignment
+6 - Back
+
+=========== HR MENU ===========
+1 - Change submission deadline
+2 - Add employee
+3 - View all employees
+4 - Manage shift history
+5 - Manage shifts
+6 - View Current weekly schedule
+7 - Close week and start new one
+8 - Fire an employee
+9 - Manage role
+10 - Block shift
+11 - Exit
+SUNDAY - MORNING
+  Manager: Not assigned
+  BAGGER: Yuval
+
+SUNDAY - EVENING
+  Manager: Not assigned
+  No employees assigned
+
+MONDAY - MORNING
+  Manager: Not assigned
+  No employees assigned
+
+MONDAY - EVENING
+  Manager: Not assigned
+  No employees assigned
+
+TUESDAY - MORNING
+  Manager: Not assigned
+  No employees assigned
+
+TUESDAY - EVENING
+  Manager: Not assigned
+  No employees assigned
+
+WEDNESDAY - MORNING
+  Manager: Not assigned
+  No employees assigned
+
+WEDNESDAY - EVENING
+  Manager: Not assigned
+  No employees assigned
+
+THURSDAY - MORNING
+  Manager: Not assigned
+  No employees assigned
+
+THURSDAY - EVENING
+  Manager: Not assigned
+  No employees assigned
+
+FRIDAY - MORNING
+  Manager: Not assigned
+  No employees assigned
+
+FRIDAY - EVENING
+  Manager: Not assigned
+  No employees assigned
+
+
+=========== HR MENU ===========
+1 - Change submission deadline
+2 - Add employee
+3 - View all employees
+4 - Manage shift history
+5 - Manage shifts
+6 - View Current weekly schedule
+7 - Close week and start new one
+8 - Fire an employee
+9 - Manage role
+10 - Block shift
+11 - Exit
+Enter day (1=Sunday ... 7=Saturday):
+Enter shift type (1=Morning, 2=Evening):
+SHIFT_MANAGER:
+  - 1 Omer
+  - 5 Amit
+CASHIER:
+  - 1 Omer
+  - 3 Yossi
+STOCKER:
+  - 2 Dana
+  - 4 Noa
+BAGGER:
+  - 6 Yuval
+Required employees that still missing:
+CASHIER: 1
+STOCKER: 1
+BAGGER: 0
+SHIFT_MANAGER: missing
+1 - Assign employee
+2 - Assign shift manager
+3 - Change required roles
+4 - Swap employees
+5 - Exceptional assignment
+6 - Back
+Enter employee ID: Choose role:
+1 - BAGGER
+2 - CASHIER
+3 - STOCKER
+4 - Back
+Assignment failed!
+Required employees that still missing:
+CASHIER: 1
+STOCKER: 1
+BAGGER: 0
+SHIFT_MANAGER: missing
+1 - Assign employee
+2 - Assign shift manager
+3 - Change required roles
+4 - Swap employees
+5 - Exceptional assignment
+6 - Back
+
+=========== HR MENU ===========
+1 - Change submission deadline
+2 - Add employee
+3 - View all employees
+4 - Manage shift history
+5 - Manage shifts
+6 - View Current weekly schedule
+7 - Close week and start new one
+8 - Fire an employee
+9 - Manage role
+10 - Block shift
+11 - Exit
+Which menu would you like to use?
+1 - HR Manager
+2 - Employee
+3 - Exit System
+Please enter your choice
+Goodbye!
