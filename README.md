@@ -14,11 +14,6 @@ The system supports role-based functionality, allowing employees to submit avail
 - Java
 - Object-Oriented Programming (OOP)
 
-## My Contribution
-- Implemented scheduling logic for assigning shifts based on constraints
-- Developed role-based functionality (employee vs manager)
-- Handled validation and conflict resolution for scheduling
-
 ## How to Run
 1. Clone the repository:
    ```bash
