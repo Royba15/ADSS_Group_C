@@ -19,6 +19,8 @@ public class ConsolePrinter {
         System.out.println("4. Reports");
         System.out.println("5. Apply Discount");
         System.out.println("6. Report Defective Product");
+        System.out.println("7. Add New Category");
+        System.out.println("8. Add New Product");
         System.out.println("0. Exit");
         System.out.print("Choose an option: ");
     }
@@ -49,6 +51,9 @@ public class ConsolePrinter {
         System.out.println("ID:            " + p.getProductID());
         System.out.println("Name:          " + p.getProductName());
         System.out.println("Manufacturer:  " + p.getManufacturerID());
+        System.out.println("Categories:    Main: " + p.getMainCategory().getName()
+                + " | Sub: " + p.getSubCategory().getName()
+                + " | Sub-Sub: " + p.getSubSubCategory().getName());
         System.out.println("Total Qty:     " + p.getInventory().getTotalQuantity());
         System.out.println("Shelf Qty:     " + p.getInventory().getShelfQuantity());
         System.out.println("Warehouse Qty: " + p.getInventory().getWarehouseQuantity());

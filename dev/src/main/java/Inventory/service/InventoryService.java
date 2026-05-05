@@ -147,4 +147,127 @@ public class InventoryService {
         }
         return true;
     }
+
+    // Add a new category
+    public boolean addNewCategory(String categoryName, int level) {
+        if (categoryName == null || categoryName.trim().isEmpty()) {
+            return false;
+        }
+        if (level < 0 || level > 2) {
+            return false;
+        }
+
+        Category newCategory = new Category(categoryName.trim(), level);
+
+        // Check if category already exists
+        if (categories.contains(newCategory)) {
+            return false;
+        }
+
+        categories.add(newCategory);
+        return true;
+    }
+
+    // Add a new product with all details
+    // Note: Categories must already exist - we don't create them automatically
+    public boolean addNewProduct(int productID, String productName, int manufacturerID,
+                                 double costPrice, double sellingPrice, String catalogID,
+                                 String mainCategoryName, String subCategoryName, String subSubCategoryName,
+                                 int shelfQuantity, int warehouseQuantity, int minThreshold, String location) {
+
+        // Validation
+        if (productName == null || productName.trim().isEmpty()) {
+            return false;
+        }
+
+        if (costPrice < 0 || sellingPrice < 0) {
+            return false;
+        }
+
+        if (shelfQuantity < 0 || warehouseQuantity < 0 || minThreshold < 0) {
+            return false;
+        }
+
+        // Check if product ID already exists
+        if (getProductByID(productID) != null) {
+            return false;
+        }
+
+        // Check if all categories exist - they must be created beforehand
+        Category mainCategory = new Category(mainCategoryName, 0);
+        Category subCategory = new Category(subCategoryName, 1);
+        Category subSubCategory = new Category(subSubCategoryName, 2);
+
+        if (!categories.contains(mainCategory)) {
+            return false; // Main category doesn't exist
+        }
+        if (!categories.contains(subCategory)) {
+            return false; // Sub category doesn't exist
+        }
+        if (!categories.contains(subSubCategory)) {
+            return false; // Sub-sub category doesn't exist
+        }
+
+        // Create inventory
+        InventoryLevel inventory = new InventoryLevel(shelfQuantity, warehouseQuantity, minThreshold, location);
+
+        // Create product with existing categories
+        Product newProduct = new Product(productID, productName.trim(), manufacturerID,
+                costPrice, sellingPrice, catalogID, mainCategory, subCategory, subSubCategory, inventory);
+
+        // Add product
+        addProduct(newProduct);
+        return true;
+    }
+
+    // Get the next available product ID
+    public int getNextProductID() {
+        if (products.isEmpty()) {
+            return 1;
+        }
+        int maxID = 0;
+        for (Product p : products) {
+            if (p.getProductID() > maxID) {
+                maxID = p.getProductID();
+            }
+        }
+        return maxID + 1;
+    }
+
+    // Get all categories by level
+    public List<Category> getCategoriesByLevel(int level) {
+        List<Category> result = new ArrayList<>();
+        for (Category c : categories) {
+            if (c.getLevel() == level) {
+                result.add(c);
+            }
+        }
+        return result;
+    }
+
+    // Check if all three categories exist
+    public boolean allCategoriesExist(String mainCatName, String subCatName, String subSubCatName) {
+        Category mainCat = new Category(mainCatName, 0);
+        Category subCat = new Category(subCatName, 1);
+        Category subSubCat = new Category(subSubCatName, 2);
+
+        return categories.contains(mainCat) &&
+                categories.contains(subCat) &&
+                categories.contains(subSubCat);
+    }
+
+    // Check if a category exists (regardless of level)
+    public boolean categoryExists(String categoryName) {
+        for (Category c : categories) {
+            if (c.getName().equalsIgnoreCase(categoryName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Get all products
+    public List<Product> getAllProducts() {
+        return new ArrayList<>(products);
+    }
 }

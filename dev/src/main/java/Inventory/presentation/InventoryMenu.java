@@ -28,8 +28,30 @@ public class InventoryMenu {
 
     public static void main(String[] args) {
         InventoryMenu menu = new InventoryMenu();
-        menu.initializeData();
+        menu.promptForDatabaseInitialization();
         menu.run();
+    }
+
+    private void promptForDatabaseInitialization() {
+        printer.printHeader("DATABASE INITIALIZATION");
+        System.out.println("1. Load Existing Database");
+        System.out.println("2. Start with Empty Database");
+        System.out.print("Choose an option: ");
+        try {
+            int choice = Integer.parseInt(scanner.nextLine());
+            if (choice == 1) {
+                initializeData();
+                printer.printSuccess("Existing database loaded!");
+            } else if (choice == 2) {
+                printer.printSuccess("Starting with empty database!");
+            } else {
+                printer.printError("Invalid choice. Loading existing database...");
+                initializeData();
+            }
+        } catch (Exception e) {
+            printer.printError("Error reading input. Loading existing database...");
+            initializeData();
+        }
     }
 
     public void run() {
@@ -65,6 +87,12 @@ public class InventoryMenu {
                 break;
             case 6:
                 reportDefectiveFlow();
+                break;
+            case 7:
+                addNewCategoryFlow();
+                break;
+            case 8:
+                addNewProductFlow();
                 break;
             case 0: {}
             break;
@@ -271,6 +299,146 @@ public class InventoryMenu {
         }
     }
 
+    // Add new category
+    private void addNewCategoryFlow() {
+        try {
+            printer.promptForCategoryName();
+            String categoryName = scanner.nextLine().trim();
+
+            if (categoryName.isEmpty()) {
+                printer.printError("Category name cannot be empty.");
+                return;
+            }
+
+            System.out.print("Enter category level (0=Main, 1=Sub, 2=Sub-Sub): ");
+            int level = Integer.parseInt(scanner.nextLine());
+
+            if (level < 0 || level > 2) {
+                printer.printError("Invalid level. Must be 0, 1, or 2.");
+                return;
+            }
+
+            // Use service to add category - no Domain Object creation in Menu
+            if (service.addNewCategory(categoryName, level)) {
+                printer.printSuccess("Category '" + categoryName + "' added successfully!");
+            } else {
+                printer.printError("Failed to add category. It may already exist.");
+            }
+        } catch (NumberFormatException e) {
+            printer.printError("Invalid input. Please enter valid numbers.");
+        } catch (Exception e) {
+            printer.printError("Error adding category: " + e.getMessage());
+        }
+    }
+
+    // Add new product
+    private void addNewProductFlow() {
+        try {
+            printer.promptForProductId();
+            int productID = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("Enter product name: ");
+            String productName = scanner.nextLine().trim();
+            if (productName.isEmpty()) {
+                printer.printError("Product name cannot be empty.");
+                return;
+            }
+
+            System.out.print("Enter manufacturer ID: ");
+            int manufacturerID = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("Enter cost price: ");
+            double costPrice = Double.parseDouble(scanner.nextLine());
+
+            System.out.print("Enter selling price: ");
+            double sellingPrice = Double.parseDouble(scanner.nextLine());
+
+            System.out.print("Enter supplier catalog ID: ");
+            String catalogID = scanner.nextLine().trim();
+
+            // Display available categories by level
+            System.out.println("\n--- Available Categories ---");
+
+            System.out.println("\nMain Categories:");
+            List<Inventory.domain.Category> mainCategories = service.getCategoriesByLevel(0);
+            if (mainCategories.isEmpty()) {
+                printer.printError("No main categories available. Please create a main category first (Option 7).");
+                return;
+            }
+            for (Inventory.domain.Category c : mainCategories) {
+                System.out.println("  - " + c.getName());
+            }
+
+            System.out.print("\nEnter main category name: ");
+            String mainCatName = scanner.nextLine().trim();
+
+            if (!service.categoryExists(mainCatName)) {
+                printer.printError("Main category '" + mainCatName + "' does not exist.");
+                return;
+            }
+
+            System.out.println("\nSub Categories:");
+            List<Inventory.domain.Category> subCategories = service.getCategoriesByLevel(1);
+            if (subCategories.isEmpty()) {
+                printer.printError("No sub categories available. Please create sub categories first (Option 7).");
+                return;
+            }
+            for (Inventory.domain.Category c : subCategories) {
+                System.out.println("  - " + c.getName());
+            }
+
+            System.out.print("Enter sub category name: ");
+            String subCatName = scanner.nextLine().trim();
+
+            if (!service.categoryExists(subCatName)) {
+                printer.printError("Sub category '" + subCatName + "' does not exist.");
+                return;
+            }
+
+            System.out.println("\nSub-Sub Categories:");
+            List<Inventory.domain.Category> subSubCategories = service.getCategoriesByLevel(2);
+            if (subSubCategories.isEmpty()) {
+                printer.printError("No sub-sub categories available. Please create sub-sub categories first (Option 7).");
+                return;
+            }
+            for (Inventory.domain.Category c : subSubCategories) {
+                System.out.println("  - " + c.getName());
+            }
+
+            System.out.print("Enter sub-sub category name: ");
+            String subSubCatName = scanner.nextLine().trim();
+
+            if (!service.categoryExists(subSubCatName)) {
+                printer.printError("Sub-sub category '" + subSubCatName + "' does not exist.");
+                return;
+            }
+
+            printer.promptForQuantity("shelf");
+            int shelfQty = Integer.parseInt(scanner.nextLine());
+
+            printer.promptForQuantity("warehouse");
+            int warehouseQty = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("Enter minimum quantity threshold: ");
+            int minThreshold = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("Enter location (e.g., Aisle 1): ");
+            String location = scanner.nextLine().trim();
+
+            // Use service to add product - categories must exist
+            if (service.addNewProduct(productID, productName, manufacturerID, costPrice, sellingPrice,
+                    catalogID, mainCatName, subCatName, subSubCatName,
+                    shelfQty, warehouseQty, minThreshold, location)) {
+                printer.printSuccess("Product '" + productName + "' added successfully!");
+            } else {
+                printer.printError("Failed to add product. Check that all categories exist or product ID is already in use.");
+            }
+        } catch (NumberFormatException e) {
+            printer.printError("Invalid input. Please enter valid numbers.");
+        } catch (Exception e) {
+            printer.printError("Error adding product: " + e.getMessage());
+        }
+    }
 
 
 }
