@@ -2,11 +2,21 @@ package presentation;
 
 import domain.*;
 import service.*;
+import data.ScheduleDAO;
 
 import java.util.*;
 import java.time.*;
 
 public class Main {
+
+    private static int readInt(Scanner scanner) {
+        while (!scanner.hasNextInt()) {
+            System.out.println("Invalid input. Please enter a number:");
+            scanner.next();
+        }
+
+        return scanner.nextInt();
+    }
 
     public static void main(String[] args) {
 
@@ -14,8 +24,9 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         EmployeeManager manager = new EmployeeManager();
-        WeeklySchedule schedule = new WeeklySchedule();
-        ShiftHistory history = new ShiftHistory();
+        ScheduleDAO scheduleDAO = new ScheduleDAO();
+        WeeklySchedule schedule = scheduleDAO.loadCurrentSchedule(manager.getAllEmployees());
+        ShiftHistory history = new ShiftHistory(scheduleDAO.loadHistory(manager.getAllEmployees()));
 
         // Welcome message
         System.out.println("=================================");
@@ -29,7 +40,7 @@ public class Main {
         System.out.println("1 - Yes");
         System.out.println("2 - No");
 
-        int initChoice = scanner.nextInt();
+        int initChoice = readInt(scanner);
 
         if (initChoice == 1) {
             DataInitializer.initialize(manager, history);
@@ -37,10 +48,20 @@ public class Main {
             System.out.println("System loaded with sample data!");
         }
         else if (initChoice == 2) {
-            System.out.println("System started without data.");
+            data.DatabaseInitializer.clearData();
+            manager = new EmployeeManager();
+            schedule = new WeeklySchedule();
+            history = new ShiftHistory();
+            scheduleDAO.saveCurrentSchedule(schedule);
+            System.out.println("Database cleared. System started without data.");
         }
         else {
-            System.out.println("Invalid choice, starting without data.");
+            data.DatabaseInitializer.clearData();
+            manager = new EmployeeManager();
+            schedule = new WeeklySchedule();
+            history = new ShiftHistory();
+            scheduleDAO.saveCurrentSchedule(schedule);
+            System.out.println("Invalid choice. Database cleared and system started without data.");
         }
 
         while (true) {
@@ -53,7 +74,7 @@ public class Main {
             System.out.println("Please enter your choice");
 
 
-            int choice = scanner.nextInt();
+            int choice = readInt(scanner);
 
             if (choice == 3) {
                 System.out.println("Goodbye!");
@@ -91,13 +112,13 @@ public class Main {
                     System.out.println("10 - Block shift");
                     System.out.println("11 - Exit");
 
-                    int hrChoice = scanner.nextInt();
+                    int hrChoice = readInt(scanner);
 
                     // Change submission deadline
                     if (hrChoice == 1) {
 
                         System.out.println("Enter day (1=Sunday ... 7=Saturday):");
-                        int dayInput = scanner.nextInt();
+                        int dayInput = readInt(scanner);
 
                         DayOfWeek day;
 
@@ -115,11 +136,17 @@ public class Main {
                         }
 
                         System.out.println("Enter hour (0-23):");
-                        int hour = scanner.nextInt();
+                        int hour = readInt(scanner);
+
+                        if (hour < 0 || hour > 23) {
+                            System.out.println("Invalid hour");
+                            continue;
+                        }
 
                         LocalTime time = LocalTime.of(hour, 0);
 
                         schedule.setSubmissionDeadline(day, time);
+                        scheduleDAO.saveCurrentSchedule(schedule);
                         System.out.println("Deadline updated to: " + day + " at " + time);
                     }
 
@@ -132,8 +159,28 @@ public class Main {
                         System.out.print("Enter name: ");
                         String name = scanner.next();
 
-                        Employee newEmp = new Employee(id, name,
-                                LocalDate.now(), 0, "Default", "000");
+                        System.out.print("Enter branch ID: ");
+                        String branchId = scanner.next();
+
+                        Branch branch = new Branch(branchId);
+
+                        System.out.println("Is this employee a driver?");
+                        System.out.println("1 - Yes");
+                        System.out.println("2 - No");
+                        int driverChoice = readInt(scanner);
+
+                        Employee newEmp;
+
+                        if (driverChoice == 1) {
+                            System.out.print("Enter license type: ");
+                            String licenseType = scanner.next();
+
+                            newEmp = new Driver(id, name,
+                                    LocalDate.now(), 0, "Default", "000", branch, licenseType);
+                        } else {
+                            newEmp = new Employee(id, name,
+                                    LocalDate.now(), 0, "Default", "000", branch);
+                        }
 
                         // Ask for roles
                         System.out.println("Assign roles:");
@@ -146,7 +193,7 @@ public class Main {
                         }
 
                         System.out.print("Choose role: ");
-                        choice = scanner.nextInt();
+                        choice = readInt(scanner);
 
                         if (choice < 1 || choice > rolesList.size()) {
                             System.out.println("Invalid choice!");
@@ -167,7 +214,17 @@ public class Main {
 
                             String status = e.isActive() ? "" : " (FIRED)";
 
-                            System.out.println(e.getId() + " - " + e.getName() + status);
+                            String branchId = e.getBranch() == null ? "No branch" : e.getBranch().getId();
+
+                            String driverInfo = "";
+
+                            if (e instanceof Driver) {
+                                Driver driver = (Driver) e;
+                                driverInfo = " - License: " + driver.getLicenseType();
+                            }
+
+                            System.out.println(e.getId() + " - " + e.getName()
+                                    + " - Branch: " + branchId + driverInfo + status);
                         }
                     }
                     // View history menu
@@ -181,7 +238,7 @@ public class Main {
                             System.out.println("3 - change history start date");
                             System.out.println("4 - Back");
 
-                            int histChoice = scanner.nextInt();
+                            int histChoice = readInt(scanner);
 
                             // View all history
                             if (histChoice == 1) {
@@ -199,11 +256,18 @@ public class Main {
                             else if (histChoice == 2) {
 
                                 System.out.println("Enter date (year month day):");
-                                int year = scanner.nextInt();
-                                int month = scanner.nextInt();
-                                int day = scanner.nextInt();
+                                int year = readInt(scanner);
+                                int month = readInt(scanner);
+                                int day = readInt(scanner);
 
-                                LocalDate date = LocalDate.of(year, month, day);
+                                LocalDate date;
+
+                                try {
+                                    date = LocalDate.of(year, month, day);
+                                } catch (Exception e) {
+                                    System.out.println("Invalid date!");
+                                    continue;
+                                }
 
                                 WeeklySchedule week = history.getWeek(date);
 
@@ -251,7 +315,7 @@ public class Main {
                         }
 
                         System.out.println("Enter day (1=Sunday ... 7=Saturday):");
-                        int dayInput = scanner.nextInt();
+                        int dayInput = readInt(scanner);
 
                         DayOfWeek day;
 
@@ -283,9 +347,18 @@ public class Main {
                         }
 
                         System.out.println("Enter shift type (1=Morning, 2=Evening):");
-                        int typeInput = scanner.nextInt();
+                        int typeInput = readInt(scanner);
 
-                        ShiftType type = (typeInput == 1) ? ShiftType.MORNING : ShiftType.EVENING;
+                        ShiftType type;
+
+                        if (typeInput == 1) {
+                            type = ShiftType.MORNING;
+                        } else if (typeInput == 2) {
+                            type = ShiftType.EVENING;
+                        } else {
+                            System.out.println("Invalid shift type");
+                            continue;
+                        }
 
                         ShiftSlot slot = new ShiftSlot(day, type);
                         Shift shift = schedule.getShift(slot);
@@ -334,7 +407,7 @@ public class Main {
                             System.out.println("5 - Exceptional assignment");
                             System.out.println("6 - Back");
 
-                            int assignChoice = scanner.nextInt();
+                            int assignChoice = readInt(scanner);
 
                             if (assignChoice == 2) {
 
@@ -368,6 +441,7 @@ public class Main {
 
                                 // Assign manager
                                 if (shift.setManager(m)) {
+                                    scheduleDAO.saveCurrentSchedule(schedule);
                                     System.out.println("Manager assigned!");
                                 } else {
                                     System.out.println("Manager assignment failed!");
@@ -399,7 +473,7 @@ public class Main {
 
                                 System.out.println((rolesList.size() + 1) + " - Back");
 
-                                int roleChoice = scanner.nextInt();
+                                int roleChoice = readInt(scanner);
 
                                 if (roleChoice == rolesList.size() + 1) {
                                     continue;
@@ -414,16 +488,20 @@ public class Main {
 
 
                                 System.out.print("Enter required amount: ");
-                                int amount = scanner.nextInt();
+                                int amount = readInt(scanner);
 
                                 if (amount < 0) {
                                     System.out.println("Invalid amount");
                                     continue;
                                 }
 
-                                shift.setRequiredRole(role, amount);
+                                if (!shift.setRequiredRole(role, amount)) {
+                                    System.out.println("Cannot set STOCKER requirement to 0 when this shift has a delivery!");
+                                    continue;
+                                }
 
                                 System.out.println("Shift requirement updated!");
+                                scheduleDAO.saveCurrentSchedule(schedule);
                                 break;
                             }
 
@@ -481,9 +559,26 @@ public class Main {
                                     continue;
                                 }
 
+                                if (role.equals("DRIVER")) {
+                                    if (!(e2 instanceof Driver)) {
+                                        System.out.println("Employee " + e2.getName() + " is not a driver!");
+                                        continue;
+                                    }
+
+                                    Driver driver = (Driver) e2;
+
+                                    if (!shift.canDriverHandleDelivery(driver)) {
+                                        System.out.println("Driver license does not match the delivery truck type!");
+                                        System.out.println("Required license: "
+                                                + shift.getDelivery().getTruckType().getRequiredLicenseType());
+                                        continue;
+                                    }
+                                }
+
                                 // Replace
                                 shift.removeEmployee(e1);
                                 shift.addEmployee(e2, role);
+                                scheduleDAO.saveCurrentSchedule(schedule);
 
                                 System.out.println("Employee replaced successfully!");
                             }
@@ -519,7 +614,7 @@ public class Main {
 
                                 System.out.println((rolesList.size() + 1) + " - Back");
 
-                                int roleChoice = scanner.nextInt();
+                                int roleChoice = readInt(scanner);
 
                                 if (roleChoice == rolesList.size() + 1) {
                                     continue;
@@ -532,9 +627,25 @@ public class Main {
 
                                 String role = rolesList.get(roleChoice - 1);
 
+                                if (role.equals("DRIVER")) {
+                                    if (!(emp instanceof Driver)) {
+                                        System.out.println("Employee is not a driver!");
+                                        continue;
+                                    }
+
+                                    Driver driver = (Driver) emp;
+
+                                    if (!shift.canDriverHandleDelivery(driver)) {
+                                        System.out.println("Driver license does not match the delivery truck type!");
+                                        System.out.println("Required license: "
+                                                + shift.getDelivery().getTruckType().getRequiredLicenseType());
+                                        continue;
+                                    }
+                                }
 
                                 // Assign employee
                                 if (shift.addEmployee(emp, role)) {
+                                    scheduleDAO.saveCurrentSchedule(schedule);
                                     System.out.println("Employee assigned!");
                                 } else {
                                     System.out.println("Assignment failed!");
@@ -562,7 +673,7 @@ public class Main {
                                     System.out.println((i + 1) + " - " + rolesList.get(i));
                                 }
 
-                                int roleChoice = scanner.nextInt();
+                                int roleChoice = readInt(scanner);
 
                                 if (roleChoice < 1 || roleChoice > rolesList.size()) {
                                     System.out.println("Invalid choice!");
@@ -576,7 +687,24 @@ public class Main {
                                     continue;
                                 }
 
+                                if (role.equals("DRIVER")) {
+                                    if (!(emp instanceof Driver)) {
+                                        System.out.println("Employee is not a driver!");
+                                        continue;
+                                    }
+
+                                    Driver driver = (Driver) emp;
+
+                                    if (!shift.canDriverHandleDelivery(driver)) {
+                                        System.out.println("Driver license does not match the delivery truck type!");
+                                        System.out.println("Required license: "
+                                                + shift.getDelivery().getTruckType().getRequiredLicenseType());
+                                        continue;
+                                    }
+                                }
+
                                 shift.getAssignedEmployees().put(emp, role);
+                                scheduleDAO.saveCurrentSchedule(schedule);
 
                                 System.out.println("Exceptional assignment done!");
                             }
@@ -600,13 +728,14 @@ public class Main {
                         schedule = new WeeklySchedule();
 
                         for (String role : RoleRegistry.getRoles()) {
-                            if (!role.equals("SHIFT_MANAGER")) {
+                            if (!role.equals("SHIFT_MANAGER") && !role.equals("DRIVER")) {
                                 for (Shift shift : schedule.getAllShifts()) {
                                     shift.setRequiredRole(role, 1);
                                 }
                             }
                         }
 
+                        scheduleDAO.saveCurrentSchedule(schedule);
                         System.out.println("Week saved and new week started!");
                     }
                     else if (hrChoice == 8) {
@@ -626,6 +755,7 @@ public class Main {
                         }
 
                         emp.setActive(false);
+                        manager.saveEmployee(emp);
 
                         System.out.println("Employee " + emp.getName() + " is now fired");
                     }
@@ -638,7 +768,7 @@ public class Main {
                         System.out.println("2 - Add role to employee");
                         System.out.println("3 - Back");
 
-                        int subChoice = scanner.nextInt();
+                        int subChoice = readInt(scanner);
 
                         // ===== Add role to system =====
                         if (subChoice == 1) {
@@ -653,12 +783,13 @@ public class Main {
 
                             RoleRegistry.addRole(role);
 
-                            if (!role.equals("SHIFT_MANAGER")) {
+                            if (!role.equals("SHIFT_MANAGER") && !role.equals("DRIVER")) {
                                 for (Shift shift : schedule.getAllShifts()) {
                                     shift.setRequiredRole(role, 1);
                                 }
                             }
 
+                            scheduleDAO.saveCurrentSchedule(schedule);
                             System.out.println("Role " + role + " added successfully!");
 
 
@@ -687,7 +818,7 @@ public class Main {
                             }
 
                             System.out.print("Choose role: ");
-                             choice = scanner.nextInt();
+                             choice = readInt(scanner);
 
                             if (choice < 1 || choice > rolesList.size()) {
                                 System.out.println("Invalid choice!");
@@ -706,6 +837,7 @@ public class Main {
                                 continue;
                             }
                             emp.addRole(role);
+                            manager.saveEmployee(emp);
 
                             System.out.println("Role added to employee!");
                         }
@@ -722,7 +854,7 @@ public class Main {
                     else if (hrChoice == 10) {
 
                         System.out.println("Enter day (1=Sunday ... 7=Friday):");
-                        int dayInput = scanner.nextInt();
+                        int dayInput = readInt(scanner);
 
                         DayOfWeek day;
 
@@ -739,7 +871,7 @@ public class Main {
                         }
 
                         System.out.println("Enter shift type (1=Morning, 2=Evening):");
-                        int typeInput = scanner.nextInt();
+                        int typeInput = readInt(scanner);
 
                         ShiftType type;
 
@@ -761,6 +893,7 @@ public class Main {
                         }
 
                         shift.setBlocked(true);
+                        scheduleDAO.saveCurrentSchedule(schedule);
 
                         System.out.println("Shift blocked successfully!");
                     }
@@ -807,7 +940,7 @@ public class Main {
                     System.out.println("2 - View weekly schedule");
                     System.out.println("3 - Exit");
 
-                    int empChoice = scanner.nextInt();
+                    int empChoice = readInt(scanner);
 
                     // Submit availability
                     if (empChoice == 1) {
@@ -823,7 +956,7 @@ public class Main {
                             System.out.println("1 - Add shift");
                             System.out.println("2 - Back");
 
-                            int subChoice = scanner.nextInt();
+                            int subChoice = readInt(scanner);
 
                             if (subChoice == 2) {
                                 break; // back to employee menu
@@ -831,7 +964,7 @@ public class Main {
 
                             // Ask for day
                             System.out.println("Enter day (1=Sunday ... 7=Saturday):");
-                            int dayInput = scanner.nextInt();
+                            int dayInput = readInt(scanner);
 
                             DayOfWeek day;
 
@@ -852,9 +985,18 @@ public class Main {
 
                             // Ask for shift type
                             System.out.println("Enter shift type (1=Morning, 2=Evening):");
-                            int typeInput = scanner.nextInt();
+                            int typeInput = readInt(scanner);
 
-                            ShiftType type = (typeInput == 1) ? ShiftType.MORNING : ShiftType.EVENING;
+                            ShiftType type;
+
+                            if (typeInput == 1) {
+                                type = ShiftType.MORNING;
+                            } else if (typeInput == 2) {
+                                type = ShiftType.EVENING;
+                            } else {
+                                System.out.println("Invalid shift type");
+                                continue;
+                            }
 
 
                             ShiftSlot slot = new ShiftSlot(day, type);
@@ -874,6 +1016,7 @@ public class Main {
 
                             // Add availability
                             employee.addAvailableShift(slot);
+                            manager.saveEmployee(employee);
 
                             System.out.println("Availability added!");
 
@@ -909,3 +1052,4 @@ public class Main {
         }
     }
 }
+

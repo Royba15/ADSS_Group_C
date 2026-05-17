@@ -2,6 +2,7 @@ package service;
 
 import java.util.*;
 
+import data.EmployeeDAO;
 import domain.Employee;
 import domain.ShiftSlot;
 
@@ -9,14 +10,27 @@ public class EmployeeManager {
 
     // Stores all employees in the system (by ID)
     private Map<String, Employee> employees;
+    private EmployeeDAO employeeDAO;
 
     public EmployeeManager() {
         this.employees = new LinkedHashMap<>();
+        this.employeeDAO = new EmployeeDAO();
+
+        for (Employee employee : employeeDAO.findAll()) {
+            employees.put(employee.getId(), employee);
+        }
     }
 
     // Add a new employee to the system
     public void addEmployee(Employee e) {
         employees.put(e.getId(), e);
+        employeeDAO.save(e);
+    }
+
+    // Save changes made to an existing employee
+    public void saveEmployee(Employee e) {
+        employees.put(e.getId(), e);
+        employeeDAO.save(e);
     }
 
     // Get employee by ID
@@ -48,18 +62,14 @@ public class EmployeeManager {
     // Check if employee is available for a slot
     private boolean isEmployeeAvailable(Employee e, ShiftSlot slot) {
 
-        if (!e.hasSubmittedAvailability()) {
-            return true;
-        }
-
-        return e.getAvailableShifts().contains(slot);
+        return e.isAvailableFor(slot);
     }
     public void resetAllEmployeesAvailability() {
 
         for (Employee e : employees.values()) {
 
-            e.getAvailableShifts().clear();
-            e.setSubmittedAvailability(false);
+            e.clearAvailabilitySubmission();
+            employeeDAO.save(e);
         }
     }
 }

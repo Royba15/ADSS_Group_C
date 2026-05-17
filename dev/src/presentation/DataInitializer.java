@@ -11,16 +11,16 @@ public class DataInitializer {
 
     public static void initialize(EmployeeManager manager, ShiftHistory history) {
 
-        RoleRegistry.addRole("CASHIER");
-        RoleRegistry.addRole("STOCKER");
-        RoleRegistry.addRole("SHIFT_MANAGER");
+        Branch mainBranch = new Branch("1");
 
         // ===== Employees =====
-        Employee e1 = new Employee("1", "Omer", LocalDate.now(), 0, "Full", "123");
-        Employee e2 = new Employee("2", "Dana", LocalDate.now(), 0, "Part", "456");
-        Employee e3 = new Employee("3", "Yossi", LocalDate.now(), 0, "Full", "789");
-        Employee e4 = new Employee("4", "Noa", LocalDate.now(), 0, "Student", "321");
-        Employee e5 = new Employee("5", "Amit", LocalDate.now(), 0, "Senior", "654");
+        Employee e1 = new Employee("1", "Omer", LocalDate.now(), 0, "Full", "123", mainBranch);
+        Employee e2 = new Employee("2", "Dana", LocalDate.now(), 0, "Part", "456", mainBranch);
+        Employee e3 = new Employee("3", "Yossi", LocalDate.now(), 0, "Full", "789", mainBranch);
+        Employee e4 = new Employee("4", "Noa", LocalDate.now(), 0, "Student", "321", mainBranch);
+        Employee e5 = new Employee("5", "Amit", LocalDate.now(), 0, "Senior", "654", mainBranch);
+        Driver e6 = new Driver("6", "Lior", LocalDate.now(), 0, "Full", "987", mainBranch, "B");
+        Driver e7 = new Driver("7", "Roni", LocalDate.now(), 0, "Full", "654", mainBranch, "C");
 
         // ===== Roles =====
         e1.addRole("SHIFT_MANAGER");
@@ -40,6 +40,8 @@ public class DataInitializer {
         manager.addEmployee(e3);
         manager.addEmployee(e4);
         manager.addEmployee(e5);
+        manager.addEmployee(e6);
+        manager.addEmployee(e7);
 
         // ===== Make everyone available for all shifts =====
         for (DayOfWeek day : new DayOfWeek[]{
@@ -59,6 +61,8 @@ public class DataInitializer {
                 e3.addAvailableShift(slot);
                 e4.addAvailableShift(slot);
                 e5.addAvailableShift(slot);
+                e6.addAvailableShift(slot);
+                e7.addAvailableShift(slot);
             }
         }
 
@@ -77,6 +81,14 @@ public class DataInitializer {
             // Employees
             shift.addEmployee(e1,"CASHIER");
             shift.addEmployee(e2, "STOCKER");
+
+            if (shift.getRequiredRoleAmount("DRIVER") > 0) {
+                if (shift.canDriverHandleDelivery(e6)) {
+                    shift.addEmployee(e6, "DRIVER");
+                } else {
+                    shift.addEmployee(e7, "DRIVER");
+                }
+            }
         }
 
         // ===== Add to history =====

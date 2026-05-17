@@ -11,10 +11,13 @@ public class Shift {
     private Map<Employee, String> assignedEmployees;
 
     // Defines how many employees are required for each role (excluding manager)
-    private Map<String, Integer> requiredRoles;
+    private StaffingRequirement staffingRequirement;
 
     // The shift manager (only one allowed)
     private Employee manager;
+
+    // Delivery planned for this shift, if one exists
+    private Delivery delivery;
 
     //if the super closed in this shift
     private boolean blocked = false;
@@ -22,17 +25,52 @@ public class Shift {
     public Shift(ShiftSlot slot) {
         this.slot = slot;
         this.assignedEmployees = new LinkedHashMap<>();
-        this.requiredRoles = new LinkedHashMap<>();
+        this.staffingRequirement = new StaffingRequirement();
         this.manager = null;
-
-        // Default requirement: 1 employee per role (excluding manager)
-        requiredRoles.put("CASHIER", 1);
-        requiredRoles.put("STOCKER", 1);
+        this.delivery = null;
     }
 
     // Allows HR manager to set required number of employees per role
-    public void setRequiredRole(String role, int amount) {
-        requiredRoles.put(role, amount);
+    public boolean setRequiredRole(String role, int amount) {
+        if (hasDelivery() && Objects.equals(role, "STOCKER") && amount == 0) {
+            return false;
+        }
+
+        staffingRequirement.setRequiredRole(role, amount);
+        return true;
+    }
+
+    public int getRequiredRoleAmount(String role) {
+        return staffingRequirement.getRequiredAmount(role);
+    }
+
+    public Set<String> getRequiredRoles() {
+        return staffingRequirement.getRequiredRoles();
+    }
+
+    public boolean hasDelivery() {
+        return delivery != null;
+    }
+
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
+
+        if (delivery != null && getRequiredRoleAmount("STOCKER") == 0) {
+            staffingRequirement.setRequiredRole("STOCKER", 1);
+        }
+    }
+
+    public Delivery getDelivery() {
+        return delivery;
+    }
+
+    public boolean canDriverHandleDelivery(Driver driver) {
+        if (delivery == null) {
+            return true;
+        }
+
+        return driver.getLicenseType().equalsIgnoreCase(
+                delivery.getTruckType().getRequiredLicenseType());
     }
 
     // Assign a shift manager (only one allowed)
@@ -53,7 +91,7 @@ public class Shift {
         }
 
         // Check if employee is available for this shift
-        if (e.hasSubmittedAvailability() && !e.getAvailableShifts().contains(slot)) {
+        if (!e.isAvailableFor(slot)) {
             return false;
         }
         if (!e.isActive()) {
@@ -90,13 +128,25 @@ public class Shift {
         }
 
         // Check if employee is available for this shift
-        if (e.hasSubmittedAvailability() && !e.getAvailableShifts().contains(slot)) {
+        if (!e.isAvailableFor(slot)) {
             return false;
+        }
+
+        if (Objects.equals(role, "DRIVER")) {
+            if (!(e instanceof Driver)) {
+                return false;
+            }
+
+            Driver driver = (Driver) e;
+
+            if (!canDriverHandleDelivery(driver)) {
+                return false;
+            }
         }
 
         // Check if the required number of employees for this role is reached
         int currentCount = countRole(role);
-        int requiredCount = requiredRoles.getOrDefault(role, 0);
+        int requiredCount = staffingRequirement.getRequiredAmount(role);
 
         if (currentCount >= requiredCount) {
             return false;
@@ -126,6 +176,14 @@ public class Shift {
         return manager;
     }
 
+    public void restoreManager(Employee manager) {
+        this.manager = manager;
+    }
+
+    public void restoreAssignedEmployee(Employee employee, String role) {
+        assignedEmployees.put(employee, role);
+    }
+
     public Map<Employee, String> getAssignedEmployees() {
         return assignedEmployees;
     }
@@ -143,18 +201,18 @@ public class Shift {
         // Count employees per role
         Map<String, Integer> count = new LinkedHashMap<>();
 
-        for (String r : requiredRoles.keySet()) {
+        for (String r : staffingRequirement.getRequiredRoles()) {
             count.put(r, 0);
         }
 
         for (Employee e : assignedEmployees.keySet()) {
             String r = assignedEmployees.get(e);
-            count.put(r, count.get(r) + 1);
+            count.put(r, count.getOrDefault(r, 0) + 1);
         }
 
         // Validate requirements
-        for (String r : requiredRoles.keySet()) {
-            if (count.get(r) < requiredRoles.get(r)) {
+        for (String r : staffingRequirement.getRequiredRoles()) {
+            if (count.get(r) < staffingRequirement.getRequiredAmount(r)) {
                 return false;
             }
         }
@@ -170,18 +228,18 @@ public class Shift {
         // Count current assignments
         Map<String, Integer> current = new LinkedHashMap<>();
 
-        for (String r : requiredRoles.keySet()) {
+        for (String r : staffingRequirement.getRequiredRoles()) {
             current.put(r, 0);
         }
 
         for (Employee e : assignedEmployees.keySet()) {
             String r = assignedEmployees.get(e);
-            current.put(r, current.get(r) + 1);
+            current.put(r, current.getOrDefault(r, 0) + 1);
         }
 
         // Calculate remaining
-        for (String r : requiredRoles.keySet()) {
-            int need = requiredRoles.get(r);
+        for (String r : staffingRequirement.getRequiredRoles()) {
+            int need = staffingRequirement.getRequiredAmount(r);
             int have = current.get(r);
             remaining.put(r, Math.max(0, need - have));
         }

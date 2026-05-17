@@ -37,11 +37,32 @@ public class WeeklySchedule {
             shifts.put(morning, new Shift(morning));
             shifts.put(evening, new Shift(evening));
         }
+
+        applyDeliveryDriverRequirements();
+    }
+
+    private void applyDeliveryDriverRequirements() {
+        for (Delivery delivery : DeliveryMock.getDeliveries()) {
+            Shift shift = shifts.get(delivery.getSlot());
+
+            if (shift != null) {
+                shift.setDelivery(delivery);
+                shift.setRequiredRole("DRIVER", 1);
+            }
+        }
     }
     // Allows HR manager to change submission deadline
     public void setSubmissionDeadline(DayOfWeek day, LocalTime time) {
         this.submissionDay = day;
         this.submissionTime = time;
+    }
+
+    public DayOfWeek getSubmissionDay() {
+        return submissionDay;
+    }
+
+    public LocalTime getSubmissionTime() {
+        return submissionTime;
     }
 
     public boolean canSubmit(LocalDateTime currentTime) {
