@@ -123,7 +123,7 @@ public class InventoryService {
     public OrderReport generateOrderReport() {
         List<Product> toOrder = new ArrayList<>();
         for (Product p : products) {
-            if (p.getInventory().getTotalQuantity()==0) toOrder.add(p);
+            if (p.checkMinThreshold()) toOrder.add(p);
         }
         return new OrderReport(toOrder);
     }
@@ -170,10 +170,7 @@ public class InventoryService {
 
     // Add a new product with all details
     // Note: Categories must already exist - we don't create them automatically
-    public boolean addNewProduct(int productID, String productName, int manufacturerID,
-                                 double costPrice, double sellingPrice, String catalogID,
-                                 String mainCategoryName, String subCategoryName, String subSubCategoryName,
-                                 int shelfQuantity, int warehouseQuantity, int minThreshold, String location) {
+    public boolean addNewProduct(int productID, String productName, int manufacturerID, double costPrice, double sellingPrice, String catalogID, String mainCategoryName, String subCategoryName, String subSubCategoryName, int shelfQuantity, int warehouseQuantity, int minThreshold, String location) {
 
         // Validation
         if (productName == null || productName.trim().isEmpty()) {
@@ -269,5 +266,40 @@ public class InventoryService {
     // Get all products
     public List<Product> getAllProducts() {
         return new ArrayList<>(products);
+    }
+
+    // Delete a product by ID (fixes "Missing Product Delete" feedback)
+    public boolean deleteProduct(int productID) {
+        Product p = getProductByID(productID);
+        if (p == null) return false;
+        products.remove(p);
+        removeFromMap(p.getMainCategory(), p);
+        removeFromMap(p.getSubCategory(), p);
+        removeFromMap(p.getSubSubCategory(), p);
+        return true;
+    }
+
+    private void removeFromMap(Category cat, Product p) {
+        List<Product> list = categoryToProducts.get(cat);
+        if (list != null) list.remove(p);
+    }
+
+    // Apply discount to all products of a specific supplier (fixes Req 6 feedback) /////// צריך לתקן כי צריך להחליט האם supplierCatalogID זה המשתנה שאליו אנחנו מתייחסים כשמדובר בספק, ובנוסף לבדוק האם צריך לשנות את זה למספר אינטגר או להשאיר סטרינג
+    public boolean applyDiscountToSupplier(int supplierID, String promoName, double discount,
+                                           LocalDateTime start, LocalDateTime end) {
+        if (discount < 0 || discount > 100)
+            throw new IllegalArgumentException("Discount must be between 0 and 100");
+        if (start == null || end == null || !end.isAfter(start))
+            throw new IllegalArgumentException("End date must be after start date");
+
+        boolean found = false;
+        DiscountPromotion promo = new DiscountPromotion(supplierID, promoName, discount, start, end);
+        for (Product p : products) {
+            if (p.getSupplierID() == supplierID) {
+                p.assignPromotion(promo);
+                found = true;
+            }
+        }
+        return found;
     }
 }

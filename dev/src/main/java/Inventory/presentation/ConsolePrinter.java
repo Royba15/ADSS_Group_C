@@ -21,6 +21,7 @@ public class ConsolePrinter {
         System.out.println("6. Report Defective Product");
         System.out.println("7. Add New Category");
         System.out.println("8. Add New Product");
+        System.out.println("9. Delete Product");
         System.out.println("0. Exit");
         System.out.print("Choose an option: ");
     }
@@ -40,6 +41,7 @@ public class ConsolePrinter {
         printHeader("APPLY DISCOUNT");
         System.out.println("1. Apply Discount to Product by ID");
         System.out.println("2. Apply Discount to Category");
+        System.out.println("3. Apply Discount to Supplier");
         System.out.println("0. Back");
         System.out.print("Choose an option: ");
     }

@@ -94,6 +94,9 @@ public class InventoryMenu {
             case 8:
                 addNewProductFlow();
                 break;
+            case 9:
+                deleteProductFlow();
+                break;
             case 0: {}
             break;
             default:
@@ -173,6 +176,9 @@ public class InventoryMenu {
                 case 2:
                     applyDiscountToCategoryFlow();
                     break;
+                case 3:
+                    applyDiscountToSupplierFlow();
+                    break;
                 case 0: break;
                 default:
                     printer.printError("Invalid option.");
@@ -233,6 +239,46 @@ public class InventoryMenu {
             }
         } catch (DateTimeParseException e) {
             printer.printError("Invalid format! Use dd.MM.yyyy (e.g., 31.12.2000).");
+        } catch (Exception e) {
+            printer.printError("Error: " + e.getMessage());
+        }
+    }
+
+    // Apply discount to all products of a supplier (fixes Req 6 feedback)
+    private void applyDiscountToSupplierFlow() {
+        try {
+            printer.promptForSupplierID();
+            int supplierID = Integer.parseInt(scanner.nextLine().trim());
+
+            printer.promptForPromoName();
+            String promoName = scanner.nextLine().trim();
+            if (promoName.isEmpty()) {
+                printer.printError("Promotion name cannot be empty.");
+                return;
+            }
+
+            printer.promptForDiscount();
+            double discount = Double.parseDouble(scanner.nextLine().trim());
+
+            printer.promptForDate("start");
+            java.time.LocalDate startDate = java.time.LocalDate.parse(scanner.nextLine().trim(), DATE_FORMAT);
+            java.time.LocalDateTime start = startDate.atStartOfDay();
+            printer.promptForDate("end");
+            java.time.LocalDate endDate = java.time.LocalDate.parse(scanner.nextLine().trim(), DATE_FORMAT);
+            java.time.LocalDateTime end = endDate.atTime(23, 59);
+
+            if (!end.isAfter(start)) {
+                printer.printError("End date must be after start date.");
+                return;
+            }
+
+            if (service.applyDiscountToSupplier(supplierID, promoName, discount, start, end)) {
+                printer.printSuccess("Discount applied to all products from supplier " + supplierID);
+            } else {
+                printer.printError("No products found for supplier ID " + supplierID);
+            }
+        } catch (DateTimeParseException e) {
+            printer.printError("Invalid format! Use dd.MM.yyyy (e.g., 17.05.2026).");
         } catch (Exception e) {
             printer.printError("Error: " + e.getMessage());
         }
@@ -437,6 +483,39 @@ public class InventoryMenu {
             printer.printError("Invalid input. Please enter valid numbers.");
         } catch (Exception e) {
             printer.printError("Error adding product: " + e.getMessage());
+        }
+    }
+
+    // Delete product by ID (fixes "Missing Product Delete" feedback)
+    private void deleteProductFlow() {
+        try {
+            printer.printHeader("DELETE PRODUCT");
+            printer.promptForProductId();
+            int id = Integer.parseInt(scanner.nextLine().trim());
+
+            Product product = service.getProductByID(id);
+            if (product == null) {
+                printer.printError("Product not found.");
+                return;
+            }
+
+            printer.printProduct(product);
+            System.out.print("Are you sure you want to delete this product? (yes/no): ");
+            String confirm = scanner.nextLine().trim().toLowerCase();
+            if (!confirm.equals("yes")) {
+                printer.printSuccess("Deletion cancelled.");
+                return;
+            }
+
+            if (service.deleteProduct(id)) {
+                printer.printSuccess("Product deleted successfully.");
+            } else {
+                printer.printError("Failed to delete product.");
+            }
+        } catch (NumberFormatException e) {
+            printer.printError("Invalid ID format.");
+        } catch (Exception e) {
+            printer.printError("Error deleting product: " + e.getMessage());
         }
     }
 
