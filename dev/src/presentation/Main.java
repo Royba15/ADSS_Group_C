@@ -1,8 +1,11 @@
 package presentation;
 
 import domain.*;
+import repository.DaoScheduleRepository;
+import repository.DaoSystemStateRepository;
+import repository.ScheduleRepository;
+import repository.SystemStateRepository;
 import service.*;
-import data.ScheduleDAO;
 
 import java.util.*;
 import java.time.*;
@@ -24,9 +27,10 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         EmployeeManager manager = new EmployeeManager();
-        ScheduleDAO scheduleDAO = new ScheduleDAO();
-        WeeklySchedule schedule = scheduleDAO.loadCurrentSchedule(manager.getAllEmployees());
-        ShiftHistory history = new ShiftHistory(scheduleDAO.loadHistory(manager.getAllEmployees()));
+        ScheduleRepository scheduleRepository = new DaoScheduleRepository();
+        SystemStateRepository systemStateRepository = new DaoSystemStateRepository();
+        WeeklySchedule schedule = scheduleRepository.loadCurrentSchedule(manager.getAllEmployees());
+        ShiftHistory history = new ShiftHistory(scheduleRepository.loadHistory(manager.getAllEmployees()));
 
         // Welcome message
         System.out.println("=================================");
@@ -48,19 +52,19 @@ public class Main {
             System.out.println("System loaded with sample data!");
         }
         else if (initChoice == 2) {
-            data.DatabaseInitializer.clearData();
+            systemStateRepository.clearData();
             manager = new EmployeeManager();
             schedule = new WeeklySchedule();
             history = new ShiftHistory();
-            scheduleDAO.saveCurrentSchedule(schedule);
+            scheduleRepository.saveCurrentSchedule(schedule);
             System.out.println("Database cleared. System started without data.");
         }
         else {
-            data.DatabaseInitializer.clearData();
+            systemStateRepository.clearData();
             manager = new EmployeeManager();
             schedule = new WeeklySchedule();
             history = new ShiftHistory();
-            scheduleDAO.saveCurrentSchedule(schedule);
+            scheduleRepository.saveCurrentSchedule(schedule);
             System.out.println("Invalid choice. Database cleared and system started without data.");
         }
 
@@ -146,7 +150,7 @@ public class Main {
                         LocalTime time = LocalTime.of(hour, 0);
 
                         schedule.setSubmissionDeadline(day, time);
-                        scheduleDAO.saveCurrentSchedule(schedule);
+                        scheduleRepository.saveCurrentSchedule(schedule);
                         System.out.println("Deadline updated to: " + day + " at " + time);
                     }
 
@@ -441,7 +445,7 @@ public class Main {
 
                                 // Assign manager
                                 if (shift.setManager(m)) {
-                                    scheduleDAO.saveCurrentSchedule(schedule);
+                                    scheduleRepository.saveCurrentSchedule(schedule);
                                     System.out.println("Manager assigned!");
                                 } else {
                                     System.out.println("Manager assignment failed!");
@@ -501,7 +505,7 @@ public class Main {
                                 }
 
                                 System.out.println("Shift requirement updated!");
-                                scheduleDAO.saveCurrentSchedule(schedule);
+                                scheduleRepository.saveCurrentSchedule(schedule);
                                 break;
                             }
 
@@ -578,7 +582,7 @@ public class Main {
                                 // Replace
                                 shift.removeEmployee(e1);
                                 shift.addEmployee(e2, role);
-                                scheduleDAO.saveCurrentSchedule(schedule);
+                                scheduleRepository.saveCurrentSchedule(schedule);
 
                                 System.out.println("Employee replaced successfully!");
                             }
@@ -645,7 +649,7 @@ public class Main {
 
                                 // Assign employee
                                 if (shift.addEmployee(emp, role)) {
-                                    scheduleDAO.saveCurrentSchedule(schedule);
+                                    scheduleRepository.saveCurrentSchedule(schedule);
                                     System.out.println("Employee assigned!");
                                 } else {
                                     System.out.println("Assignment failed!");
@@ -704,7 +708,7 @@ public class Main {
                                 }
 
                                 shift.getAssignedEmployees().put(emp, role);
-                                scheduleDAO.saveCurrentSchedule(schedule);
+                                scheduleRepository.saveCurrentSchedule(schedule);
 
                                 System.out.println("Exceptional assignment done!");
                             }
@@ -735,7 +739,7 @@ public class Main {
                             }
                         }
 
-                        scheduleDAO.saveCurrentSchedule(schedule);
+                        scheduleRepository.saveCurrentSchedule(schedule);
                         System.out.println("Week saved and new week started!");
                     }
                     else if (hrChoice == 8) {
@@ -789,7 +793,7 @@ public class Main {
                                 }
                             }
 
-                            scheduleDAO.saveCurrentSchedule(schedule);
+                            scheduleRepository.saveCurrentSchedule(schedule);
                             System.out.println("Role " + role + " added successfully!");
 
 
@@ -893,7 +897,7 @@ public class Main {
                         }
 
                         shift.setBlocked(true);
-                        scheduleDAO.saveCurrentSchedule(schedule);
+                        scheduleRepository.saveCurrentSchedule(schedule);
 
                         System.out.println("Shift blocked successfully!");
                     }

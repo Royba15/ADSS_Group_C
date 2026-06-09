@@ -5,29 +5,30 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import data.ScheduleDAO;
 import domain.WeeklySchedule;
+import repository.DaoScheduleRepository;
+import repository.ScheduleRepository;
 
 public class ShiftHistory {
 
     // Stores all weekly schedules by week start date
     private Map<LocalDate, WeeklySchedule> history;
-    private ScheduleDAO scheduleDAO;
+    private ScheduleRepository scheduleRepository;
 
     public ShiftHistory() {
         this.history = new LinkedHashMap<>();
-        this.scheduleDAO = new ScheduleDAO();
+        this.scheduleRepository = new DaoScheduleRepository();
     }
 
     public ShiftHistory(Map<LocalDate, WeeklySchedule> history) {
         this.history = new LinkedHashMap<>(history);
-        this.scheduleDAO = new ScheduleDAO();
+        this.scheduleRepository = new DaoScheduleRepository();
     }
 
     // Add a new weekly schedule to history
     public void addWeek(LocalDate startOfWeek, WeeklySchedule schedule) {
         history.put(startOfWeek, schedule);
-        scheduleDAO.saveHistoryWeek(startOfWeek, schedule);
+        scheduleRepository.saveHistoryWeek(startOfWeek, schedule);
     }
 
     // Get schedule for a specific week
@@ -51,7 +52,7 @@ public class ShiftHistory {
             }
         }
 
-        scheduleDAO.removeHistoryBefore(date);
+        scheduleRepository.removeHistoryBefore(date);
     }
     public WeeklySchedule getLastWeek() {
 

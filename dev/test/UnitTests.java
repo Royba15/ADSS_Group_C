@@ -13,6 +13,8 @@ import domain.ShiftType;
 import domain.StaffingRequirement;
 import domain.TruckType;
 import domain.WeeklySchedule;
+import presentation.DataInitializer;
+import service.EmployeeManager;
 import service.ShiftHistory;
 
 import java.time.DayOfWeek;
@@ -57,6 +59,10 @@ public class UnitTests {
         runDb("db_04_roleCanBeSavedAndLoaded", UnitTests::db_04_roleCanBeSavedAndLoaded);
         runDb("db_05_currentScheduleCanBeSavedAndLoaded", UnitTests::db_05_currentScheduleCanBeSavedAndLoaded);
 
+        if (failed == 0) {
+            restoreTestDatabaseToDataInitializerState();
+        }
+
         System.out.println();
         System.out.println("Passed: " + passed);
         System.out.println("Failed: " + failed);
@@ -93,6 +99,15 @@ public class UnitTests {
             failed++;
             System.out.println("[ERROR] " + testName + " - " + e.getMessage());
         }
+    }
+
+    private static void restoreTestDatabaseToDataInitializerState() {
+        data.DatabaseInitializer.clearData();
+
+        EmployeeManager manager = new EmployeeManager();
+        ShiftHistory history = new ShiftHistory();
+
+        DataInitializer.initialize(manager, history);
     }
 
     private static Employee employee(String id) {

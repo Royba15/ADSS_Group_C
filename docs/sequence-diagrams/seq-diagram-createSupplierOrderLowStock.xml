@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="idTQih7TmfFztJZ0UZL2">
+    <mxGraphModel dx="646" dy="454" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" parent="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=18;fontStyle=1;" value="Scenario 2: Create Supplier Order Due to Low Stock&lt;br&gt;(Sequence Diagram)" vertex="1">
+          <mxGeometry height="60" width="500" x="500" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="3" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="&amp;lt;&amp;lt;System&amp;gt;&amp;gt;&lt;br&gt;System&lt;br&gt;Scheduler" vertex="1">
+          <mxGeometry height="1250" width="120" x="40" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="4" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="&amp;lt;&amp;lt;Service&amp;gt;&amp;gt;&lt;br&gt;:InventoryService" vertex="1">
+          <mxGeometry height="1250" width="120" x="240" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="5" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="&amp;lt;&amp;lt;Service&amp;gt;&amp;gt;&lt;br&gt;:SupplierService" vertex="1">
+          <mxGeometry height="1250" width="120" x="440" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="6" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="&amp;lt;&amp;lt;Entity&amp;gt;&amp;gt;&lt;br&gt;:Product" vertex="1">
+          <mxGeometry height="1250" width="120" x="640" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="7" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="&amp;lt;&amp;lt;ValueObject&amp;gt;&amp;gt;&lt;br&gt;:InventoryLevel" vertex="1">
+          <mxGeometry height="1250" width="120" x="790" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="8" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="&amp;lt;&amp;lt;Entity&amp;gt;&amp;gt;&lt;br&gt;:Supplier" vertex="1">
+          <mxGeometry height="1250" width="120" x="940" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="9" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="Database" vertex="1">
+          <mxGeometry height="1250" width="120" x="1090" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="10" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;width=50;height=20;boundedLbl=1;verticalAlign=middle;align=center;fontStyle=1;" value="loop" vertex="1">
+          <mxGeometry height="890" width="1280" x="60" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="11" parent="1" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontStyle=1;" value="[for each product]" vertex="1">
+          <mxGeometry height="20" width="130" x="110" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="12" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;width=40;height=20;boundedLbl=1;verticalAlign=middle;align=center;fontStyle=1;" value="alt" vertex="1">
+          <mxGeometry height="720" width="1240" x="80" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="13" parent="1" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontStyle=1;" value="[stock &amp;lt; minimum]" vertex="1">
+          <mxGeometry height="20" width="140" x="120" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="14" parent="1" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontStyle=1;fontSize=11;" value="[stock &amp;gt;= minimum]" vertex="1">
+          <mxGeometry height="20" width="140" x="80" y="1080" as="geometry" />
+        </mxCell>
+        <mxCell id="15" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="1: systemAutoCheck()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="100" y="160" as="sourcePoint" />
+            <mxPoint x="300" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="16" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="2: SELECT * FROM products">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="300" y="200" as="sourcePoint" />
+            <mxPoint x="1150" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="17" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;endSize=8;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="3: return products list">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1150" y="240" as="sourcePoint" />
+            <mxPoint x="300" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="18" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="4: isAlertActive()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="300" y="310" as="sourcePoint" />
+            <mxPoint x="700" y="310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="19" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="5: getTotalQuantity()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="700" y="350" as="sourcePoint" />
+            <mxPoint x="850" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="20" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;endSize=8;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="6: return totalQty">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="850" y="390" as="sourcePoint" />
+            <mxPoint x="700" y="390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="21" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;endSize=8;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="7: return true">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="700" y="460" as="sourcePoint" />
+            <mxPoint x="300" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="22" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="8: createSupplierOrder(productID, missingQty)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="300" y="500" as="sourcePoint" />
+            <mxPoint x="500" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="23" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="9: findBestSupplier(productID)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="540" y="530" />
+              <mxPoint x="540" y="560" />
+            </Array>
+            <mxPoint x="500" y="530" as="sourcePoint" />
+            <mxPoint x="500" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="24" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="10: SELECT suppliers FOR product">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="500" y="600" as="sourcePoint" />
+            <mxPoint x="1150" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="25" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;endSize=8;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="11: suppliers list">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1150" y="640" as="sourcePoint" />
+            <mxPoint x="500" y="640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="26" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="12: &amp;lt;&amp;lt;create&amp;gt;&amp;gt; evaluate suppliers">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="500" y="680" as="sourcePoint" />
+            <mxPoint x="1000" y="680" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="27" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;endSize=8;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="13: return best supplier">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1000" y="720" as="sourcePoint" />
+            <mxPoint x="500" y="720" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="28" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="14: CREATE SupplierOrder">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="500" y="760" as="sourcePoint" />
+            <mxPoint x="1150" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="29" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;endSize=8;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="15: orderId">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1150" y="800" as="sourcePoint" />
+            <mxPoint x="500" y="800" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="30" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="16: POST /orders {details}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="500" y="840" as="sourcePoint" />
+            <mxPoint x="1300" y="840" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="31" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="17: validate order">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1340" y="870" />
+              <mxPoint x="1340" y="900" />
+            </Array>
+            <mxPoint x="1300" y="870" as="sourcePoint" />
+            <mxPoint x="1300" y="900" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="32" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;endSize=8;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="18: 200 OK {orderId, deliveryDate}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1300" y="940" as="sourcePoint" />
+            <mxPoint x="500" y="940" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="33" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="19: UPDATE supplier_orders SET status=&amp;quot;SENT&amp;quot;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="500" y="980" as="sourcePoint" />
+            <mxPoint x="1150" y="980" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="34" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;endSize=8;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="20: success">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1150" y="1020" as="sourcePoint" />
+            <mxPoint x="500" y="1020" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="35" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;endSize=8;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="21: return {success, orderId}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="500" y="1060" as="sourcePoint" />
+            <mxPoint x="300" y="1060" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="36" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;endSize=8;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="22: return false">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="700" y="1110" as="sourcePoint" />
+            <mxPoint x="300" y="1110" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="37" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="23: log completion">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="300" y="1190" as="sourcePoint" />
+            <mxPoint x="1150" y="1190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="38" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;endSize=8;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="24: logged">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1150" y="1230" as="sourcePoint" />
+            <mxPoint x="300" y="1230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="39" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;edgeStyle=orthogonalEdgeStyle;rounded=0;" value="25: complete()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="300" y="1270" as="sourcePoint" />
+            <mxPoint x="100" y="1270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

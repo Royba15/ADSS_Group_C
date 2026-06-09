@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS shift_history (
 INSERT OR IGNORE INTO roles(name) VALUES ('CASHIER');
 INSERT OR IGNORE INTO roles(name) VALUES ('STOCKER');
 INSERT OR IGNORE INTO roles(name) VALUES ('DRIVER');
-INSERT OR IGNORE INTO roles(name) VALUES ('SHI FT_MANAGER');
+INSERT OR IGNORE INTO roles(name) VALUES ('SHIFT_MANAGER');
 
 -- Default truck types used by deliveries.
 INSERT OR IGNORE INTO truck_types(name, required_license_type) VALUES ('SMALL', 'B');

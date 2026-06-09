@@ -2,21 +2,22 @@ package service;
 
 import java.util.*;
 
-import data.EmployeeDAO;
 import domain.Employee;
 import domain.ShiftSlot;
+import repository.DaoEmployeeRepository;
+import repository.EmployeeRepository;
 
 public class EmployeeManager {
 
     // Stores all employees in the system (by ID)
     private Map<String, Employee> employees;
-    private EmployeeDAO employeeDAO;
+    private EmployeeRepository employeeRepository;
 
     public EmployeeManager() {
         this.employees = new LinkedHashMap<>();
-        this.employeeDAO = new EmployeeDAO();
+        this.employeeRepository = new DaoEmployeeRepository();
 
-        for (Employee employee : employeeDAO.findAll()) {
+        for (Employee employee : employeeRepository.findAll()) {
             employees.put(employee.getId(), employee);
         }
     }
@@ -24,13 +25,13 @@ public class EmployeeManager {
     // Add a new employee to the system
     public void addEmployee(Employee e) {
         employees.put(e.getId(), e);
-        employeeDAO.save(e);
+        employeeRepository.save(e);
     }
 
     // Save changes made to an existing employee
     public void saveEmployee(Employee e) {
         employees.put(e.getId(), e);
-        employeeDAO.save(e);
+        employeeRepository.save(e);
     }
 
     // Get employee by ID
@@ -69,7 +70,7 @@ public class EmployeeManager {
         for (Employee e : employees.values()) {
 
             e.clearAvailabilitySubmission();
-            employeeDAO.save(e);
+            employeeRepository.save(e);
         }
     }
 }

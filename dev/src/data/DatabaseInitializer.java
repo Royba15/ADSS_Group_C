@@ -22,9 +22,11 @@ public class DatabaseInitializer {
             "availability_shift_slots",
             "availability_submissions",
             "employee_roles",
+            "roles",
             "drivers",
             "employees",
-            "branches"
+            "branches",
+            "truck_types"
     };
 
     public static void initialize() {

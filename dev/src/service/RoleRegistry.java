@@ -1,6 +1,7 @@
 package service;
 
-import data.RoleDAO;
+import repository.DaoRoleRepository;
+import repository.RoleRepository;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -8,14 +9,14 @@ import java.util.Set;
 public class RoleRegistry {
 
     private static Set<String> roles = new LinkedHashSet<>();
-    private static RoleDAO roleDAO = new RoleDAO();
+    private static RoleRepository roleRepository = new DaoRoleRepository();
 
     static {
         roles.add("CASHIER");
         roles.add("STOCKER");
         roles.add("DRIVER");
         roles.add("SHIFT_MANAGER");
-        roles.addAll(roleDAO.findAll());
+        roles.addAll(roleRepository.findAll());
     }
 
     // Add new role
@@ -23,7 +24,7 @@ public class RoleRegistry {
         String normalizedRole = role.toUpperCase();
 
         roles.add(normalizedRole);
-        roleDAO.save(normalizedRole);
+        roleRepository.save(normalizedRole);
     }
 
     // Get all roles
