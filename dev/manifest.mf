@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: presentation.Main
+Class-Path: ../lib/sqlite-jdbc-3.36.0.3.jar
+Enable-Native-Access: ALL-UNNAMED
+
