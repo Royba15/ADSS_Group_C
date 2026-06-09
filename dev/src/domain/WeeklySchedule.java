@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.HashMap;
 
 public class WeeklySchedule {
 
