@@ -1,5 +1,6 @@
 package Inventory.service;
-
+import Inventory.integration.SupplierIntegrationService;
+import java.util.Set;
 import Inventory.domain.*;
 import Inventory.DB.Datainit;
 
@@ -14,6 +15,7 @@ public class InventoryService {
     private final List<DefectiveItem> defectiveItems;
     private final List<Category> categories;
     private final Map<Category, List<Product>> categoryToProducts;
+    private final SupplierIntegrationService supplierIntegrationService;
 
     // constructor
     public InventoryService() {
@@ -21,6 +23,7 @@ public class InventoryService {
         this.defectiveItems = new ArrayList<>();
         this.categories=new ArrayList<>();
         this.categoryToProducts = new HashMap<>();
+        this.supplierIntegrationService = new SupplierIntegrationService();
     }
 
     // function init all the data
@@ -66,6 +69,7 @@ public class InventoryService {
         Product p = getProductByID(productID);
         if (p == null) return false;
         p.getInventory().updateQuantity(shelfQty, warehouseQty);
+        supplierIntegrationService.createAutomaticOrderIfNeeded(p);
         return true;
     }
 
@@ -170,7 +174,7 @@ public class InventoryService {
 
     // Add a new product with all details
     // Note: Categories must already exist - we don't create them automatically
-    public boolean addNewProduct(int productID, String productName, int manufacturerID, double costPrice, double sellingPrice, String catalogID, String mainCategoryName, String subCategoryName, String subSubCategoryName, int shelfQuantity, int warehouseQuantity, int minThreshold, String location) {
+    public boolean addNewProduct(int productID, String productName, int supplierID, double costPrice, double sellingPrice, String catalogID, String mainCategoryName, String subCategoryName, String subSubCategoryName, int shelfQuantity, int warehouseQuantity, int minThreshold, String location) {
 
         // Validation
         if (productName == null || productName.trim().isEmpty()) {
@@ -209,7 +213,7 @@ public class InventoryService {
         InventoryLevel inventory = new InventoryLevel(shelfQuantity, warehouseQuantity, minThreshold, location);
 
         // Create product with existing categories
-        Product newProduct = new Product(productID, productName.trim(), manufacturerID,
+        Product newProduct = new Product(productID, productName.trim(), supplierID,
                 costPrice, sellingPrice, catalogID, mainCategory, subCategory, subSubCategory, inventory);
 
         // Add product
@@ -301,5 +305,19 @@ public class InventoryService {
             }
         }
         return found;
+    }
+
+    public boolean createManualSupplierOrder(int productID, int quantityToOrder) {
+        Product p = getProductByID(productID);
+
+        if (p == null) {
+            return false;
+        }
+
+        if (quantityToOrder <= 0) {
+            return false;
+        }
+
+        return supplierIntegrationService.createManualOrder(p, quantityToOrder);
     }
 }

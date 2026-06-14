@@ -22,6 +22,7 @@ public class ConsolePrinter {
         System.out.println("7. Add New Category");
         System.out.println("8. Add New Product");
         System.out.println("9. Delete Product");
+        System.out.println("10. Create Manual Supplier Order");
         System.out.println("0. Exit");
         System.out.print("Choose an option: ");
     }
@@ -162,6 +163,9 @@ public class ConsolePrinter {
     }
     public void printError(String msg) {
         System.out.println("[ERROR] " + msg);
+    }
+    public void promptForOrderQuantity() {
+        System.out.print("Enter quantity to order: ");
     }
 
 }

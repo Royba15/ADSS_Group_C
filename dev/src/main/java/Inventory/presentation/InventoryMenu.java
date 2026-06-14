@@ -100,6 +100,9 @@ public class InventoryMenu {
             case 9:
                 deleteProductFlow();
                 break;
+            case 10:
+                createManualSupplierOrderFlow();
+                break;
             case 0: {}
             break;
             default:
@@ -394,7 +397,7 @@ public class InventoryMenu {
             }
 
             System.out.print("Enter Supplier ID: ");
-            int SupplierID = Integer.parseInt(scanner.nextLine());
+            int supplierID = Integer.parseInt(scanner.nextLine());
 
             System.out.print("Enter cost price: ");
             double costPrice = Double.parseDouble(scanner.nextLine());
@@ -475,7 +478,7 @@ public class InventoryMenu {
             String location = scanner.nextLine().trim();
 
             // Use service to add product - categories must exist
-            if (service.addNewProduct(productID, productName, SupplierID, costPrice, sellingPrice,
+            if (service.addNewProduct(productID, productName, supplierID, costPrice, sellingPrice,
                     catalogID, mainCatName, subCatName, subSubCatName,
                     shelfQty, warehouseQty, minThreshold, location)) {
                 printer.printSuccess("Product '" + productName + "' added successfully!");
@@ -519,6 +522,42 @@ public class InventoryMenu {
             printer.printError("Invalid ID format.");
         } catch (Exception e) {
             printer.printError("Error deleting product: " + e.getMessage());
+        }
+    }
+
+    private void createManualSupplierOrderFlow() {
+        try {
+            printer.printHeader("CREATE MANUAL SUPPLIER ORDER");
+
+            printer.promptForProductId();
+            int productID = Integer.parseInt(scanner.nextLine().trim());
+
+            Product product = service.getProductByID(productID);
+            if (product == null) {
+                printer.printError("Product not found.");
+                return;
+            }
+
+            printer.printProduct(product);
+
+            printer.promptForOrderQuantity();
+            int quantityToOrder = Integer.parseInt(scanner.nextLine().trim());
+
+            if (quantityToOrder <= 0) {
+                printer.printError("Order quantity must be greater than 0.");
+                return;
+            }
+
+            if (service.createManualSupplierOrder(productID, quantityToOrder)) {
+                printer.printSuccess("Manual supplier order created successfully.");
+            } else {
+                printer.printError("Failed to create order. Product may already have an active order.");
+            }
+
+        } catch (NumberFormatException e) {
+            printer.printError("Invalid input. Please enter valid numbers.");
+        } catch (Exception e) {
+            printer.printError("Error creating manual order: " + e.getMessage());
         }
     }
 
