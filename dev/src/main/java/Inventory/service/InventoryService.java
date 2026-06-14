@@ -1,12 +1,8 @@
 package Inventory.service;
 
+import Inventory.DB.dao.InventoryRepository;
+import Inventory.DB.impl.InventoryRepositoryImpl;
 import Inventory.integration.SupplierIntegrationService;
-import Inventory.DB.dao.CategoryDAO;
-import Inventory.DB.dao.DefectiveItemDAO;
-import Inventory.DB.dao.ProductDAO;
-import Inventory.DB.impl.JdbcCategoryDAO;
-import Inventory.DB.impl.JdbcDefectiveItemDAO;
-import Inventory.DB.impl.JdbcProductDAO;
 import Inventory.domain.*;
 import Inventory.dto.CategoryDTO;
 import Inventory.dto.DefectiveItemDTO;
@@ -20,15 +16,11 @@ import java.util.List;
 
 public class InventoryService {
 
-    private final ProductDAO productDAO;
-    private final CategoryDAO categoryDAO;
-    private final DefectiveItemDAO defectiveDAO;
+    private final InventoryRepository repo;
     private final SupplierIntegrationService supplierIntegrationService;
 
     public InventoryService() {
-        this.productDAO                 = new JdbcProductDAO();
-        this.categoryDAO                = new JdbcCategoryDAO();
-        this.defectiveDAO               = new JdbcDefectiveItemDAO();
+        this.repo                       = new InventoryRepositoryImpl();
         this.supplierIntegrationService = new SupplierIntegrationService();
     }
 
@@ -36,7 +28,7 @@ public class InventoryService {
 
     public Product getProductByID(int productID) {
         try {
-            return productDAO.findById(productID).map(this::dtoToDomain).orElse(null);
+            return repo.findProductById(productID).map(this::dtoToDomain).orElse(null);
         } catch (SQLException e) {
             System.err.println("[DB] getProductByID failed: " + e.getMessage());
             return null;
@@ -46,7 +38,7 @@ public class InventoryService {
     public List<Product> getAllProducts() {
         try {
             List<Product> result = new ArrayList<>();
-            for (ProductDTO dto : productDAO.findAll()) result.add(dtoToDomain(dto));
+            for (ProductDTO dto : repo.findAllProducts()) result.add(dtoToDomain(dto));
             return result;
         } catch (SQLException e) {
             System.err.println("[DB] getAllProducts failed: " + e.getMessage());
@@ -56,9 +48,8 @@ public class InventoryService {
 
     public boolean updateInventory(int productID, int shelfQty, int warehouseQty) {
         try {
-            if (!productDAO.existsById(productID)) return false;
-            productDAO.updateInventoryQuantity(productID, shelfQty, warehouseQty);
-            // בדוק חוסר → הזמנה אוטומטית
+            if (!repo.productExists(productID)) return false;
+            repo.updateInventoryQuantity(productID, shelfQty, warehouseQty);
             Product p = getProductByID(productID);
             if (p != null) supplierIntegrationService.createAutomaticOrderIfNeeded(p);
             return true;
@@ -76,12 +67,12 @@ public class InventoryService {
             if (productName == null || productName.trim().isEmpty()) return false;
             if (costPrice < 0 || sellingPrice < 0) return false;
             if (shelfQuantity < 0 || warehouseQuantity < 0 || minThreshold < 0) return false;
-            if (productDAO.existsById(productID)) return false;
-            if (categoryDAO.findByName(mainCategoryName).isEmpty())   return false;
-            if (categoryDAO.findByName(subCategoryName).isEmpty())    return false;
-            if (categoryDAO.findByName(subSubCategoryName).isEmpty()) return false;
+            if (repo.productExists(productID)) return false;
+            if (repo.findCategoryByName(mainCategoryName).isEmpty())   return false;
+            if (repo.findCategoryByName(subCategoryName).isEmpty())    return false;
+            if (repo.findCategoryByName(subSubCategoryName).isEmpty()) return false;
 
-            productDAO.save(new ProductDTO(
+            repo.addProduct(new ProductDTO(
                     productID, productName.trim(), supplierID,
                     costPrice, sellingPrice, sellingPrice, catalogID,
                     mainCategoryName, subCategoryName, subSubCategoryName,
@@ -95,8 +86,8 @@ public class InventoryService {
 
     public boolean deleteProduct(int productID) {
         try {
-            if (!productDAO.existsById(productID)) return false;
-            productDAO.delete(productID);
+            if (!repo.productExists(productID)) return false;
+            repo.deleteProduct(productID);
             return true;
         } catch (SQLException e) {
             System.err.println("[DB] deleteProduct failed: " + e.getMessage());
@@ -106,7 +97,7 @@ public class InventoryService {
 
     public int getNextProductID() {
         try {
-            return productDAO.findAll().stream()
+            return repo.findAllProducts().stream()
                     .mapToInt(ProductDTO::productId).max().orElse(0) + 1;
         } catch (SQLException e) { return 1; }
     }
@@ -116,7 +107,7 @@ public class InventoryService {
     public List<Product> getLowStockProducts() {
         try {
             List<Product> result = new ArrayList<>();
-            for (ProductDTO dto : productDAO.findBelowThreshold()) result.add(dtoToDomain(dto));
+            for (ProductDTO dto : repo.findProductsBelowThreshold()) result.add(dtoToDomain(dto));
             return result;
         } catch (SQLException e) {
             System.err.println("[DB] getLowStockProducts failed: " + e.getMessage());
@@ -130,8 +121,8 @@ public class InventoryService {
         try {
             if (categoryName == null || categoryName.trim().isEmpty()) return false;
             if (level < 0 || level > 2) return false;
-            if (categoryDAO.findByName(categoryName.trim()).isPresent()) return false;
-            categoryDAO.save(new CategoryDTO(categoryName.trim(), level));
+            if (repo.findCategoryByName(categoryName.trim()).isPresent()) return false;
+            repo.addCategory(new CategoryDTO(categoryName.trim(), level));
             return true;
         } catch (SQLException e) {
             System.err.println("[DB] addNewCategory failed: " + e.getMessage());
@@ -142,7 +133,7 @@ public class InventoryService {
     public List<Category> getCategories() {
         try {
             List<Category> result = new ArrayList<>();
-            for (CategoryDTO dto : categoryDAO.findAll())
+            for (CategoryDTO dto : repo.findAllCategories())
                 result.add(new Category(dto.name(), dto.level()));
             return result;
         } catch (SQLException e) {
@@ -154,7 +145,7 @@ public class InventoryService {
     public List<Category> getCategoriesByLevel(int level) {
         try {
             List<Category> result = new ArrayList<>();
-            for (CategoryDTO dto : categoryDAO.findByLevel(level))
+            for (CategoryDTO dto : repo.findCategoriesByLevel(level))
                 result.add(new Category(dto.name(), dto.level()));
             return result;
         } catch (SQLException e) {
@@ -164,7 +155,7 @@ public class InventoryService {
     }
 
     public boolean categoryExists(String categoryName) {
-        try { return categoryDAO.findByName(categoryName).isPresent(); }
+        try { return repo.findCategoryByName(categoryName).isPresent(); }
         catch (SQLException e) { return false; }
     }
 
@@ -176,9 +167,9 @@ public class InventoryService {
 
     public void reportDefectiveItem(int productID, int quantity, String reason) {
         try {
-            ProductDTO p = productDAO.findById(productID).orElse(null);
+            ProductDTO p = repo.findProductById(productID).orElse(null);
             if (p == null) return;
-            defectiveDAO.save(new DefectiveItemDTO(0, productID, p.name(), quantity, reason));
+            repo.reportDefective(new DefectiveItemDTO(0, productID, p.name(), quantity, reason));
         } catch (SQLException e) {
             System.err.println("[DB] reportDefectiveItem failed: " + e.getMessage());
         }
@@ -187,7 +178,7 @@ public class InventoryService {
     public List<DefectiveItem> getDefectiveItems() {
         try {
             List<DefectiveItem> result = new ArrayList<>();
-            for (DefectiveItemDTO dto : defectiveDAO.findAll()) {
+            for (DefectiveItemDTO dto : repo.findAllDefectiveItems()) {
                 Product p = getProductByID(dto.productId());
                 if (p != null)
                     result.add(new DefectiveItem(dto.id(), p, dto.quantity(), dto.reason()));
@@ -201,7 +192,7 @@ public class InventoryService {
 
     public int getTotalDefectiveCountForProduct(int productID) {
         try {
-            return defectiveDAO.findByProductId(productID).stream()
+            return repo.findDefectiveByProduct(productID).stream()
                     .mapToInt(DefectiveItemDTO::quantity).sum();
         } catch (SQLException e) { return 0; }
     }
@@ -212,7 +203,7 @@ public class InventoryService {
         List<Product> result = new ArrayList<>();
         for (String name : categoryNames) {
             try {
-                for (ProductDTO dto : productDAO.findByCategory(name))
+                for (ProductDTO dto : repo.findProductsByCategory(name))
                     result.add(dtoToDomain(dto));
             } catch (SQLException e) {
                 System.err.println("[DB] categoryReport failed: " + e.getMessage());
@@ -223,17 +214,16 @@ public class InventoryService {
 
     public DefectiveReport generateDefectiveReport() { return new DefectiveReport(getDefectiveItems()); }
 
-
     // ── Discounts ─────────────────────────────────────────────────────────────
 
     public boolean applyDiscountToProduct(int productID, String promoName, double discount,
                                           LocalDateTime start, LocalDateTime end) {
         try {
-            ProductDTO dto = productDAO.findById(productID).orElse(null);
+            ProductDTO dto = repo.findProductById(productID).orElse(null);
             if (dto == null) return false;
             Product p = dtoToDomain(dto);
             p.assignPromotion(new DiscountPromotion(productID, promoName, discount, start, end));
-            productDAO.updateSellingPrice(productID, p.getSellingPrice());
+            repo.updateSellingPrice(productID, p.getSellingPrice());
             return true;
         } catch (SQLException e) {
             System.err.println("[DB] applyDiscountToProduct failed: " + e.getMessage());
@@ -244,13 +234,13 @@ public class InventoryService {
     public boolean applyDiscountToCategory(String categoryName, String promoName, double discount,
                                            LocalDateTime start, LocalDateTime end) {
         try {
-            List<ProductDTO> dtos = productDAO.findByCategory(categoryName);
+            List<ProductDTO> dtos = repo.findProductsByCategory(categoryName);
             if (dtos.isEmpty()) return false;
             DiscountPromotion promo = new DiscountPromotion(categoryName.hashCode(), promoName, discount, start, end);
             for (ProductDTO dto : dtos) {
                 Product p = dtoToDomain(dto);
                 p.assignPromotion(promo);
-                productDAO.updateSellingPrice(p.getProductID(), p.getSellingPrice());
+                repo.updateSellingPrice(p.getProductID(), p.getSellingPrice());
             }
             return true;
         } catch (SQLException e) {
@@ -266,13 +256,13 @@ public class InventoryService {
         if (start == null || end == null || !end.isAfter(start))
             throw new IllegalArgumentException("End date must be after start date");
         try {
-            List<ProductDTO> dtos = productDAO.findBySupplier(supplierID);
+            List<ProductDTO> dtos = repo.findProductsBySupplier(supplierID);
             if (dtos.isEmpty()) return false;
             DiscountPromotion promo = new DiscountPromotion(supplierID, promoName, discount, start, end);
             for (ProductDTO dto : dtos) {
                 Product p = dtoToDomain(dto);
                 p.assignPromotion(promo);
-                productDAO.updateSellingPrice(p.getProductID(), p.getSellingPrice());
+                repo.updateSellingPrice(p.getProductID(), p.getSellingPrice());
             }
             return true;
         } catch (SQLException e) {
@@ -283,11 +273,40 @@ public class InventoryService {
 
     // ── Supplier integration ──────────────────────────────────────────────────
 
-    public boolean createManualSupplierOrder(int productID, int quantityToOrder, boolean allowDuplicateOrder) {
+    public boolean createManualSupplierOrder(int productID, int quantityToOrder,
+                                             boolean allowDuplicateOrder) {
         Product p = getProductByID(productID);
-        if (p == null) {return false;}
-        if (quantityToOrder <= 0) {return false;}
+        if (p == null || quantityToOrder <= 0) return false;
         return supplierIntegrationService.createManualOrder(p, quantityToOrder, allowDuplicateOrder);
+    }
+
+    public boolean createScheduledSupplierOrder(int productID, int quantity,
+                                                String scheduledDate, String frequency) {
+        Product p = getProductByID(productID);
+        if (p == null || quantity <= 0) return false;
+        return supplierIntegrationService.createScheduledOrder(p, quantity, scheduledDate, frequency);
+    }
+
+    public boolean receiveOrder(int orderId) {
+        try {
+            SupplierOrderDTO order = supplierIntegrationService.findOrderById(orderId);
+            if (order == null) return false;
+            if (!order.status().equals("CREATED") && !order.status().equals("SENT")
+                    && !order.status().equals("PENDING")) return false;
+
+            supplierIntegrationService.receiveOrder(orderId);
+
+            ProductDTO product = repo.findProductById(order.productId()).orElse(null);
+            if (product == null) return false;
+            repo.updateInventoryQuantity(
+                    order.productId(),
+                    product.shelfQuantity(),
+                    product.warehouseQuantity() + order.quantity());
+            return true;
+        } catch (SQLException e) {
+            System.err.println("[DB] receiveOrder failed: " + e.getMessage());
+            return false;
+        }
     }
 
     public List<SupplierOrderDTO> getActiveSupplierOrdersForProduct(int productID) {
@@ -310,8 +329,20 @@ public class InventoryService {
         return supplierIntegrationService.getAllOrders();
     }
 
+    public List<SupplierOrderDTO> getActiveOrders() {
+        return supplierIntegrationService.getActiveOrders();
+    }
+
     public List<SupplierOrderDTO> getOrdersForProduct(int productID) {
         return supplierIntegrationService.getOrdersForProduct(productID);
+    }
+
+    public void createAutomaticOrdersForLowStock() {
+        List<Product> lowStock = getLowStockProducts();
+        if (lowStock.isEmpty()) return;
+        for (Product p : lowStock) {
+            supplierIntegrationService.createAutomaticOrderIfNeeded(p);
+        }
     }
 
     // ── helper: DTO → Domain object ───────────────────────────────────────────
@@ -327,53 +358,5 @@ public class InventoryService {
                 dto.productId(), dto.name(), dto.supplierId(),
                 dto.costPrice(), dto.sellingPrice(), dto.supplierCatalogId(),
                 main, sub, subSub, inv);
-    }
-    public void createAutomaticOrdersForLowStock() {
-        List<Product> lowStock = getLowStockProducts();
-        if (lowStock.isEmpty()) {
-
-            return;
-        }
-
-        for (Product p : lowStock) {
-            supplierIntegrationService.createAutomaticOrderIfNeeded(p);
-        }
-    }
-    // קבלת כל ההזמנות הפעילות (CREATED או SENT)
-    public List<SupplierOrderDTO> getActiveOrders() {
-        return supplierIntegrationService.getActiveOrders();
-    }
-
-    // קבלת משלוח — מעדכן סטטוס ומוסיף כמות למחסן
-    public boolean receiveOrder(int orderId) {
-        try {
-            // מצא את ההזמנה
-            SupplierOrderDTO order = supplierIntegrationService.findOrderById(orderId);
-            if (order == null) return false;
-            if (!order.status().equals("CREATED") && !order.status().equals("SENT")) return false;
-
-            // עדכן סטטוס ל-RECEIVED
-            supplierIntegrationService.receiveOrder(orderId);
-
-            // הוסף כמות למחסן
-            ProductDTO product = productDAO.findById(order.productId()).orElse(null);
-            if (product == null) return false;
-
-            int newWarehouse = product.warehouseQuantity() + order.quantity();
-            productDAO.updateInventoryQuantity(
-                    order.productId(),
-                    product.shelfQuantity(),
-                    newWarehouse);
-            return true;
-        } catch (SQLException e) {
-            System.err.println("[DB] receiveOrder failed: " + e.getMessage());
-            return false;
-        }
-    }
-    public boolean createScheduledSupplierOrder(int productID, int quantity,
-                                                String scheduledDate, String frequency) {
-        Product p = getProductByID(productID);
-        if (p == null || quantity <= 0) return false;
-        return supplierIntegrationService.createScheduledOrder(p, quantity, scheduledDate, frequency);
     }
 }
