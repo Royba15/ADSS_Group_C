@@ -113,7 +113,7 @@ public class InventoryMenu {
             case 7:  addNewCategoryFlow();                               break;
             case 8:  addNewProductFlow();                                break;
             case 9:  deleteProductFlow();                                break;
-            case 10: createManualSupplierOrderFlow();
+            case 10: createManualSupplierOrderFlow();                    break;
             case 11: receiveShipmentFlow(); break;
             case 0:  break;
             default: printer.printError("Option not found.");            break;

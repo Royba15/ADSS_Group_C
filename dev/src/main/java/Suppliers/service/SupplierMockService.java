@@ -35,13 +35,6 @@ public class SupplierMockService {
             return false;
         }
 
-        /*
-         * MOCK:
-         * מבחינתנו מודול הספקים קיבל את ההזמנה המלאה.
-         */
-        System.out.println("Full order received:");
-        System.out.println(order);
-
         return true;
     }
 }
