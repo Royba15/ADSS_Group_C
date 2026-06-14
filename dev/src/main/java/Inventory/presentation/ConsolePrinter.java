@@ -25,7 +25,7 @@ public class ConsolePrinter {
         System.out.println("7. Add New Category");
         System.out.println("8. Add New Product");
         System.out.println("9. Delete Product");
-        System.out.println("10. Create Manual Supplier Order");
+        System.out.println("10. Create Supplier Order");
         System.out.println("11. Receive Shipment");
         System.out.println("0. Exit");
         System.out.print("Choose an option: ");
@@ -78,14 +78,18 @@ public class ConsolePrinter {
             return;
         }
         for (SupplierOrderDTO o : orders) {
-            System.out.println("  Order #"     + o.orderId()
-                    + " | Product: "           + o.productName()
-                    + " (ID: "                 + o.productId() + ")"
-                    + " | Supplier ID: "       + o.supplierId()
-                    + " | Catalog: "           + o.supplierCatalogId()
-                    + " | Qty: "               + o.quantity()
-                    + " | Status: "            + o.status()
-                    + " | Created: "           + o.createdAt());
+            System.out.print("  Order #" + o.orderId()
+                    + " | Product: "     + o.productName()
+                    + " (ID: "           + o.productId() + ")"
+                    + " | Supplier ID: " + o.supplierId()
+                    + " | Qty: "         + o.quantity()
+                    + " | Type: "        + o.orderType()
+                    + " | Status: "      + o.status());
+            if ("SCHEDULED".equals(o.orderType())) {
+                System.out.print(" | Delivery: " + o.scheduledDate()
+                        + " | Frequency: "        + o.frequency());
+            }
+            System.out.println(" | Created: " + o.createdAt());
         }
     }
     // Print all products by category

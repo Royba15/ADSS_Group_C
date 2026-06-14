@@ -14,14 +14,14 @@ import java.util.Optional;
  */
 public class JdbcSupplierOrderDAO implements SupplierOrderDAO {
 
-    @Override
     public int save(SupplierOrderDTO dto) throws SQLException {
         String sql = """
-            INSERT INTO supplier_orders(
-                product_id, product_name, supplier_id,
-                supplier_catalog_id, quantity, status, created_at)
-            VALUES(?,?,?,?,?,?,?)
-        """;
+        INSERT INTO supplier_orders(
+            product_id, product_name, supplier_id,
+            supplier_catalog_id, quantity, status,
+            order_type, scheduled_date, frequency, created_at)
+        VALUES(?,?,?,?,?,?,?,?,?,?)
+    """;
         try (PreparedStatement ps = DatabaseConnection.getConnection()
                 .prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1,    dto.productId());
@@ -30,7 +30,10 @@ public class JdbcSupplierOrderDAO implements SupplierOrderDAO {
             ps.setString(4, dto.supplierCatalogId());
             ps.setInt(5,    dto.quantity());
             ps.setString(6, dto.status());
-            ps.setString(7, dto.createdAt());
+            ps.setString(7, dto.orderType());
+            ps.setString(8, dto.scheduledDate());
+            ps.setString(9, dto.frequency());
+            ps.setString(10,dto.createdAt());
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) return keys.getInt(1);
@@ -111,7 +114,26 @@ public class JdbcSupplierOrderDAO implements SupplierOrderDAO {
                 rs.getString("supplier_catalog_id"),
                 rs.getInt("quantity"),
                 rs.getString("status"),
+                rs.getString("order_type"),
+                rs.getString("scheduled_date"),
+                rs.getString("frequency"),
                 rs.getString("created_at")
         );
+    }
+    @Override
+    public List<SupplierOrderDTO> findPendingByDate(String date) throws SQLException {
+        List<SupplierOrderDTO> list = new ArrayList<>();
+        String sql = """
+        SELECT * FROM supplier_orders
+        WHERE status = 'PENDING'
+          AND scheduled_date <= ?
+    """;
+        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
+            ps.setString(1, date);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapRow(rs));
+            }
+        }
+        return list;
     }
 }

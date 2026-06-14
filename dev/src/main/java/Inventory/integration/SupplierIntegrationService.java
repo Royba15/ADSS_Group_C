@@ -68,6 +68,9 @@ public class SupplierIntegrationService {
                     product.getSupplierCatalogID(),
                     quantityToOrder,
                     OrderStatus.CREATED.name(),
+                    "IMMEDIATE",                   // orderType ← חדש
+                    null,                          // scheduledDate ← חדש
+                    null,                          // frequency ← חדש
                     LocalDateTime.now().toString()
             );
 
@@ -200,5 +203,43 @@ public class SupplierIntegrationService {
             System.err.println("[DB] receiveOrder failed: " + e.getMessage());
         }
     }
+    public boolean createScheduledOrder(Product product, int quantity,
+                                        String scheduledDate, String frequency) {
+        // בדוק תאריך — חייב להיות לפחות מחר
+        try {
+            java.time.LocalDate scheduled = java.time.LocalDate.parse(scheduledDate);
+            if (!scheduled.isAfter(java.time.LocalDate.now())) {
+                System.out.println("[ORDER] Scheduled date must be at least tomorrow.");
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println("[ORDER] Invalid date format.");
+            return false;
+        }
 
+        int supplierId = supplierMockService.findBestSupplierForOrder(
+                product.getProductID(), quantity);
+
+        try {
+            SupplierOrderDTO dto = new SupplierOrderDTO(
+                    0,
+                    product.getProductID(),
+                    product.getProductName(),
+                    supplierId,
+                    product.getSupplierCatalogID(),
+                    quantity,
+                    "PENDING",
+                    "SCHEDULED",
+                    scheduledDate,
+                    frequency,
+                    java.time.LocalDateTime.now().toString()
+            );
+            int newId = orderDAO.save(dto);
+            System.out.println("[ORDER] Scheduled order #" + newId + " created for " + scheduledDate);
+            return true;
+        } catch (SQLException e) {
+            System.err.println("[DB] createScheduledOrder failed: " + e.getMessage());
+            return false;
+        }
+    }
 }

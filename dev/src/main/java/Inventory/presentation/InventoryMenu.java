@@ -106,14 +106,14 @@ public class InventoryMenu {
         switch (choice) {
             case 1:  updateInventoryFlow();                              break;
             case 2:  viewProductFlow();                                  break;
-            case 3:  printer.printAlerts(service.getLowStockProducts()); break;
+            case 3: printer.printOrderReport(service.getAllOrders()); break;
             case 4:  handleReportsMenu();                                break;
             case 5:  handleDiscountMenu();                               break;
             case 6:  reportDefectiveFlow();                              break;
             case 7:  addNewCategoryFlow();                               break;
             case 8:  addNewProductFlow();                                break;
             case 9:  deleteProductFlow();                                break;
-            case 10: createManualSupplierOrderFlow();                    break;
+            case 10: supplierOrderMenuFlow(); break;
             case 11: receiveShipmentFlow(); break;
             case 0:  break;
             default: printer.printError("Option not found.");            break;
@@ -163,7 +163,7 @@ public class InventoryMenu {
             switch (reportChoice) {
                 case 1: printer.printDefectiveReport(service.generateDefectiveReport()); break;
                 case 2: categoryReportFlow();  break;
-                case 3: printer.printOrderReport(service.getActiveOrders()); break;
+                case 3: printer.printOrderReport(service.getAllOrders()); break;
                 case 0: break;
                 default: printer.printError("Invalid report option."); break;
             }
@@ -585,6 +585,61 @@ public class InventoryMenu {
             }
         } catch (NumberFormatException e) {
             printer.printError("Invalid order number.");
+        } catch (Exception e) {
+            printer.printError("Error: " + e.getMessage());
+        }
+    }
+    private void supplierOrderMenuFlow() {
+        printer.printHeader("CREATE SUPPLIER ORDER");
+        System.out.println("1. Immediate Order");
+        System.out.println("2. Scheduled Order");
+        System.out.print("Choose: ");
+        try {
+            int choice = Integer.parseInt(scanner.nextLine().trim());
+            switch (choice) {
+                case 1 -> createManualSupplierOrderFlow();
+                case 2 -> createScheduledOrderFlow();
+                default -> printer.printError("Invalid option.");
+            }
+        } catch (NumberFormatException e) {
+            printer.printError("Invalid input.");
+        }
+    }
+    private void createScheduledOrderFlow() {
+        try {
+            printer.promptForProductId();
+            int productID = Integer.parseInt(scanner.nextLine().trim());
+
+            Product product = service.getProductByID(productID);
+            if (product == null) { printer.printError("Product not found."); return; }
+
+            printer.promptForOrderQuantity();
+            int quantity = Integer.parseInt(scanner.nextLine().trim());
+            if (quantity <= 0) { printer.printError("Quantity must be greater than 0."); return; }
+
+            System.out.print("Enter delivery date (yyyy-MM-dd, must be tomorrow or later): ");
+            String scheduledDate = scanner.nextLine().trim();
+
+            System.out.println("Select frequency:");
+            System.out.println("1. Once");
+            System.out.println("2. Weekly");
+            System.out.println("3. Monthly");
+            System.out.print("Choose: ");
+            String frequency = switch (scanner.nextLine().trim()) {
+                case "1" -> "ONCE";
+                case "2" -> "WEEKLY";
+                case "3" -> "MONTHLY";
+                default  -> "ONCE";
+            };
+
+            if (service.createScheduledSupplierOrder(productID, quantity, scheduledDate, frequency)) {
+                printer.printSuccess("Scheduled order created for " + scheduledDate
+                        + " | Frequency: " + frequency);
+            } else {
+                printer.printError("Failed to create scheduled order. Check date is at least tomorrow.");
+            }
+        } catch (NumberFormatException e) {
+            printer.printError("Invalid input.");
         } catch (Exception e) {
             printer.printError("Error: " + e.getMessage());
         }

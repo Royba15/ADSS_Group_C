@@ -10,6 +10,9 @@ public record SupplierOrderDTO(
         int supplierId,
         String supplierCatalogId,
         int quantity,
-        String status,      // CREATED / SENT / RECEIVED / CANCELLED
+        String status,          // CREATED / SENT / RECEIVED / CANCELLED / PENDING
+        String orderType,       // IMMEDIATE / SCHEDULED
+        String scheduledDate,   // null אם IMMEDIATE
+        String frequency,       // ONCE / WEEKLY / MONTHLY / null אם IMMEDIATE
         String createdAt
 ) {}
