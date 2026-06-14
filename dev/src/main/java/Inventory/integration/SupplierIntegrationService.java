@@ -105,9 +105,8 @@ public class SupplierIntegrationService {
     }
 
     private int calculateQuantityToOrder(Product product) {
-        int current      = product.getInventory().getTotalQuantity();
         int minThreshold = product.getInventory().getMinQuantityThreshold();
-        return (minThreshold + 1) - current;
+        return (minThreshold*2);
     }
 
     // ── שאילתות ──────────────────────────────────────────────────────────────
