@@ -64,6 +64,8 @@ public class SchemaCreator {
             """);
 
             // טבלת הזמנות ספקים — חדשה
+
+            // החלף את CREATE TABLE של supplier_orders:
             st.execute("""
                 CREATE TABLE IF NOT EXISTS supplier_orders (
                     order_id            INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -73,6 +75,9 @@ public class SchemaCreator {
                     supplier_catalog_id TEXT,
                     quantity            INTEGER NOT NULL,
                     status              TEXT    NOT NULL DEFAULT 'CREATED',
+                    order_type          TEXT    NOT NULL DEFAULT 'IMMEDIATE',
+                    scheduled_date      TEXT,
+                    frequency           TEXT,
                     created_at          TEXT    NOT NULL
                 )
             """);

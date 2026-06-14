@@ -370,4 +370,10 @@ public class InventoryService {
             return false;
         }
     }
+    public boolean createScheduledSupplierOrder(int productID, int quantity,
+                                                String scheduledDate, String frequency) {
+        Product p = getProductByID(productID);
+        if (p == null || quantity <= 0) return false;
+        return supplierIntegrationService.createScheduledOrder(p, quantity, scheduledDate, frequency);
+    }
 }

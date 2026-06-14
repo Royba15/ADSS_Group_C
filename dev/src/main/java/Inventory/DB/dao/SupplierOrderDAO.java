@@ -15,4 +15,5 @@ public interface SupplierOrderDAO {
     List<SupplierOrderDTO> findAll() throws SQLException;
     List<SupplierOrderDTO> findByProductId(int productId) throws SQLException;
     List<SupplierOrderDTO> findActiveByProductId(int productId) throws SQLException;
+    List<SupplierOrderDTO> findPendingByDate(String date) throws SQLException;
 }
