@@ -283,10 +283,15 @@ public class InventoryService {
 
     // ── Supplier integration ──────────────────────────────────────────────────
 
-    public boolean createManualSupplierOrder(int productID, int quantityToOrder) {
+    public boolean createManualSupplierOrder(int productID, int quantityToOrder, boolean allowDuplicateOrder) {
         Product p = getProductByID(productID);
-        if (p == null || quantityToOrder <= 0) return false;
-        return supplierIntegrationService.createManualOrder(p, quantityToOrder);
+        if (p == null) {return false;}
+        if (quantityToOrder <= 0) {return false;}
+        return supplierIntegrationService.createManualOrder(p, quantityToOrder, allowDuplicateOrder);
+    }
+
+    public List<SupplierOrderDTO> getActiveSupplierOrdersForProduct(int productID) {
+        return supplierIntegrationService.getActiveOrdersForProduct(productID);
     }
 
     public boolean markOrderAsReceived(int productID) {

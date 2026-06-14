@@ -518,10 +518,36 @@ public class InventoryMenu {
                 return;
             }
 
-            if (service.createManualSupplierOrder(productID, quantityToOrder)) {
+            List<SupplierOrderDTO> activeOrders = service.getActiveSupplierOrdersForProduct(productID);
+            boolean allowDuplicateOrder = false;
+
+            if (!activeOrders.isEmpty()) {
+                printer.printHeader("ACTIVE ORDER EXISTS");
+
+                System.out.println("There is already an active supplier order for this product.");
+                System.out.println("If you continue, there will be more than 2 active orders for the same product.");
+                System.out.println();
+
+                for (SupplierOrderDTO order : activeOrders) {
+                    printer.printSupplierOrderDTO(order);
+                    System.out.println("----------------------------------------");
+                }
+
+                System.out.print("Do you want to continue and create another order? (yes/no): ");
+                String answer = scanner.nextLine().trim().toLowerCase();
+
+                if (!answer.equals("yes")) {
+                    printer.printSuccess("Manual supplier order cancelled.");
+                    return;
+                }
+
+                allowDuplicateOrder = true;
+            }
+
+            if (service.createManualSupplierOrder(productID, quantityToOrder, allowDuplicateOrder)) {
                 printer.printSuccess("Manual supplier order created successfully.");
             } else {
-                printer.printError("Failed to create order. Product may already have an active order.");
+                printer.printError("Failed to create order.");
             }
 
         } catch (NumberFormatException e) {

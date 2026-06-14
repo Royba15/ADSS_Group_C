@@ -1,6 +1,8 @@
 package Inventory.presentation;
 
 import Inventory.domain.*;
+import Inventory.dto.SupplierOrderDTO;
+
 import java.util.List;
 
 public class ConsolePrinter {
@@ -166,6 +168,30 @@ public class ConsolePrinter {
     }
     public void promptForOrderQuantity() {
         System.out.print("Enter quantity to order: ");
+    }
+    public void printSupplierOrderDTO(SupplierOrderDTO order) {
+        System.out.println("Order ID:            " + order.orderId());
+        System.out.println("Product ID:          " + order.productId());
+        System.out.println("Product Name:        " + order.productName());
+        System.out.println("Supplier ID:         " + order.supplierId());
+        System.out.println("Supplier Catalog ID: " + order.supplierCatalogId());
+        System.out.println("Quantity:            " + order.quantity());
+        System.out.println("Status:              " + order.status());
+        System.out.println("Created At:          " + order.createdAt());
+    }
+
+    public void printSupplierOrdersDTO(List<SupplierOrderDTO> orders) {
+        printHeader("SUPPLIER ORDERS");
+
+        if (orders == null || orders.isEmpty()) {
+            System.out.println("No supplier orders found.");
+            return;
+        }
+
+        for (SupplierOrderDTO order : orders) {
+            printSupplierOrderDTO(order);
+            System.out.println("----------------------------------------");
+        }
     }
 
 }

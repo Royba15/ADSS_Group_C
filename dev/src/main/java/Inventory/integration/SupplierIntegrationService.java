@@ -30,67 +30,75 @@ public class SupplierIntegrationService {
     // ── יצירת הזמנה אוטומטית אם מתחת לסף ───────────────────────────────────
 
     public boolean createAutomaticOrderIfNeeded(Product product) {
-        if (product == null || product.getInventory() == null) return false;
-        if (!product.checkMinThreshold()) return false;
-
+        if (product == null || product.getInventory() == null) {return false;}
+        if (!product.checkMinThreshold()) {return false;}
         int quantity = calculateQuantityToOrder(product);
-        return createOrder(product, quantity);
+        // Automatic orders should not create duplicates
+        return createOrder(product, quantity, false);
     }
 
     // ── יצירת הזמנה ידנית ────────────────────────────────────────────────────
 
-    public boolean createManualOrder(Product product, int quantityToOrder) {
-        if (product == null || product.getInventory() == null) return false;
-        if (quantityToOrder <= 0) return false;
-        return createOrder(product, quantityToOrder);
+    public boolean createManualOrder(Product product, int quantityToOrder, boolean allowDuplicateOrder) {
+        if (product == null || product.getInventory() == null) {return false;}
+        if (quantityToOrder <= 0) {return false;}
+        return createOrder(product, quantityToOrder, allowDuplicateOrder);
     }
 
     // ── לוגיקה פנימית ────────────────────────────────────────────────────────
 
-    private boolean createOrder(Product product, int quantityToOrder) {
-        if (quantityToOrder <= 0) return false;
-
-        // בדוק אם יש הזמנה פעילה קיימת ב-DB
-        if (hasActiveOrderForProduct(product.getProductID())) {
-            System.out.println("[ORDER BLOCKED] Product " + product.getProductID()
-                    + " already has an active order.");
+    private boolean createOrder(Product product, int quantityToOrder, boolean allowDuplicateOrder) {
+        if (quantityToOrder <= 0) {
             return false;
         }
 
-        int selectedSupplierID = supplierMockService.findBestSupplierForOrder(
-                product.getProductID(), quantityToOrder);
+        boolean hasActiveOrder = hasActiveOrderForProduct(product.getProductID());
+        if (hasActiveOrder && !allowDuplicateOrder) {
+            return false;
+        }
 
-        // צור domain object לצורך שליחה ל-Mock
-        SupplierOrder order = new SupplierOrder(
-                0,  // ה-ID ייקבע ע"י ה-DB
-                product.getProductID(),
-                product.getProductName(),
-                selectedSupplierID,
-                product.getSupplierCatalogID(),
-                quantityToOrder
-        );
+        int selectedSupplierID = supplierMockService.findBestSupplierForOrder(product.getProductID(), quantityToOrder);
 
-        boolean sent = supplierMockService.sendOrder(order);
-        if (!sent) return false;
-
-        // שמור ל-DB
         try {
-            SupplierOrderDTO dto = new SupplierOrderDTO(
+            SupplierOrderDTO createdDto = new SupplierOrderDTO(
                     0,
                     product.getProductID(),
                     product.getProductName(),
                     selectedSupplierID,
                     product.getSupplierCatalogID(),
                     quantityToOrder,
-                    OrderStatus.SENT.name(),
+                    OrderStatus.CREATED.name(),
                     LocalDateTime.now().toString()
             );
-            int newId = orderDAO.save(dto);
+
+            int newId = orderDAO.save(createdDto);
+
+            SupplierOrder order = new SupplierOrder(
+                    newId,
+                    product.getProductID(),
+                    product.getProductName(),
+                    selectedSupplierID,
+                    product.getSupplierCatalogID(),
+                    quantityToOrder
+            );
+
+            boolean sent = supplierMockService.sendOrder(order);
+
+            if (!sent) {
+                orderDAO.updateStatus(newId, OrderStatus.CANCELLED.name());
+                return false;
+            }
+
+            orderDAO.updateStatus(newId, OrderStatus.SENT.name());
+
             System.out.println("[ORDER] Created order #" + newId
                     + " for product " + product.getProductName()
                     + " qty=" + quantityToOrder
-                    + " supplier=" + selectedSupplierID);
+                    + " supplier=" + selectedSupplierID
+                    + " status=" + OrderStatus.SENT.name());
+
             return true;
+
         } catch (SQLException e) {
             System.err.println("[DB] createOrder failed: " + e.getMessage());
             return false;
@@ -111,6 +119,15 @@ public class SupplierIntegrationService {
         } catch (SQLException e) {
             System.err.println("[DB] hasActiveOrder failed: " + e.getMessage());
             return false;
+        }
+    }
+
+    public List<SupplierOrderDTO> getActiveOrdersForProduct(int productID) {
+        try {
+            return orderDAO.findActiveByProductId(productID);
+        } catch (SQLException e) {
+            System.err.println("[DB] getActiveOrdersForProduct failed: " + e.getMessage());
+            return new ArrayList<>();
         }
     }
 
@@ -157,4 +174,5 @@ public class SupplierIntegrationService {
             return new ArrayList<>();
         }
     }
+
 }
