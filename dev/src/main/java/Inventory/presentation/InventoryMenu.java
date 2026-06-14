@@ -1,7 +1,13 @@
 package Inventory.presentation;
 
+import Inventory.DB.DBDataInit;
+import Inventory.DB.DatabaseConnection;
+import Inventory.DB.SchemaCreator;
 import Inventory.service.InventoryService;
 import Inventory.domain.Product;
+
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
@@ -10,8 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-import static Inventory.DB.Datainit.testConnection;
-
 public class InventoryMenu {
     private final InventoryService service;
     private final ConsolePrinter printer;
@@ -19,13 +23,14 @@ public class InventoryMenu {
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     public InventoryMenu() {
-        this.service = new InventoryService();
         this.printer = new ConsolePrinter();
         this.scanner = new Scanner(System.in);
-    }
-
-    public void initializeData() {
-        service.initializeData();
+        try {
+            SchemaCreator.createTables();
+        } catch (SQLException e) {
+            System.err.println("DB init failed: " + e.getMessage());
+        }
+        this.service = new InventoryService();
     }
 
     public static void main(String[] args) {
@@ -35,25 +40,45 @@ public class InventoryMenu {
     }
 
     private void promptForDatabaseInitialization() {
-        testConnection();
         printer.printHeader("DATABASE INITIALIZATION");
-        System.out.println("1. Load Existing Database");
-        System.out.println("2. Start with Empty Database");
+        System.out.println("1. Use existing data (+ load defaults if empty)");
+        System.out.println("2. Start fresh with empty database");
         System.out.print("Choose an option: ");
         try {
-            int choice = Integer.parseInt(scanner.nextLine());
-            if (choice == 1) {
-                initializeData();
-                printer.printSuccess("Existing database loaded!");
-            } else if (choice == 2) {
-                printer.printSuccess("Starting with empty database!");
-            } else {
-                printer.printError("Invalid choice. Loading existing database...");
-                initializeData();
+            int choice = Integer.parseInt(scanner.nextLine().trim());
+            switch (choice) {
+                case 1 -> {
+                    // DBDataInit.init() בודק אם כבר יש נתונים — אם כן לא נוגע
+                    DBDataInit.init();
+                    printer.printSuccess("Database ready!");
+                }
+                case 2 -> {
+                    clearDatabase();
+                    printer.printSuccess("Starting with empty database!");
+                }
+                default -> {
+                    printer.printError("Invalid choice. Using existing data...");
+                    DBDataInit.init();
+                    printer.printSuccess("Database ready!");
+                }
             }
         } catch (Exception e) {
-            printer.printError("Error reading input. Loading existing database...");
-            initializeData();
+            printer.printError("Error: " + e.getMessage());
+        }
+    }
+
+    /**
+     * מוחק את כל הנתונים — הטבלאות נשארות, רק הרשומות נמחקות.
+     */
+    private void clearDatabase() {
+        try (Statement st = DatabaseConnection.getConnection().createStatement()) {
+            st.execute("DELETE FROM defective_items");
+            st.execute("DELETE FROM inventory_levels");
+            st.execute("DELETE FROM products");
+            st.execute("DELETE FROM categories");
+            System.out.println("[DB] Database cleared.");
+        } catch (SQLException e) {
+            System.err.println("Failed to clear database: " + e.getMessage());
         }
     }
 
@@ -73,41 +98,18 @@ public class InventoryMenu {
 
     private void handleMainChoice(int choice) {
         switch (choice) {
-            case 1:
-                updateInventoryFlow();
-                break;
-            case 2:
-                viewProductFlow();
-                break;
-            case 3:
-                printer.printAlerts(service.getLowStockProducts());
-                break;
-            case 4:
-                handleReportsMenu();
-                break;
-            case 5:
-                handleDiscountMenu();
-                break;
-            case 6:
-                reportDefectiveFlow();
-                break;
-            case 7:
-                addNewCategoryFlow();
-                break;
-            case 8:
-                addNewProductFlow();
-                break;
-            case 9:
-                deleteProductFlow();
-                break;
-            case 10:
-                createManualSupplierOrderFlow();
-                break;
-            case 0: {}
-            break;
-            default:
-                printer.printError("Option not found.");
-                break;
+            case 1:  updateInventoryFlow();                              break;
+            case 2:  viewProductFlow();                                  break;
+            case 3:  printer.printAlerts(service.getLowStockProducts()); break;
+            case 4:  handleReportsMenu();                                break;
+            case 5:  handleDiscountMenu();                               break;
+            case 6:  reportDefectiveFlow();                              break;
+            case 7:  addNewCategoryFlow();                               break;
+            case 8:  addNewProductFlow();                                break;
+            case 9:  deleteProductFlow();                                break;
+            case 10: createManualSupplierOrderFlow();;
+            case 0:  break;
+            default: printer.printError("Option not found.");            break;
         }
     }
 
@@ -146,55 +148,39 @@ public class InventoryMenu {
             printer.printError("Invalid ID format.");
         }
     }
-    // display report menu
+
     private void handleReportsMenu() {
         printer.printReportsMenu();
         try {
             int reportChoice = Integer.parseInt(scanner.nextLine());
             switch (reportChoice) {
-                case 1:
-                    printer.printDefectiveReport(service.generateDefectiveReport());
-                    break;
-                case 2:
-                    categoryReportFlow();
-                    break;
-                case 3:
-                    printer.printOrderReport(service.generateOrderReport());
-                    break;
+                case 1: printer.printDefectiveReport(service.generateDefectiveReport()); break;
+                case 2: categoryReportFlow();                                             break;
+                case 3: printer.printOrderReport(service.generateOrderReport());         break;
                 case 0: break;
-                default:
-                    printer.printError("Invalid report option.");
-                    break;
+                default: printer.printError("Invalid report option."); break;
             }
         } catch (Exception e) {
             printer.printError("Input error.");
         }
     }
-    // display discount menu
+
     private void handleDiscountMenu() {
         printer.printDiscountMenu();
         try {
             int choice = Integer.parseInt(scanner.nextLine());
             switch (choice) {
-                case 1:
-                    applyDiscountToProductFlow();
-                    break;
-                case 2:
-                    applyDiscountToCategoryFlow();
-                    break;
-                case 3:
-                    applyDiscountToSupplierFlow();
-                    break;
+                case 1: applyDiscountToProductFlow();  break;
+                case 2: applyDiscountToCategoryFlow(); break;
+                case 3: applyDiscountToSupplierFlow(); break;
                 case 0: break;
-                default:
-                    printer.printError("Invalid option.");
-                    break;
+                default: printer.printError("Invalid option."); break;
             }
         } catch (Exception e) {
             printer.printError("Input error.");
         }
     }
-    // create discount by id product
+
     private void applyDiscountToProductFlow() {
         try {
             printer.promptForProductId();
@@ -204,11 +190,9 @@ public class InventoryMenu {
             printer.promptForDiscount();
             double discount = Double.parseDouble(scanner.nextLine());
             printer.promptForDate("start");
-            LocalDate startDate = LocalDate.parse(scanner.nextLine(), DATE_FORMAT);
-            LocalDateTime start = startDate.atStartOfDay();
+            LocalDateTime start = LocalDate.parse(scanner.nextLine(), DATE_FORMAT).atStartOfDay();
             printer.promptForDate("end");
-            LocalDate endDate = LocalDate.parse(scanner.nextLine(), DATE_FORMAT);
-            LocalDateTime end = endDate.atTime(23, 59);
+            LocalDateTime end = LocalDate.parse(scanner.nextLine(), DATE_FORMAT).atTime(23, 59);
 
             if (service.applyDiscountToProduct(id, promoName, discount, start, end)) {
                 printer.printSuccess("Discount applied!");
@@ -222,8 +206,7 @@ public class InventoryMenu {
         }
     }
 
-    // create discount by category
-    private void applyDiscountToCategoryFlow () {
+    private void applyDiscountToCategoryFlow() {
         try {
             printer.promptForCategoryName();
             String catName = scanner.nextLine();
@@ -232,11 +215,9 @@ public class InventoryMenu {
             printer.promptForDiscount();
             double discount = Double.parseDouble(scanner.nextLine());
             printer.promptForDate("start");
-            LocalDate startDate = LocalDate.parse(scanner.nextLine(), DATE_FORMAT);
-            LocalDateTime start = startDate.atStartOfDay();
+            LocalDateTime start = LocalDate.parse(scanner.nextLine(), DATE_FORMAT).atStartOfDay();
             printer.promptForDate("end");
-            LocalDate endDate = LocalDate.parse(scanner.nextLine(), DATE_FORMAT);
-            LocalDateTime end = endDate.atTime(23, 59);
+            LocalDateTime end = LocalDate.parse(scanner.nextLine(), DATE_FORMAT).atTime(23, 59);
 
             if (service.applyDiscountToCategory(catName, promoName, discount, start, end)) {
                 printer.printSuccess("Discount applied!");
@@ -250,7 +231,6 @@ public class InventoryMenu {
         }
     }
 
-    // Apply discount to all products of a supplier (fixes Req 6 feedback)
     private void applyDiscountToSupplierFlow() {
         try {
             printer.promptForSupplierID();
@@ -267,11 +247,9 @@ public class InventoryMenu {
             double discount = Double.parseDouble(scanner.nextLine().trim());
 
             printer.promptForDate("start");
-            java.time.LocalDate startDate = java.time.LocalDate.parse(scanner.nextLine().trim(), DATE_FORMAT);
-            java.time.LocalDateTime start = startDate.atStartOfDay();
+            LocalDateTime start = LocalDate.parse(scanner.nextLine().trim(), DATE_FORMAT).atStartOfDay();
             printer.promptForDate("end");
-            java.time.LocalDate endDate = java.time.LocalDate.parse(scanner.nextLine().trim(), DATE_FORMAT);
-            java.time.LocalDateTime end = endDate.atTime(23, 59);
+            LocalDateTime end = LocalDate.parse(scanner.nextLine().trim(), DATE_FORMAT).atTime(23, 59);
 
             if (!end.isAfter(start)) {
                 printer.printError("End date must be after start date.");
@@ -290,7 +268,6 @@ public class InventoryMenu {
         }
     }
 
-    // create category report
     private void categoryReportFlow() {
         printer.promptForCategoryList();
         String input = scanner.nextLine();
@@ -298,7 +275,6 @@ public class InventoryMenu {
         printer.printCategoryReport(service.generateCategoryReport(categoryNames));
     }
 
-    // create defective report
     private void reportDefectiveFlow() {
         try {
             printer.promptForProductId();
@@ -320,7 +296,6 @@ public class InventoryMenu {
                 printer.printError("Reason cannot be empty.");
                 return;
             }
-
             if (quantity <= 0) {
                 printer.printError("Quantity must be greater than 0.");
                 return;
@@ -414,13 +389,10 @@ public class InventoryMenu {
             System.out.println("\nMain Categories:");
             List<Inventory.domain.Category> mainCategories = service.getCategoriesByLevel(0);
             if (mainCategories.isEmpty()) {
-                printer.printError("No main categories available. Please create a main category first (Option 7).");
+                printer.printError("No main categories available. Please create one first (Option 7).");
                 return;
             }
-            for (Inventory.domain.Category c : mainCategories) {
-                System.out.println("  - " + c.getName());
-            }
-
+            for (Inventory.domain.Category c : mainCategories) System.out.println("  - " + c.getName());
             System.out.print("\nEnter main category name: ");
             String mainCatName = scanner.nextLine().trim();
 
@@ -432,13 +404,10 @@ public class InventoryMenu {
             System.out.println("\nSub Categories:");
             List<Inventory.domain.Category> subCategories = service.getCategoriesByLevel(1);
             if (subCategories.isEmpty()) {
-                printer.printError("No sub categories available. Please create sub categories first (Option 7).");
+                printer.printError("No sub categories available. Please create one first (Option 7).");
                 return;
             }
-            for (Inventory.domain.Category c : subCategories) {
-                System.out.println("  - " + c.getName());
-            }
-
+            for (Inventory.domain.Category c : subCategories) System.out.println("  - " + c.getName());
             System.out.print("Enter sub category name: ");
             String subCatName = scanner.nextLine().trim();
 
@@ -450,13 +419,10 @@ public class InventoryMenu {
             System.out.println("\nSub-Sub Categories:");
             List<Inventory.domain.Category> subSubCategories = service.getCategoriesByLevel(2);
             if (subSubCategories.isEmpty()) {
-                printer.printError("No sub-sub categories available. Please create sub-sub categories first (Option 7).");
+                printer.printError("No sub-sub categories available. Please create one first (Option 7).");
                 return;
             }
-            for (Inventory.domain.Category c : subSubCategories) {
-                System.out.println("  - " + c.getName());
-            }
-
+            for (Inventory.domain.Category c : subSubCategories) System.out.println("  - " + c.getName());
             System.out.print("Enter sub-sub category name: ");
             String subSubCatName = scanner.nextLine().trim();
 
@@ -477,13 +443,12 @@ public class InventoryMenu {
             System.out.print("Enter location (e.g., Aisle 1): ");
             String location = scanner.nextLine().trim();
 
-            // Use service to add product - categories must exist
             if (service.addNewProduct(productID, productName, supplierID, costPrice, sellingPrice,
                     catalogID, mainCatName, subCatName, subSubCatName,
                     shelfQty, warehouseQty, minThreshold, location)) {
                 printer.printSuccess("Product '" + productName + "' added successfully!");
             } else {
-                printer.printError("Failed to add product. Check that all categories exist or product ID is already in use.");
+                printer.printError("Failed to add product. Check categories exist or product ID is in use.");
             }
         } catch (NumberFormatException e) {
             printer.printError("Invalid input. Please enter valid numbers.");
@@ -492,7 +457,6 @@ public class InventoryMenu {
         }
     }
 
-    // Delete product by ID (fixes "Missing Product Delete" feedback)
     private void deleteProductFlow() {
         try {
             printer.printHeader("DELETE PRODUCT");

@@ -1,323 +1,326 @@
 package Inventory.service;
-import Inventory.integration.SupplierIntegrationService;
-import java.util.Set;
-import Inventory.domain.*;
-import Inventory.DB.Datainit;
 
+import Inventory.integration.SupplierIntegrationService;
+import Inventory.DB.dao.CategoryDAO;
+import Inventory.DB.dao.DefectiveItemDAO;
+import Inventory.DB.dao.ProductDAO;
+import Inventory.DB.impl.JdbcCategoryDAO;
+import Inventory.DB.impl.JdbcDefectiveItemDAO;
+import Inventory.DB.impl.JdbcProductDAO;
+import Inventory.domain.*;
+import Inventory.dto.CategoryDTO;
+import Inventory.dto.DefectiveItemDTO;
+import Inventory.dto.ProductDTO;
+import Inventory.dto.SupplierOrderDTO;
+
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class InventoryService {
-    private final List<Product> products;
-    private final List<DefectiveItem> defectiveItems;
-    private final List<Category> categories;
-    private final Map<Category, List<Product>> categoryToProducts;
+
+    private final ProductDAO productDAO;
+    private final CategoryDAO categoryDAO;
+    private final DefectiveItemDAO defectiveDAO;
     private final SupplierIntegrationService supplierIntegrationService;
 
-    // constructor
     public InventoryService() {
-        this.products = new ArrayList<>();
-        this.defectiveItems = new ArrayList<>();
-        this.categories=new ArrayList<>();
-        this.categoryToProducts = new HashMap<>();
+        this.productDAO                 = new JdbcProductDAO();
+        this.categoryDAO                = new JdbcCategoryDAO();
+        this.defectiveDAO               = new JdbcDefectiveItemDAO();
         this.supplierIntegrationService = new SupplierIntegrationService();
     }
 
-    // function init all the data
-    public void initializeData() {
-        Datainit initializer = new Datainit(this);
-        initializer.initializeData();
-    }
+    // ── Products ──────────────────────────────────────────────────────────────
 
-    // add to lists (prod, map)
-    public void addProduct(Product p) {
-        if (p == null) return;
-        products.add(p);
-        addToMap(p.getMainCategory(), p);
-        addToMap(p.getSubCategory(), p);
-        addToMap(p.getSubSubCategory(), p);
-    }
-
-    private void addToMap(Category cat, Product p) {
-        categoryToProducts.putIfAbsent(cat, new ArrayList<>());
-        categoryToProducts.get(cat).add(p);
-    }
-
-
-    // View Product by ID
     public Product getProductByID(int productID) {
-        for (Product p : products) {
-            if (p.getProductID() == productID) {
-                return p;
-            }
+        try {
+            return productDAO.findById(productID).map(this::dtoToDomain).orElse(null);
+        } catch (SQLException e) {
+            System.err.println("[DB] getProductByID failed: " + e.getMessage());
+            return null;
         }
-        return null;
     }
 
-    public void addCategory(Category c) {
-        if (c != null) categories.add(c);
-    }
-
-    public List<Category> getCategories() {
-        return new ArrayList<>(categories);
+    public List<Product> getAllProducts() {
+        try {
+            List<Product> result = new ArrayList<>();
+            for (ProductDTO dto : productDAO.findAll()) result.add(dtoToDomain(dto));
+            return result;
+        } catch (SQLException e) {
+            System.err.println("[DB] getAllProducts failed: " + e.getMessage());
+            return new ArrayList<>();
+        }
     }
 
     public boolean updateInventory(int productID, int shelfQty, int warehouseQty) {
-        Product p = getProductByID(productID);
-        if (p == null) return false;
-        p.getInventory().updateQuantity(shelfQty, warehouseQty);
-        supplierIntegrationService.createAutomaticOrderIfNeeded(p);
-        return true;
-    }
-
-    // Alerts
-    public List<Product> getLowStockProducts() {
-        List<Product> alerts = new ArrayList<>();
-        for (Product p : products) {
-            if (p.checkMinThreshold()) {
-                alerts.add(p);
-            }
+        try {
+            if (!productDAO.existsById(productID)) return false;
+            productDAO.updateInventoryQuantity(productID, shelfQty, warehouseQty);
+            // בדוק חוסר → הזמנה אוטומטית
+            Product p = getProductByID(productID);
+            if (p != null) supplierIntegrationService.createAutomaticOrderIfNeeded(p);
+            return true;
+        } catch (SQLException e) {
+            System.err.println("[DB] updateInventory failed: " + e.getMessage());
+            return false;
         }
-        return alerts;
     }
 
-    // Reports
-    // Defective items report
-    public List<DefectiveItem> getDefectiveItems() {
-        return new ArrayList<>(defectiveItems);
+    public boolean addNewProduct(int productID, String productName, int supplierID,
+                                 double costPrice, double sellingPrice, String catalogID,
+                                 String mainCategoryName, String subCategoryName, String subSubCategoryName,
+                                 int shelfQuantity, int warehouseQuantity, int minThreshold, String location) {
+        try {
+            if (productName == null || productName.trim().isEmpty()) return false;
+            if (costPrice < 0 || sellingPrice < 0) return false;
+            if (shelfQuantity < 0 || warehouseQuantity < 0 || minThreshold < 0) return false;
+            if (productDAO.existsById(productID)) return false;
+            if (categoryDAO.findByName(mainCategoryName).isEmpty())   return false;
+            if (categoryDAO.findByName(subCategoryName).isEmpty())    return false;
+            if (categoryDAO.findByName(subSubCategoryName).isEmpty()) return false;
+
+            productDAO.save(new ProductDTO(
+                    productID, productName.trim(), supplierID,
+                    costPrice, sellingPrice, sellingPrice, catalogID,
+                    mainCategoryName, subCategoryName, subSubCategoryName,
+                    shelfQuantity, warehouseQuantity, minThreshold, location));
+            return true;
+        } catch (SQLException e) {
+            System.err.println("[DB] addNewProduct failed: " + e.getMessage());
+            return false;
+        }
     }
 
-    // Report Defective Product
+    public boolean deleteProduct(int productID) {
+        try {
+            if (!productDAO.existsById(productID)) return false;
+            productDAO.delete(productID);
+            return true;
+        } catch (SQLException e) {
+            System.err.println("[DB] deleteProduct failed: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public int getNextProductID() {
+        try {
+            return productDAO.findAll().stream()
+                    .mapToInt(ProductDTO::productId).max().orElse(0) + 1;
+        } catch (SQLException e) { return 1; }
+    }
+
+    // ── Low stock ─────────────────────────────────────────────────────────────
+
+    public List<Product> getLowStockProducts() {
+        try {
+            List<Product> result = new ArrayList<>();
+            for (ProductDTO dto : productDAO.findBelowThreshold()) result.add(dtoToDomain(dto));
+            return result;
+        } catch (SQLException e) {
+            System.err.println("[DB] getLowStockProducts failed: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    // ── Categories ────────────────────────────────────────────────────────────
+
+    public boolean addNewCategory(String categoryName, int level) {
+        try {
+            if (categoryName == null || categoryName.trim().isEmpty()) return false;
+            if (level < 0 || level > 2) return false;
+            if (categoryDAO.findByName(categoryName.trim()).isPresent()) return false;
+            categoryDAO.save(new CategoryDTO(categoryName.trim(), level));
+            return true;
+        } catch (SQLException e) {
+            System.err.println("[DB] addNewCategory failed: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public List<Category> getCategories() {
+        try {
+            List<Category> result = new ArrayList<>();
+            for (CategoryDTO dto : categoryDAO.findAll())
+                result.add(new Category(dto.name(), dto.level()));
+            return result;
+        } catch (SQLException e) {
+            System.err.println("[DB] getCategories failed: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    public List<Category> getCategoriesByLevel(int level) {
+        try {
+            List<Category> result = new ArrayList<>();
+            for (CategoryDTO dto : categoryDAO.findByLevel(level))
+                result.add(new Category(dto.name(), dto.level()));
+            return result;
+        } catch (SQLException e) {
+            System.err.println("[DB] getCategoriesByLevel failed: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    public boolean categoryExists(String categoryName) {
+        try { return categoryDAO.findByName(categoryName).isPresent(); }
+        catch (SQLException e) { return false; }
+    }
+
+    public boolean allCategoriesExist(String main, String sub, String subSub) {
+        return categoryExists(main) && categoryExists(sub) && categoryExists(subSub);
+    }
+
+    // ── Defective items ───────────────────────────────────────────────────────
+
     public void reportDefectiveItem(int productID, int quantity, String reason) {
-        Product p = getProductByID(productID);
-        if (p == null) return;
-        int newID = defectiveItems.size() + 1;
-        DefectiveItem item = new DefectiveItem(newID, p, quantity, reason);
-        defectiveItems.add(item);
+        try {
+            ProductDTO p = productDAO.findById(productID).orElse(null);
+            if (p == null) return;
+            defectiveDAO.save(new DefectiveItemDTO(0, productID, p.name(), quantity, reason));
+        } catch (SQLException e) {
+            System.err.println("[DB] reportDefectiveItem failed: " + e.getMessage());
+        }
+    }
+
+    public List<DefectiveItem> getDefectiveItems() {
+        try {
+            List<DefectiveItem> result = new ArrayList<>();
+            for (DefectiveItemDTO dto : defectiveDAO.findAll()) {
+                Product p = getProductByID(dto.productId());
+                if (p != null)
+                    result.add(new DefectiveItem(dto.id(), p, dto.quantity(), dto.reason()));
+            }
+            return result;
+        } catch (SQLException e) {
+            System.err.println("[DB] getDefectiveItems failed: " + e.getMessage());
+            return new ArrayList<>();
+        }
     }
 
     public int getTotalDefectiveCountForProduct(int productID) {
-        int totalDefective = 0;
-        for (DefectiveItem item : defectiveItems) {
-            if (item.getProduct().getProductID() == productID) {
-                totalDefective += item.getQuantity();
-            }
-        }
-        return totalDefective;
+        try {
+            return defectiveDAO.findByProductId(productID).stream()
+                    .mapToInt(DefectiveItemDTO::quantity).sum();
+        } catch (SQLException e) { return 0; }
     }
+
+    // ── Reports ───────────────────────────────────────────────────────────────
 
     public CategoryReport generateCategoryReport(List<String> categoryNames) {
         List<Product> result = new ArrayList<>();
         for (String name : categoryNames) {
-            Category key = new Category(name, 0);
-            if (categoryToProducts.containsKey(key)) {
-                result.addAll(categoryToProducts.get(key));
+            try {
+                for (ProductDTO dto : productDAO.findByCategory(name))
+                    result.add(dtoToDomain(dto));
+            } catch (SQLException e) {
+                System.err.println("[DB] categoryReport failed: " + e.getMessage());
             }
         }
         return new CategoryReport(categoryNames, result);
     }
 
-    public DefectiveReport generateDefectiveReport() {
-        return new DefectiveReport(new ArrayList<>(defectiveItems));
+    public DefectiveReport generateDefectiveReport() { return new DefectiveReport(getDefectiveItems()); }
+    public OrderReport     generateOrderReport()     { return new OrderReport(getLowStockProducts()); }
+
+    // ── Discounts ─────────────────────────────────────────────────────────────
+
+    public boolean applyDiscountToProduct(int productID, String promoName, double discount,
+                                          LocalDateTime start, LocalDateTime end) {
+        try {
+            ProductDTO dto = productDAO.findById(productID).orElse(null);
+            if (dto == null) return false;
+            Product p = dtoToDomain(dto);
+            p.assignPromotion(new DiscountPromotion(productID, promoName, discount, start, end));
+            productDAO.updateSellingPrice(productID, p.getSellingPrice());
+            return true;
+        } catch (SQLException e) {
+            System.err.println("[DB] applyDiscountToProduct failed: " + e.getMessage());
+            return false;
+        }
     }
 
-    public OrderReport generateOrderReport() {
-        List<Product> toOrder = new ArrayList<>();
-        for (Product p : products) {
-            if (p.checkMinThreshold()) toOrder.add(p);
-        }
-        return new OrderReport(toOrder);
-    }
-
-    public boolean applyDiscountToProduct(int productID, String promoName, double discount, LocalDateTime start, LocalDateTime end) {
-        Product p = getProductByID(productID);
-        if (p == null) return false;
-        int newID = products.indexOf(p) + 1;
-        DiscountPromotion promo = new DiscountPromotion(newID, promoName, discount, start, end);
-        p.assignPromotion(promo);
-        return true;
-    }
-
-    public boolean applyDiscountToCategory(String categoryName, String promoName, double discount, LocalDateTime start, LocalDateTime end) {
-        Category key = new Category(categoryName, 0);
-        if (!categoryToProducts.containsKey(key)) return false;
-        int newID = categoryName.hashCode();
-        DiscountPromotion promo = new DiscountPromotion(newID, promoName, discount, start, end);
-        for (Product p : categoryToProducts.get(key)) {
-            p.assignPromotion(promo);
-        }
-        return true;
-    }
-
-    // Add a new category
-    public boolean addNewCategory(String categoryName, int level) {
-        if (categoryName == null || categoryName.trim().isEmpty()) {
-            return false;
-        }
-        if (level < 0 || level > 2) {
-            return false;
-        }
-
-        Category newCategory = new Category(categoryName.trim(), level);
-
-        // Check if category already exists
-        if (categories.contains(newCategory)) {
-            return false;
-        }
-
-        categories.add(newCategory);
-        return true;
-    }
-
-    // Add a new product with all details
-    // Note: Categories must already exist - we don't create them automatically
-    public boolean addNewProduct(int productID, String productName, int supplierID, double costPrice, double sellingPrice, String catalogID, String mainCategoryName, String subCategoryName, String subSubCategoryName, int shelfQuantity, int warehouseQuantity, int minThreshold, String location) {
-
-        // Validation
-        if (productName == null || productName.trim().isEmpty()) {
-            return false;
-        }
-
-        if (costPrice < 0 || sellingPrice < 0) {
-            return false;
-        }
-
-        if (shelfQuantity < 0 || warehouseQuantity < 0 || minThreshold < 0) {
-            return false;
-        }
-
-        // Check if product ID already exists
-        if (getProductByID(productID) != null) {
-            return false;
-        }
-
-        // Check if all categories exist - they must be created beforehand
-        Category mainCategory = new Category(mainCategoryName, 0);
-        Category subCategory = new Category(subCategoryName, 1);
-        Category subSubCategory = new Category(subSubCategoryName, 2);
-
-        if (!categories.contains(mainCategory)) {
-            return false; // Main category doesn't exist
-        }
-        if (!categories.contains(subCategory)) {
-            return false; // Sub category doesn't exist
-        }
-        if (!categories.contains(subSubCategory)) {
-            return false; // Sub-sub category doesn't exist
-        }
-
-        // Create inventory
-        InventoryLevel inventory = new InventoryLevel(shelfQuantity, warehouseQuantity, minThreshold, location);
-
-        // Create product with existing categories
-        Product newProduct = new Product(productID, productName.trim(), supplierID,
-                costPrice, sellingPrice, catalogID, mainCategory, subCategory, subSubCategory, inventory);
-
-        // Add product
-        addProduct(newProduct);
-        return true;
-    }
-
-    // Get the next available product ID
-    public int getNextProductID() {
-        if (products.isEmpty()) {
-            return 1;
-        }
-        int maxID = 0;
-        for (Product p : products) {
-            if (p.getProductID() > maxID) {
-                maxID = p.getProductID();
+    public boolean applyDiscountToCategory(String categoryName, String promoName, double discount,
+                                           LocalDateTime start, LocalDateTime end) {
+        try {
+            List<ProductDTO> dtos = productDAO.findByCategory(categoryName);
+            if (dtos.isEmpty()) return false;
+            DiscountPromotion promo = new DiscountPromotion(categoryName.hashCode(), promoName, discount, start, end);
+            for (ProductDTO dto : dtos) {
+                Product p = dtoToDomain(dto);
+                p.assignPromotion(promo);
+                productDAO.updateSellingPrice(p.getProductID(), p.getSellingPrice());
             }
+            return true;
+        } catch (SQLException e) {
+            System.err.println("[DB] applyDiscountToCategory failed: " + e.getMessage());
+            return false;
         }
-        return maxID + 1;
     }
 
-    // Get all categories by level
-    public List<Category> getCategoriesByLevel(int level) {
-        List<Category> result = new ArrayList<>();
-        for (Category c : categories) {
-            if (c.getLevel() == level) {
-                result.add(c);
-            }
-        }
-        return result;
-    }
-
-    // Check if all three categories exist
-    public boolean allCategoriesExist(String mainCatName, String subCatName, String subSubCatName) {
-        Category mainCat = new Category(mainCatName, 0);
-        Category subCat = new Category(subCatName, 1);
-        Category subSubCat = new Category(subSubCatName, 2);
-
-        return categories.contains(mainCat) &&
-                categories.contains(subCat) &&
-                categories.contains(subSubCat);
-    }
-
-    // Check if a category exists (regardless of level)
-    public boolean categoryExists(String categoryName) {
-        for (Category c : categories) {
-            if (c.getName().equalsIgnoreCase(categoryName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // Get all products
-    public List<Product> getAllProducts() {
-        return new ArrayList<>(products);
-    }
-
-    // Delete a product by ID (fixes "Missing Product Delete" feedback)
-    public boolean deleteProduct(int productID) {
-        Product p = getProductByID(productID);
-        if (p == null) return false;
-        products.remove(p);
-        removeFromMap(p.getMainCategory(), p);
-        removeFromMap(p.getSubCategory(), p);
-        removeFromMap(p.getSubSubCategory(), p);
-        return true;
-    }
-
-    private void removeFromMap(Category cat, Product p) {
-        List<Product> list = categoryToProducts.get(cat);
-        if (list != null) list.remove(p);
-    }
-
-    // Apply discount to all products of a specific supplier (fixes Req 6 feedback) /////// צריך לתקן כי צריך להחליט האם supplierCatalogID זה המשתנה שאליו אנחנו מתייחסים כשמדובר בספק, ובנוסף לבדוק האם צריך לשנות את זה למספר אינטגר או להשאיר סטרינג
     public boolean applyDiscountToSupplier(int supplierID, String promoName, double discount,
                                            LocalDateTime start, LocalDateTime end) {
         if (discount < 0 || discount > 100)
             throw new IllegalArgumentException("Discount must be between 0 and 100");
         if (start == null || end == null || !end.isAfter(start))
             throw new IllegalArgumentException("End date must be after start date");
-
-        boolean found = false;
-        DiscountPromotion promo = new DiscountPromotion(supplierID, promoName, discount, start, end);
-        for (Product p : products) {
-            if (p.getSupplierID() == supplierID) {
+        try {
+            List<ProductDTO> dtos = productDAO.findBySupplier(supplierID);
+            if (dtos.isEmpty()) return false;
+            DiscountPromotion promo = new DiscountPromotion(supplierID, promoName, discount, start, end);
+            for (ProductDTO dto : dtos) {
+                Product p = dtoToDomain(dto);
                 p.assignPromotion(promo);
-                found = true;
+                productDAO.updateSellingPrice(p.getProductID(), p.getSellingPrice());
             }
+            return true;
+        } catch (SQLException e) {
+            System.err.println("[DB] applyDiscountToSupplier failed: " + e.getMessage());
+            return false;
         }
-        return found;
     }
+
+    // ── Supplier integration ──────────────────────────────────────────────────
 
     public boolean createManualSupplierOrder(int productID, int quantityToOrder) {
         Product p = getProductByID(productID);
-
-        if (p == null) {
-            return false;
-        }
-
-        if (quantityToOrder <= 0) {
-            return false;
-        }
-
+        if (p == null || quantityToOrder <= 0) return false;
         return supplierIntegrationService.createManualOrder(p, quantityToOrder);
+    }
+
+    public boolean markOrderAsReceived(int productID) {
+        return supplierIntegrationService.markOrderAsReceived(productID);
+    }
+
+    public boolean cancelActiveOrder(int productID) {
+        return supplierIntegrationService.cancelActiveOrder(productID);
+    }
+
+    public boolean hasActiveOrderForProduct(int productID) {
+        return supplierIntegrationService.hasActiveOrderForProduct(productID);
+    }
+
+    public List<SupplierOrderDTO> getAllOrders() {
+        return supplierIntegrationService.getAllOrders();
+    }
+
+    public List<SupplierOrderDTO> getOrdersForProduct(int productID) {
+        return supplierIntegrationService.getOrdersForProduct(productID);
+    }
+
+    // ── helper: DTO → Domain object ───────────────────────────────────────────
+
+    private Product dtoToDomain(ProductDTO dto) {
+        Category main   = new Category(dto.mainCategory(),   0);
+        Category sub    = new Category(dto.subCategory(),    1);
+        Category subSub = new Category(dto.subSubCategory(), 2);
+        InventoryLevel inv = new InventoryLevel(
+                dto.shelfQuantity(), dto.warehouseQuantity(),
+                dto.minQuantityThreshold(), dto.location());
+        return new Product(
+                dto.productId(), dto.name(), dto.supplierId(),
+                dto.costPrice(), dto.sellingPrice(), dto.supplierCatalogId(),
+                main, sub, subSub, inv);
     }
 }
