@@ -4,9 +4,45 @@ import Inventory.domain.Category;
 import Inventory.domain.InventoryLevel;
 import Inventory.domain.Product;
 import Inventory.service.InventoryService;
-
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class Datainit {
+
+        // נתיב יחסי שיצור את הקובץ בתוך תיקיית dev
+        private static final String URL = "jdbc:sqlite:inventory.db";
+
+        public static void testConnection() {
+            System.out.println("--- מתחיל בדיקת חיבור למסד הנתונים ---");
+
+            try (Connection conn = DriverManager.getConnection(URL);
+                 Statement stmt = conn.createStatement()) {
+
+                System.out.println("1. התחברות הצליחה! קובץ ה-DB נוצר/נמצא.");
+
+                // יצירת טבלת בדיקה זמנית
+                stmt.execute("CREATE TABLE IF NOT EXISTS connection_test (id INTEGER PRIMARY KEY, status TEXT);");
+                System.out.println("2. טבלת הבדיקה נוצרה בהצלחה.");
+
+                // הכנסת נתון לבדיקה
+                stmt.execute("INSERT INTO connection_test (status) VALUES ('החיבור עובד פיקס!');");
+                System.out.println("3. נתון בדיקה הוכנס בהצלחה.");
+
+                // שליפת הנתון כדי לוודא שזה עובד
+                ResultSet rs = stmt.executeQuery("SELECT * FROM connection_test;");
+                System.out.println("4. תוצאות ממסד הנתונים:");
+                while (rs.next()) {
+                    System.out.println("   [מזהה: " + rs.getInt("id") + "] -> " + rs.getString("status"));
+                }
+
+            } catch (Exception e) {
+                System.err.println("❌ הבדיקה נכשלה! שגיאה: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
     private final InventoryService service;
 
     public Datainit(InventoryService service) {

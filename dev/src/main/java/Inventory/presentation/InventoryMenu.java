@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import static Inventory.DB.Datainit.testConnection;
+
 public class InventoryMenu {
     private final InventoryService service;
     private final ConsolePrinter printer;
@@ -33,6 +35,7 @@ public class InventoryMenu {
     }
 
     private void promptForDatabaseInitialization() {
+        testConnection();
         printer.printHeader("DATABASE INITIALIZATION");
         System.out.println("1. Load Existing Database");
         System.out.println("2. Start with Empty Database");
