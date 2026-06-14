@@ -222,7 +222,7 @@ public class InventoryService {
     }
 
     public DefectiveReport generateDefectiveReport() { return new DefectiveReport(getDefectiveItems()); }
-    public OrderReport     generateOrderReport()     { return new OrderReport(getLowStockProducts()); }
+
 
     // ── Discounts ─────────────────────────────────────────────────────────────
 
@@ -322,5 +322,16 @@ public class InventoryService {
                 dto.productId(), dto.name(), dto.supplierId(),
                 dto.costPrice(), dto.sellingPrice(), dto.supplierCatalogId(),
                 main, sub, subSub, inv);
+    }
+    public void createAutomaticOrdersForLowStock() {
+        List<Product> lowStock = getLowStockProducts();
+        if (lowStock.isEmpty()) {
+            System.out.println("[ORDER] No products below threshold.");
+            return;
+        }
+        System.out.println("[ORDER] Found " + lowStock.size() + " products below threshold. Creating orders...");
+        for (Product p : lowStock) {
+            supplierIntegrationService.createAutomaticOrderIfNeeded(p);
+        }
     }
 }

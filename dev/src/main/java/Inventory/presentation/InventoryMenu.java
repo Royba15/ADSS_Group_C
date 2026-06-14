@@ -3,6 +3,7 @@ package Inventory.presentation;
 import Inventory.DB.DBDataInit;
 import Inventory.DB.DatabaseConnection;
 import Inventory.DB.SchemaCreator;
+import Inventory.dto.SupplierOrderDTO;
 import Inventory.service.InventoryService;
 import Inventory.domain.Product;
 
@@ -50,6 +51,7 @@ public class InventoryMenu {
                 case 1 -> {
                     // DBDataInit.init() בודק אם כבר יש נתונים — אם כן לא נוגע
                     DBDataInit.init();
+                    service.createAutomaticOrdersForLowStock();
                     printer.printSuccess("Database ready!");
                 }
                 case 2 -> {
@@ -59,6 +61,7 @@ public class InventoryMenu {
                 default -> {
                     printer.printError("Invalid choice. Using existing data...");
                     DBDataInit.init();
+                    service.createAutomaticOrdersForLowStock();
                     printer.printSuccess("Database ready!");
                 }
             }
@@ -72,10 +75,13 @@ public class InventoryMenu {
      */
     private void clearDatabase() {
         try (Statement st = DatabaseConnection.getConnection().createStatement()) {
+            st.execute("DELETE FROM supplier_orders");
             st.execute("DELETE FROM defective_items");
             st.execute("DELETE FROM inventory_levels");
             st.execute("DELETE FROM products");
             st.execute("DELETE FROM categories");
+            st.execute("DELETE FROM sqlite_sequence");
+            System.out.println("[DB] Database cleared.");
             System.out.println("[DB] Database cleared.");
         } catch (SQLException e) {
             System.err.println("Failed to clear database: " + e.getMessage());
@@ -156,7 +162,7 @@ public class InventoryMenu {
             switch (reportChoice) {
                 case 1: printer.printDefectiveReport(service.generateDefectiveReport()); break;
                 case 2: categoryReportFlow();                                             break;
-                case 3: printer.printOrderReport(service.generateOrderReport());         break;
+                case 3: printOrderReport(); break;
                 case 0: break;
                 default: printer.printError("Invalid report option."); break;
             }
@@ -524,6 +530,28 @@ public class InventoryMenu {
             printer.printError("Error creating manual order: " + e.getMessage());
         }
     }
+    private void printOrderReport() {
+        List<SupplierOrderDTO> orders = service.getAllOrders();
+        System.out.println("\n══════════════════════════════════════════════════════════════");
+        System.out.println("                      ORDER REPORT                           ");
+        System.out.println("══════════════════════════════════════════════════════════════");
+        if (orders.isEmpty()) {
+            System.out.println("  No orders found.");
+        } else {
+            for (SupplierOrderDTO o : orders) {
+                System.out.println("  Order #"       + o.orderId()
+                        + " | Product: "             + o.productName()
+                        + " (ID: "                   + o.productId() + ")"
+                        + " | Supplier ID: "         + o.supplierId()
+                        + " | Catalog: "             + o.supplierCatalogId()
+                        + " | Qty: "                 + o.quantity()
+                        + " | Status: "              + o.status()
+                        + " | Created: "             + o.createdAt());
+            }
+        }
+        System.out.println("══════════════════════════════════════════════════════════════\n");
+    }
+
 
 
 }
