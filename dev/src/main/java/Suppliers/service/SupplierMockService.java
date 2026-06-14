@@ -39,8 +39,7 @@ public class SupplierMockService {
          * MOCK:
          * מבחינתנו מודול הספקים קיבל את ההזמנה המלאה.
          */
-        System.out.println("[SUPPLIERS MOCK] Full order received:");
-        System.out.println(order);
+
 
         return true;
     }

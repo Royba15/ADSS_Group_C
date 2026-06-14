@@ -113,7 +113,8 @@ public class InventoryMenu {
             case 7:  addNewCategoryFlow();                               break;
             case 8:  addNewProductFlow();                                break;
             case 9:  deleteProductFlow();                                break;
-            case 10: createManualSupplierOrderFlow();;
+            case 10: createManualSupplierOrderFlow();
+            case 11: receiveShipmentFlow(); break;
             case 0:  break;
             default: printer.printError("Option not found.");            break;
         }
@@ -161,8 +162,8 @@ public class InventoryMenu {
             int reportChoice = Integer.parseInt(scanner.nextLine());
             switch (reportChoice) {
                 case 1: printer.printDefectiveReport(service.generateDefectiveReport()); break;
-                case 2: categoryReportFlow();                                             break;
-                case 3: printOrderReport(); break;
+                case 2: categoryReportFlow();  break;
+                case 3: printer.printOrderReport(service.getActiveOrders()); break;
                 case 0: break;
                 default: printer.printError("Invalid report option."); break;
             }
@@ -530,28 +531,37 @@ public class InventoryMenu {
             printer.printError("Error creating manual order: " + e.getMessage());
         }
     }
-    private void printOrderReport() {
-        List<SupplierOrderDTO> orders = service.getAllOrders();
-        System.out.println("\n══════════════════════════════════════════════════════════════");
-        System.out.println("                      ORDER REPORT                           ");
-        System.out.println("══════════════════════════════════════════════════════════════");
-        if (orders.isEmpty()) {
-            System.out.println("  No orders found.");
-        } else {
-            for (SupplierOrderDTO o : orders) {
-                System.out.println("  Order #"       + o.orderId()
-                        + " | Product: "             + o.productName()
-                        + " (ID: "                   + o.productId() + ")"
-                        + " | Supplier ID: "         + o.supplierId()
-                        + " | Catalog: "             + o.supplierCatalogId()
-                        + " | Qty: "                 + o.quantity()
-                        + " | Status: "              + o.status()
-                        + " | Created: "             + o.createdAt());
+    private void receiveShipmentFlow() {
+        try {
+            // הצג הזמנות פעילות
+            List<SupplierOrderDTO> activeOrders = service.getActiveOrders();
+            printer.printActiveOrders(activeOrders);
+            if (activeOrders.isEmpty()) return;
+
+            System.out.print("Enter Order # to mark as received (0 to cancel): ");
+            int orderId = Integer.parseInt(scanner.nextLine().trim());
+            if (orderId == 0) return;
+
+            if (service.receiveOrder(orderId)) {
+                // הצג את המוצר המעודכן
+                SupplierOrderDTO order = service.getAllOrders().stream()
+                        .filter(o -> o.orderId() == orderId)
+                        .findFirst().orElse(null);
+                if (order != null) {
+                    Product updated = service.getProductByID(order.productId());
+                    if (updated != null) {
+                        printer.printSuccess("Shipment received! Updated product details:");
+                        printer.printProduct(updated);
+                    }
+                }
+            } else {
+                printer.printError("Order not found or already received/cancelled.");
             }
+        } catch (NumberFormatException e) {
+            printer.printError("Invalid order number.");
+        } catch (Exception e) {
+            printer.printError("Error: " + e.getMessage());
         }
-        System.out.println("══════════════════════════════════════════════════════════════\n");
     }
-
-
 
 }

@@ -157,4 +157,31 @@ public class SupplierIntegrationService {
             return new ArrayList<>();
         }
     }
+    public List<SupplierOrderDTO> getActiveOrders() {
+        try {
+            return orderDAO.findAll().stream()
+                    .filter(o -> o.status().equals("CREATED") || o.status().equals("SENT"))
+                    .collect(java.util.stream.Collectors.toList());
+        } catch (SQLException e) {
+            System.err.println("[DB] getActiveOrders failed: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    public SupplierOrderDTO findOrderById(int orderId) {
+        try {
+            return orderDAO.findById(orderId).orElse(null);
+        } catch (SQLException e) {
+            System.err.println("[DB] findOrderById failed: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public void receiveOrder(int orderId) {
+        try {
+            orderDAO.updateStatus(orderId, "RECEIVED");
+        } catch (SQLException e) {
+            System.err.println("[DB] receiveOrder failed: " + e.getMessage());
+        }
+    }
 }

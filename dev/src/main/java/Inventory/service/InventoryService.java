@@ -326,12 +326,43 @@ public class InventoryService {
     public void createAutomaticOrdersForLowStock() {
         List<Product> lowStock = getLowStockProducts();
         if (lowStock.isEmpty()) {
-            System.out.println("[ORDER] No products below threshold.");
+
             return;
         }
-        System.out.println("[ORDER] Found " + lowStock.size() + " products below threshold. Creating orders...");
+
         for (Product p : lowStock) {
             supplierIntegrationService.createAutomaticOrderIfNeeded(p);
+        }
+    }
+    // קבלת כל ההזמנות הפעילות (CREATED או SENT)
+    public List<SupplierOrderDTO> getActiveOrders() {
+        return supplierIntegrationService.getActiveOrders();
+    }
+
+    // קבלת משלוח — מעדכן סטטוס ומוסיף כמות למחסן
+    public boolean receiveOrder(int orderId) {
+        try {
+            // מצא את ההזמנה
+            SupplierOrderDTO order = supplierIntegrationService.findOrderById(orderId);
+            if (order == null) return false;
+            if (!order.status().equals("CREATED") && !order.status().equals("SENT")) return false;
+
+            // עדכן סטטוס ל-RECEIVED
+            supplierIntegrationService.receiveOrder(orderId);
+
+            // הוסף כמות למחסן
+            ProductDTO product = productDAO.findById(order.productId()).orElse(null);
+            if (product == null) return false;
+
+            int newWarehouse = product.warehouseQuantity() + order.quantity();
+            productDAO.updateInventoryQuantity(
+                    order.productId(),
+                    product.shelfQuantity(),
+                    newWarehouse);
+            return true;
+        } catch (SQLException e) {
+            System.err.println("[DB] receiveOrder failed: " + e.getMessage());
+            return false;
         }
     }
 }
