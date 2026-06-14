@@ -1,4 +1,5 @@
 package Inventory.presentation;
+import Inventory.dto.SupplierOrderDTO;
 
 import Inventory.domain.*;
 import Inventory.dto.SupplierOrderDTO;
@@ -25,6 +26,7 @@ public class ConsolePrinter {
         System.out.println("8. Add New Product");
         System.out.println("9. Delete Product");
         System.out.println("10. Create Manual Supplier Order");
+        System.out.println("11. Receive Shipment");
         System.out.println("0. Exit");
         System.out.print("Choose an option: ");
     }
@@ -69,16 +71,21 @@ public class ConsolePrinter {
     }
 
     // Print products below threshold
-    public void printOrderReport(OrderReport report) {
+    public void printOrderReport(List<SupplierOrderDTO> orders) {
         printHeader("ORDER REPORT");
-        if (report.getProductsToOrder().isEmpty()) {
-            System.out.println("No items need to be ordered.");
+        if (orders.isEmpty()) {
+            System.out.println("No orders found.");
             return;
         }
-        for (Product p : report.getProductsToOrder()) {
-            System.out.println("- " + p.getProductName()
-                    + " | Current: " + p.getInventory().getTotalQuantity()
-                    + " | Minimum: " + p.getMinimumThreshold());
+        for (SupplierOrderDTO o : orders) {
+            System.out.println("  Order #"     + o.orderId()
+                    + " | Product: "           + o.productName()
+                    + " (ID: "                 + o.productId() + ")"
+                    + " | Supplier ID: "       + o.supplierId()
+                    + " | Catalog: "           + o.supplierCatalogId()
+                    + " | Qty: "               + o.quantity()
+                    + " | Status: "            + o.status()
+                    + " | Created: "           + o.createdAt());
         }
     }
     // Print all products by category
@@ -194,4 +201,20 @@ public class ConsolePrinter {
         }
     }
 
+    public void printActiveOrders(List<SupplierOrderDTO> orders) {
+        printHeader("ACTIVE ORDERS");
+        if (orders.isEmpty()) {
+            System.out.println("No active orders found.");
+            return;
+        }
+        for (SupplierOrderDTO o : orders) {
+            System.out.println("  Order #"   + o.orderId()
+                    + " | Product: "         + o.productName()
+                    + " (ID: "               + o.productId() + ")"
+                    + " | Supplier ID: "     + o.supplierId()
+                    + " | Qty: "             + o.quantity()
+                    + " | Status: "          + o.status()
+                    + " | Created: "         + o.createdAt());
+        }
+    }
 }
