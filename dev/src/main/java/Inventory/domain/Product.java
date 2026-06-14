@@ -3,7 +3,7 @@ package Inventory.domain;
 public class Product {
     private final int productID;
     private final String name;
-    private final int manufacturerID;
+    private final int supplierID;
     private final double costPrice;
     private double sellingPrice;
     private final double originalSellingPrice;
@@ -15,10 +15,10 @@ public class Product {
     private final Category subSubCategory;
 
     // Constructor
-    public Product(int id, String name, int manufacturerID, double cost, double selling, String catalogID, Category mainCategory, Category subCategory, Category subSubCategory, InventoryLevel inventory) {
+    public Product(int id, String name, int supplierID, double cost, double selling, String catalogID, Category mainCategory, Category subCategory, Category subSubCategory, InventoryLevel inventory) {
         this.productID = id;
         this.name = name;
-        this.manufacturerID = manufacturerID;
+        this.supplierID = supplierID;
         this.costPrice = cost;
         this.sellingPrice = selling;
         this.originalSellingPrice = selling;
@@ -78,7 +78,7 @@ public class Product {
                 .append(" | Main: ").append(mainCategory.getName())
                 .append(" | Sub: ").append(subCategory.getName())
                 .append(" | SubSub: ").append(subSubCategory.getName())
-                .append(" | Manufacturer: ").append(manufacturerID)
+                .append(" | Supplier: ").append(supplierID)
                 .append(" | Selling Price: $").append(String.format("%.2f", sellingPrice));
 
         if (hasActivePromotion()) {
@@ -103,8 +103,8 @@ public class Product {
     public String getProductName() {
         return name;
     }
-    public int getManufacturerID() {
-        return manufacturerID;
+    public int getSupplierID() {
+        return supplierID;
     }
     public double getCostPrice() {
         return costPrice;

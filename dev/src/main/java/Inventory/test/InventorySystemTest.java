@@ -65,7 +65,7 @@ public class InventorySystemTest {
 
         assertEquals(1, p.getProductID());
         assertEquals("Tnuva 3% Milk", p.getProductName());
-        assertEquals(101, p.getManufacturerID());
+        assertEquals(101, p.getSupplierID());
         assertEquals(4.5, p.getCostPrice());
         assertEquals(6.9, p.getSellingPrice());
         assertEquals("CAT-001", p.getSupplierCatalogID());

@@ -390,8 +390,8 @@ public class InventoryMenu {
                 return;
             }
 
-            System.out.print("Enter manufacturer ID: ");
-            int manufacturerID = Integer.parseInt(scanner.nextLine());
+            System.out.print("Enter Supplier ID: ");
+            int SupplierID = Integer.parseInt(scanner.nextLine());
 
             System.out.print("Enter cost price: ");
             double costPrice = Double.parseDouble(scanner.nextLine());
@@ -472,7 +472,7 @@ public class InventoryMenu {
             String location = scanner.nextLine().trim();
 
             // Use service to add product - categories must exist
-            if (service.addNewProduct(productID, productName, manufacturerID, costPrice, sellingPrice,
+            if (service.addNewProduct(productID, productName, SupplierID, costPrice, sellingPrice,
                     catalogID, mainCatName, subCatName, subSubCatName,
                     shelfQty, warehouseQty, minThreshold, location)) {
                 printer.printSuccess("Product '" + productName + "' added successfully!");

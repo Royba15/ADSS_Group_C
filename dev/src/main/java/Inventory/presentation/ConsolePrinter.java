@@ -52,7 +52,7 @@ public class ConsolePrinter {
         printHeader("PRODUCT DETAILS");
         System.out.println("ID:            " + p.getProductID());
         System.out.println("Name:          " + p.getProductName());
-        System.out.println("Manufacturer:  " + p.getManufacturerID());
+        System.out.println("Supplier:  " + p.getSupplierID());
         System.out.println("Categories:    Main: " + p.getMainCategory().getName()
                 + " | Sub: " + p.getSubCategory().getName()
                 + " | Sub-Sub: " + p.getSubSubCategory().getName());
@@ -135,6 +135,9 @@ public class ConsolePrinter {
     }
     public void promptForPromoName() {
         System.out.print("Enter promotion name: ");
+    }
+    public void promptForSupplierID() {
+        System.out.print("Enter supplier ID: ");
     }
     public void promptForDiscount() {
         System.out.print("Enter discount percentage (0-100): ");
