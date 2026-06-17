@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * כל ה-SQL של הזמנות ספקים נמצא כאן בלבד.
+ * JDBC implementation of SupplierOrderDAO.
+ * Manages order persistence and retrieval, including auto-generated ID handling.
  */
 public class JdbcSupplierOrderDAO implements SupplierOrderDAO {
 

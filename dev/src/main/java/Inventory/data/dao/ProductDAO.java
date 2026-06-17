@@ -5,6 +5,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Data Access Object interface for managing product data and inventory levels.
+ */
 public interface ProductDAO {
     void save(ProductDTO dto) throws SQLException;
     void update(ProductDTO dto) throws SQLException;

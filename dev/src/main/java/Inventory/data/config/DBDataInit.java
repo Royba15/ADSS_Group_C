@@ -3,10 +3,10 @@ package Inventory.data.config;
 import java.sql.*;
 
 /**
- * מאתחל נתוני בסיס ל-DB בהרצה הראשונה בלבד.
+ * Handles initial database seeding on first run.
  */
 public class DBDataInit {
-
+    // Triggers all initialization methods if the DB is empty
     public static void init() throws SQLException {
         if (isAlreadyInitialized()) {
             System.out.println("[DB] Data already initialized – skipping seed.");
@@ -20,6 +20,7 @@ public class DBDataInit {
         System.out.println("[DB] Seed complete.");
     }
 
+    // Checks if the tables contain data to avoid duplicate
     private static boolean isAlreadyInitialized() throws SQLException {
         try (Statement st = DatabaseConnection.getConnection().createStatement();
              ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM products")) {
@@ -27,6 +28,7 @@ public class DBDataInit {
         }
     }
 
+    // Populates product category hierarchy
     private static void initCategories() throws SQLException {
         String sql = "INSERT OR IGNORE INTO categories(name, level) VALUES(?, ?)";
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
@@ -48,6 +50,7 @@ public class DBDataInit {
         }
     }
 
+    // Inserts base product catalog
     private static void initProducts() throws SQLException {
         String sql = """
             INSERT OR IGNORE INTO products(
@@ -94,6 +97,7 @@ public class DBDataInit {
         }
     }
 
+    // Sets initial stock levels and warehouse locations
     private static void initInventoryLevels() throws SQLException {
         String sql = """
             INSERT OR IGNORE INTO inventory_levels(
@@ -134,6 +138,7 @@ public class DBDataInit {
         }
     }
 
+    // Records initial damaged or expired stock
     private static void initDefectiveItems() throws SQLException {
         String sql = "INSERT INTO defective_items(product_id, quantity, reason) VALUES(?,?,?)";
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {

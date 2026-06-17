@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
+/**
+ * JDBC implementation of CategoryDAO for managing categories in the database.
+ */
 public class JdbcCategoryDAO implements CategoryDAO {
 
     @Override

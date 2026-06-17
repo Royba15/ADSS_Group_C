@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * כל ה-SQL של מוצרים נמצא כאן בלבד.
+ * JDBC implementation of ProductDAO.
+ * Handles dual-table operations (products and inventory_levels) using mapping logic.
  */
 public class JdbcProductDAO implements ProductDAO {
 

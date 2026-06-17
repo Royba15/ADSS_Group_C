@@ -5,6 +5,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Data Access Object interface for managing category data.
+ */
 public interface CategoryDAO {
     void save(CategoryDTO dto) throws SQLException;
     Optional<CategoryDTO> findByName(String name) throws SQLException;

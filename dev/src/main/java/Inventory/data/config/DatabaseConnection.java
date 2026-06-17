@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * Singleton – חיבור יחיד לקובץ inventory.db
+ * Singleton class to manage the SQLite database connection.
  */
 public class DatabaseConnection {
 
@@ -15,6 +15,7 @@ public class DatabaseConnection {
 
     private DatabaseConnection() {}
 
+    // Returns a single active connection, creating it if necessary
     public static Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             connection = DriverManager.getConnection(URL);
@@ -25,6 +26,7 @@ public class DatabaseConnection {
         return connection;
     }
 
+    // Safely closes the current connection
     public static void close() {
         try {
             if (connection != null && !connection.isClosed()) {

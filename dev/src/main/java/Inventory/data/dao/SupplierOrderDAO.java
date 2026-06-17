@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * DAO ממשק לטבלת supplier_orders.
+ * Data Access Object interface for managing supplier orders.
  */
 public interface SupplierOrderDAO {
     int save(SupplierOrderDTO dto) throws SQLException;           // מחזיר את ה-ID שנוצר

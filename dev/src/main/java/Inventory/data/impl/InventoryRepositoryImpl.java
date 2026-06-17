@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * InventoryRepositoryImpl – מתאם את כל ה-DAOs.
- * אין כאן SQL — רק האצלה ל-DAO המתאים.
+ * Implementation of the InventoryRepository interface.
+ * Acts as an orchestrator that delegates data operations to specific DAO components.
  */
 public class InventoryRepositoryImpl implements InventoryRepository {
 
@@ -22,13 +22,14 @@ public class InventoryRepositoryImpl implements InventoryRepository {
     private final CategoryDAO categoryDAO;
     private final DefectiveItemDAO defectiveDAO;
 
+    // Initializes concrete DAO implementations
     public InventoryRepositoryImpl() {
         this.productDAO   = new JdbcProductDAO();
         this.categoryDAO  = new JdbcCategoryDAO();
         this.defectiveDAO = new JdbcDefectiveItemDAO();
     }
 
-    // ── Products ──────────────────────────────────────────────────────────────
+    // Products
 
     @Override
     public void addProduct(ProductDTO dto) throws SQLException {
@@ -80,7 +81,7 @@ public class InventoryRepositoryImpl implements InventoryRepository {
         return productDAO.existsById(id);
     }
 
-    // ── Categories ────────────────────────────────────────────────────────────
+    // Categories
 
     @Override
     public void addCategory(CategoryDTO dto) throws SQLException {
@@ -102,7 +103,7 @@ public class InventoryRepositoryImpl implements InventoryRepository {
         return categoryDAO.findByLevel(level);
     }
 
-    // ── Defective items ───────────────────────────────────────────────────────
+    // Defective items
 
     @Override
     public void reportDefective(DefectiveItemDTO dto) throws SQLException {

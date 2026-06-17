@@ -4,12 +4,16 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * Initializes the database schema by creating required tables if they don't exist.
+ */
 public class SchemaCreator {
 
     public static void createTables() throws SQLException {
         Connection conn = DatabaseConnection.getConnection();
         try (Statement st = conn.createStatement()) {
 
+            // Categorization hierarchy
             st.execute("""
                 CREATE TABLE IF NOT EXISTS categories (
                     name  TEXT    PRIMARY KEY,
@@ -17,6 +21,7 @@ public class SchemaCreator {
                 )
             """);
 
+            // Main product catalog with category references
             st.execute("""
                 CREATE TABLE IF NOT EXISTS products (
                     product_id             INTEGER PRIMARY KEY,
@@ -32,6 +37,7 @@ public class SchemaCreator {
                 )
             """);
 
+            // Current inventory distribution per product
             st.execute("""
                 CREATE TABLE IF NOT EXISTS inventory_levels (
                     product_id             INTEGER PRIMARY KEY
@@ -43,6 +49,7 @@ public class SchemaCreator {
                 )
             """);
 
+            // Tracking for damaged or unusable inventory
             st.execute("""
                 CREATE TABLE IF NOT EXISTS defective_items (
                     id         INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -52,6 +59,7 @@ public class SchemaCreator {
                 )
             """);
 
+            // Active price reductions and time-bound deals
             st.execute("""
                 CREATE TABLE IF NOT EXISTS discount_promotions (
                     id                  INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -63,9 +71,7 @@ public class SchemaCreator {
                 )
             """);
 
-            // טבלת הזמנות ספקים — חדשה
-
-            // החלף את CREATE TABLE של supplier_orders:
+            // Supplier procurement and scheduling records
             st.execute("""
                 CREATE TABLE IF NOT EXISTS supplier_orders (
                     order_id            INTEGER PRIMARY KEY AUTOINCREMENT,

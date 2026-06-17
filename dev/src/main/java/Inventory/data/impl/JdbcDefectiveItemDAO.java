@@ -8,6 +8,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * JDBC implementation of DefectiveItemDAO.
+ * Joins defective_items with products to provide item names alongside defect details.
+ */
 public class JdbcDefectiveItemDAO implements DefectiveItemDAO {
 
     @Override
