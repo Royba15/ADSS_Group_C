@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="ynKdtu6pvF8fPNLXIG1l">
+    <mxGraphModel dx="2007" dy="665" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" parent="1" style="shape=swimlane;whiteSpace=wrap;html=1;startSize=30;align=center;verticalAlign=top;fontSize=14;fontStyle=1" value="Inventory Management System" vertex="1">
+          <mxGeometry height="460" width="770" x="130" y="110" as="geometry">
+            <mxRectangle height="30" width="230" x="120" y="80" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="3" parent="2" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Manual Order Entry" vertex="1">
+          <mxGeometry height="50" width="150" x="450" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="4" parent="2" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Automatic Order Creation" vertex="1">
+          <mxGeometry height="50" width="160" x="450" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="5" parent="2" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Send Order Request" vertex="1">
+          <mxGeometry height="50" width="140" x="620" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="6" parent="2" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Generate Alert" vertex="1">
+          <mxGeometry height="50" width="150" x="450" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="7" parent="2" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Find Best Supplier" vertex="1">
+          <mxGeometry height="50" width="140" x="620" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="8" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Store Manager" vertex="1">
+          <mxGeometry height="60" width="30" x="40" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="9" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="System" vertex="1">
+          <mxGeometry height="60" width="30" x="180" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="10" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Supplier System" vertex="1">
+          <mxGeometry height="60" width="30" x="1000" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="11" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Update Inventory" vertex="1">
+          <mxGeometry height="50" width="160" x="140" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="12" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="View Low Stock Alerts" vertex="1">
+          <mxGeometry height="50" width="160" x="140" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="13" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Check Minimum Stock" vertex="1">
+          <mxGeometry height="50" width="160" x="360" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="14" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Create Supplier Order" vertex="1">
+          <mxGeometry height="50" width="150" x="580" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="15" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffffff;strokeColor=#000000;" value="Store Manager updates the&lt;br&gt;inventory levels in the system" vertex="1">
+          <mxGeometry height="60" width="180" x="300" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="16" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffffff;strokeColor=#000000;" value="System automatically checks if&lt;br&gt;any product is below minimum stock&lt;br&gt;threshold defined in the database" vertex="1">
+          <mxGeometry height="60" width="220" x="500" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="17" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffffff;strokeColor=#000000;" value="External system that receives&lt;br&gt;and processes supplier orders" vertex="1">
+          <mxGeometry height="60" width="180" x="940" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="18" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffffff;strokeColor=#000000;" value="System queries the database&lt;br&gt;to find the best supplier for&lt;br&gt;the product based on rating,&lt;br&gt;lead time, and availability" vertex="1">
+          <mxGeometry height="80" width="180" x="960" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="19" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffffff;strokeColor=#000000;" value="When stock is below minimum,&lt;br&gt;system creates a supplier order&lt;br&gt;and sends it to the supplier system" vertex="1">
+          <mxGeometry height="60" width="210" x="730" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="20" edge="1" parent="1" source="8" style="endArrow=open;html=1;endFill=0;strokeColor=#000000;" target="11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="21" edge="1" parent="1" source="8" style="endArrow=open;html=1;endFill=0;strokeColor=#000000;" target="12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="22" edge="1" parent="1" source="8" style="endArrow=open;html=1;endFill=0;strokeColor=#000000;edgeStyle=orthogonalEdgeStyle;curved=1;" target="3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="55" y="670" />
+              <mxPoint x="655" y="670" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="23" edge="1" parent="1" source="9" style="endArrow=open;html=1;endFill=0;strokeColor=#000000;" target="13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="24" edge="1" parent="1" source="9" style="endArrow=open;html=1;endFill=0;strokeColor=#000000;" target="4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="25" edge="1" parent="1" source="5" style="endArrow=open;html=1;endFill=0;strokeColor=#000000;" target="10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="26" connectable="0" parent="25" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];backgroundColor=#ffffff" value="sends order to" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="27" edge="1" parent="1" source="11" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#000000;" target="13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="28" connectable="0" parent="27" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];backgroundColor=#ffffff" value="«include»" vertex="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="29" edge="1" parent="1" source="13" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#000000;" target="6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="30" connectable="0" parent="29" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];backgroundColor=#ffffff" value="«include»" vertex="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="31" edge="1" parent="1" source="13" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#000000;" target="14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="32" connectable="0" parent="31" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];backgroundColor=#ffffff" value="«include»" vertex="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="33" edge="1" parent="1" source="4" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#000000;" target="13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="34" connectable="0" parent="33" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];backgroundColor=#ffffff" value="«extend»" vertex="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="35" edge="1" parent="1" source="3" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#000000;" target="13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="36" connectable="0" parent="35" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];backgroundColor=#ffffff" value="«extend»" vertex="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="37" edge="1" parent="1" source="14" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#000000;" target="5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="38" connectable="0" parent="37" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];backgroundColor=#ffffff" value="«include»" vertex="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="39" edge="1" parent="1" source="14" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#000000;" target="7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="40" connectable="0" parent="39" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];backgroundColor=#ffffff" value="«include»" vertex="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="41" edge="1" parent="1" source="15" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;" target="11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="42" edge="1" parent="1" source="16" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;" target="13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="43" edge="1" parent="1" source="17" style="endArrow=none;html=1;strokeColor=#000000;" target="10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="44" edge="1" parent="1" source="18" style="endArrow=none;html=1;strokeColor=#000000;" target="7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="45" edge="1" parent="1" source="19" style="endArrow=none;dashed=1;html=1;strokeColor=#000000;" target="14">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="770" y="400" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
