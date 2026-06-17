@@ -1,9 +1,6 @@
 package Inventory.dto;
 
-/**
- * DTO – נושא נתונים בין שכבות.
- * אין לוגיקה, אין SQL, אין domain objects.
- */
+
 public record ProductDTO(
         int productId,
         String name,

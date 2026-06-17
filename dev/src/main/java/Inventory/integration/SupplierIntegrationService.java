@@ -13,10 +13,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * SupplierIntegrationService – עובד עם DB במקום Set ב-RAM.
- * כל הזמנה נשמרת ב-supplier_orders ומתעדכנת שם.
- */
 public class SupplierIntegrationService {
 
     private final SupplierMockService supplierMockService;
@@ -27,7 +23,6 @@ public class SupplierIntegrationService {
         this.orderDAO            = new JdbcSupplierOrderDAO();
     }
 
-    // ── יצירת הזמנה אוטומטית אם מתחת לסף ───────────────────────────────────
 
     public boolean createAutomaticOrderIfNeeded(Product product) {
         if (product == null || product.getInventory() == null) {return false;}
@@ -37,7 +32,6 @@ public class SupplierIntegrationService {
         return createOrder(product, quantity, false);
     }
 
-    // ── יצירת הזמנה ידנית ────────────────────────────────────────────────────
 
     public boolean createManualOrder(Product product, int quantityToOrder, boolean allowDuplicateOrder) {
         if (product == null || product.getInventory() == null) {return false;}
@@ -45,7 +39,6 @@ public class SupplierIntegrationService {
         return createOrder(product, quantityToOrder, allowDuplicateOrder);
     }
 
-    // ── לוגיקה פנימית ────────────────────────────────────────────────────────
 
     private boolean createOrder(Product product, int quantityToOrder, boolean allowDuplicateOrder) {
         if (quantityToOrder <= 0) {
@@ -68,9 +61,9 @@ public class SupplierIntegrationService {
                     product.getSupplierCatalogID(),
                     quantityToOrder,
                     OrderStatus.CREATED.name(),
-                    "IMMEDIATE",                   // orderType ← חדש
-                    null,                          // scheduledDate ← חדש
-                    null,                          // frequency ← חדש
+                    "IMMEDIATE",
+                    null,
+                    null,
                     LocalDateTime.now().toString()
             );
 
@@ -112,7 +105,6 @@ public class SupplierIntegrationService {
         return (minThreshold*2);
     }
 
-    // ── שאילתות ──────────────────────────────────────────────────────────────
 
     public boolean hasActiveOrderForProduct(int productID) {
         try {
@@ -202,9 +194,7 @@ public class SupplierIntegrationService {
             System.err.println("[DB] receiveOrder failed: " + e.getMessage());
         }
     }
-    public boolean createScheduledOrder(Product product, int quantity,
-                                        String scheduledDate, String frequency) {
-        // בדוק תאריך — חייב להיות לפחות מחר
+    public boolean createScheduledOrder(Product product, int quantity, String scheduledDate, String frequency) {
         try {
             java.time.LocalDate scheduled = java.time.LocalDate.parse(scheduledDate);
             if (!scheduled.isAfter(java.time.LocalDate.now())) {

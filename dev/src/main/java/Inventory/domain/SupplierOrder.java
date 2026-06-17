@@ -13,12 +13,7 @@ public class SupplierOrder {
     private final LocalDateTime createdAt;
     private OrderStatus status;
 
-    public SupplierOrder(int orderID,
-                         int productID,
-                         String productName,
-                         int supplierID,
-                         String supplierCatalogID,
-                         int quantity) {
+    public SupplierOrder(int orderID, int productID, String productName, int supplierID, String supplierCatalogID, int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Order quantity must be positive");
         }
