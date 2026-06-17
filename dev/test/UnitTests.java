@@ -1,24 +1,26 @@
-import data.EmployeeDAO;
-import data.RoleDAO;
-import data.ScheduleDAO;
-import domain.AvailabilitySubmission;
-import domain.Branch;
-import domain.Delivery;
-import domain.DeliveryMock;
-import domain.Driver;
-import domain.Employee;
-import domain.Shift;
-import domain.ShiftSlot;
-import domain.ShiftType;
-import domain.StaffingRequirement;
-import domain.TruckType;
-import domain.WeeklySchedule;
-import presentation.DataInitializer;
-import service.EmployeeManager;
-import service.ShiftHistory;
+import HR.data.DatabaseInitializer;
+import HR.data.EmployeeDAO;
+import HR.data.RoleDAO;
+import HR.data.ScheduleDAO;
+import HR.domain.AvailabilitySubmission;
+import HR.domain.Branch;
+import HR.domain.Delivery;
+import HR.domain.DeliveryMock;
+import HR.domain.Driver;
+import HR.domain.Employee;
+import HR.domain.Shift;
+import HR.domain.ShiftSlot;
+import HR.domain.ShiftType;
+import HR.domain.StaffingRequirement;
+import HR.domain.TruckType;
+import HR.domain.WeeklySchedule;
+import HR.presentation.DataInitializer;
+import HR.service.EmployeeManager;
+import HR.service.ShiftHistory;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +54,10 @@ public class UnitTests {
         run("new_09_deliveryShiftCannotSetStockerRequirementToZero", UnitTests::new_09_deliveryShiftCannotSetStockerRequirementToZero);
         run("new_10_nonDeliveryShiftCanSetStockerRequirementToZero", UnitTests::new_10_nonDeliveryShiftCanSetStockerRequirementToZero);
 
-        System.setProperty("superli.db.path", "data/superli-test.db");
+        System.setProperty("superli.db.path", Path.of(
+                System.getProperty("java.io.tmpdir"),
+                "superli",
+                "superli-test.db").toString());
         runDb("db_01_employeeCanBeSavedAndLoaded", UnitTests::db_01_employeeCanBeSavedAndLoaded);
         runDb("db_02_driverLicenseCanBeSavedAndLoaded", UnitTests::db_02_driverLicenseCanBeSavedAndLoaded);
         runDb("db_03_availabilityCanBeSavedAndLoaded", UnitTests::db_03_availabilityCanBeSavedAndLoaded);
@@ -88,7 +93,7 @@ public class UnitTests {
 
     private static void runDb(String testName, TestCase testCase) {
         try {
-            data.DatabaseInitializer.clearData();
+            DatabaseInitializer.clearData();
             testCase.run();
             passed++;
             System.out.println("[PASS] " + testName);
@@ -102,7 +107,7 @@ public class UnitTests {
     }
 
     private static void restoreTestDatabaseToDataInitializerState() {
-        data.DatabaseInitializer.clearData();
+        DatabaseInitializer.clearData();
 
         EmployeeManager manager = new EmployeeManager();
         ShiftHistory history = new ShiftHistory();

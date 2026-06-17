@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c3c55004-4497-4746-bc64-855b39ce37ce" name="Changes" comment="DAO + docs directory">
+      <change beforePath="$PROJECT_DIR$/dev/manifest.mf" beforeDir="false" afterPath="$PROJECT_DIR$/dev/manifest.mf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/data/DatabaseConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/data/DatabaseConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/data/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/data/DatabaseConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/data/DatabaseInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/data/DatabaseInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/data/DatabaseSetup.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/data/DatabaseSetup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/data/EmployeeDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/data/EmployeeDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/data/RoleDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/data/RoleDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/data/ScheduleDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/data/ScheduleDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/domain/AvailabilitySubmission.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/AvailabilitySubmission.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/domain/Branch.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/Branch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/domain/Delivery.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/Delivery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/domain/DeliveryMock.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/DeliveryMock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/domain/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/Driver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/domain/Employee.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/Employee.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/domain/Shift.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/Shift.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/domain/ShiftSlot.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/ShiftSlot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/domain/ShiftType.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/ShiftType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/domain/StaffingRequirement.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/StaffingRequirement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/domain/TruckType.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/TruckType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/domain/WeeklySchedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/WeeklySchedule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/presentation/DataInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/presentation/DataInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/presentation/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/presentation/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/repository/DaoEmployeeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/repository/DaoEmployeeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/repository/DaoRoleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/repository/DaoRoleRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/repository/DaoScheduleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/repository/DaoScheduleRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/repository/DaoSystemStateRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/repository/DaoSystemStateRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/repository/EmployeeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/repository/EmployeeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/repository/RoleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/repository/RoleRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/repository/ScheduleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/repository/ScheduleRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/repository/SystemStateRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/repository/SystemStateRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/service/EmployeeManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/service/EmployeeManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/service/RoleRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/service/RoleRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/service/ShiftHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/service/ShiftHistory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/test/UnitTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/test/UnitTests.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="323840728_206692360" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;yuval-asulin&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Royba15/ADSS_Group_C.git&quot;,
+    &quot;accountId&quot;: &quot;5ea9ec81-5539-4a17-83a9-148dacbebd20&quot;
+  }
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="3CJ3SfI7jAwLINsYkTDGwgUFqFa" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.OutputGenerator.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Test1.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Test2.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Test3.executor&quot;: &quot;Run&quot;,
+    &quot;Application.TestRunner.executor&quot;: &quot;Run&quot;,
+    &quot;Application.UnitTests.executor&quot;: &quot;Run&quot;,
+    &quot;Application.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/yuval/OneDrive/Desktop/לימודים/שנה ב/סמסטר ד/ניתוצ/HW1/ADSS_Group_C&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\yuval\OneDrive\Desktop\לימודים\שנה ב\סמסטר ד\ניתוצ\HW1\ADSS_Group_C\dev\src\main\java" />
+      <recent name="C:\Users\yuval\OneDrive\Desktop\לימודים\שנה ב\סמסטר ד\ניתוצ\HW1\ADSS_Group_C\dev\src\main" />
+      <recent name="C:\Users\yuval\OneDrive\Desktop\לימודים\שנה ב\סמסטר ד\ניתוצ\HW1\ADSS_Group_C\dev\src" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.main">
+    <configuration name="TestRunner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="TestRunner" />
+      <module name="SuperLiSystem" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="main" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="HR.presentation.Main" />
+      <module name="SuperLiSystem" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.main" />
+      <item itemvalue="Application.TestRunner" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.TestRunner" />
+        <item itemvalue="Application.TestRunner" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c3c55004-4497-4746-bc64-855b39ce37ce" name="Changes" comment="" />
+      <created>1776089846762</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1776089846762</updated>
+    </task>
+    <task id="LOCAL‎-00001" summary="created project structure (src/main/java)">
+      <option name="closed" value="true" />
+      <created>1776091066677</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL‎-00001" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1776091066677</updated>
+    </task>
+    <task id="LOCAL‎-00002" summary="created project structure (src/main/java)">
+      <option name="closed" value="true" />
+      <created>1776092067853</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL‎-00002" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1776092067853</updated>
+    </task>
+    <task id="LOCAL‎-00003" summary="worker fields">
+      <option name="closed" value="true" />
+      <created>1776093231041</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL‎-00003" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1776093231041</updated>
+    </task>
+    <task id="LOCAL‎-00004" summary="worker fields">
+      <option name="closed" value="true" />
+      <created>1776322195320</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL‎-00004" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1776322195320</updated>
+    </task>
+    <task id="LOCAL‎-00005" summary="worker fields">
+      <option name="closed" value="true" />
+      <created>1776323020824</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL‎-00005" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1776323020824</updated>
+    </task>
+    <task id="LOCAL‎-00006" summary="worker fields">
+      <option name="closed" value="true" />
+      <created>1776342263157</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL‎-00006" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1776342263157</updated>
+    </task>
+    <task id="LOCAL‎-00007" summary="worker fields">
+      <option name="closed" value="true" />
+      <created>1776500695051</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL‎-00007" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1776500695051</updated>
+    </task>
+    <task id="LOCAL‎-00008" summary="Add dev source and tests">
+      <option name="closed" value="true" />
+      <created>1776501724220</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL‎-00008" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1776501724220</updated>
+    </task>
+    <task id="LOCAL‎-00009" summary="Add dev source and tests">
+      <option name="closed" value="true" />
+      <created>1776514766061</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL‎-00009" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1776514766061</updated>
+    </task>
+    <task id="LOCAL‎-00010" summary="Add dev source and tests">
+      <option name="closed" value="true" />
+      <created>1776514806721</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL‎-00010" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1776514806721</updated>
+    </task>
+    <task id="LOCAL‎-00011" summary="Add dev source and tests">
+      <option name="closed" value="true" />
+      <created>1776514951857</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL‎-00011" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1776514951857</updated>
+    </task>
+    <task id="LOCAL‎-00012" summary="Add dev source and tests">
+      <option name="closed" value="true" />
+      <created>1776611011945</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL‎-00012" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1776611011945</updated>
+    </task>
+    <task id="LOCAL‎-00013" summary="Add dev source and tests">
+      <option name="closed" value="true" />
+      <created>1776611021613</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL‎-00013" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1776611021613</updated>
+    </task>
+    <task id="LOCAL‎-00014" summary="delete in out">
+      <option name="closed" value="true" />
+      <created>1776611086505</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL‎-00014" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1776611086505</updated>
+    </task>
+    <task id="LOCAL‎-00015" summary="update code for part two - HR and DELIVERY">
+      <option name="closed" value="true" />
+      <created>1779029730057</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL‎-00015" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1779029730057</updated>
+    </task>
+    <task id="LOCAL‎-00016" summary="DB">
+      <option name="closed" value="true" />
+      <created>1780993154323</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL‎-00016" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1780993154323</updated>
+    </task>
+    <task id="LOCAL‎-00017" summary="DB">
+      <option name="closed" value="true" />
+      <created>1780993286111</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL‎-00017" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1780993286111</updated>
+    </task>
+    <task id="LOCAL‎-00018" summary="DAO + docs directory">
+      <option name="closed" value="true" />
+      <created>1781007932542</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL‎-00018" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1781007932542</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="created project structure (src/main/java)" />
+    <MESSAGE value="worker fields" />
+    <MESSAGE value="Add dev source and tests" />
+    <MESSAGE value="delete in out" />
+    <MESSAGE value="update code for part two - HR and DELIVERY" />
+    <MESSAGE value="DB" />
+    <MESSAGE value="DAO + docs directory" />
+    <option name="LAST_COMMIT_MESSAGE" value="DAO + docs directory" />
+  </component>
+</project>
