@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="tsO4674ZXawnhLmAnR7N">
+    <mxGraphModel dx="1153" dy="656" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" parent="1" style="ellipse;fillColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="164" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Enter Product ID&#xa;&amp; Quantities" vertex="1">
+          <mxGeometry height="50" width="120" x="119" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Validate Input" vertex="1">
+          <mxGeometry height="50" width="120" x="119" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="5" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Valid?" vertex="1">
+          <mxGeometry height="80" width="80" x="139" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Show Error" vertex="1">
+          <mxGeometry height="50" width="100" x="314" y="345" as="geometry" />
+        </mxCell>
+        <mxCell id="7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Update Inventory&#xa;in DB" vertex="1">
+          <mxGeometry height="50" width="120" x="119" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Check Min Stock" vertex="1">
+          <mxGeometry height="50" width="120" x="119" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="9" parent="1" style="ellipse;shape=doubleEllipse;fillColor=#000000;strokeColor=#ffffff;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="164" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="10" edge="1" parent="1" source="2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="11" edge="1" parent="1" source="3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="12" edge="1" parent="1" source="4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="13" edge="1" parent="1" source="5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="6" value="No">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="14" edge="1" parent="1" source="6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="364" y="155" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="15" edge="1" parent="1" source="5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="7" value="Yes">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="16" edge="1" parent="1" source="7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="17" edge="1" parent="1" source="8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="18" parent="1" style="ellipse;fillColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="535" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="19" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Detect current &lt; min" vertex="1">
+          <mxGeometry height="50" width="120" x="490" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="20" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Alert Exists?" vertex="1">
+          <mxGeometry height="80" width="80" x="510" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="21" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Save Alert to DB" vertex="1">
+          <mxGeometry height="50" width="120" x="490" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="22" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Update Dashboard &amp;&#xa;Notify Manager" vertex="1">
+          <mxGeometry height="50" width="140" x="480" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="23" parent="1" style="ellipse;shape=doubleEllipse;fillColor=#000000;strokeColor=#ffffff;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="535" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="24" edge="1" parent="1" source="18" style="edgeStyle=orthogonalEdgeStyle;html=1;" target="19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="25" edge="1" parent="1" source="19" style="edgeStyle=orthogonalEdgeStyle;html=1;" target="20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="26" edge="1" parent="1" source="20" style="edgeStyle=orthogonalEdgeStyle;html=1;" target="21" value="No">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="27" edge="1" parent="1" source="20" style="edgeStyle=orthogonalEdgeStyle;html=1;" target="23" value="Yes">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="685" y="330" />
+              <mxPoint x="685" y="635" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="28" edge="1" parent="1" source="21" style="edgeStyle=orthogonalEdgeStyle;html=1;" target="22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="29" edge="1" parent="1" source="22" style="edgeStyle=orthogonalEdgeStyle;html=1;" target="23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
