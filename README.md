@@ -1,10 +1,9 @@
 # ADSS Assignment 2
 
-# add here
-Name: __________
+Name: Roy Barak
 ID: 211467246
-# add here
-Name: __________
+
+Name: Tomer Tirosh
 ID: 211604319
 
 Name: Yuval Asulin
