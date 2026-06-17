@@ -109,7 +109,51 @@ To close the system completely, return to the main menu and select:
 3 - Exit System
 
 Inventory Module:
- # add here  
+
+SuperLi System – Inventory User Guide
+Overview
+The Inventory Module manages supermarket stock, defective items, product categories, promotions, and supplier orders. It tracks both shelf and warehouse quantities and supports automatic reordering when stock drops below minimum thresholds.
+
+The system interacts directly with a local SQLite database (`inventory.db`) to ensure all data is persistent between runs.
+
+Starting the System
+Run the `InventoryMenu` (or start via the Main module).
+At startup, the system asks whether to initialize the database:
+1 - Use existing data (or load default seed data if the database is empty)
+2 - Clear database and start fresh (Warning: This deletes all inventory records)
+
+Main Menu
+After startup, the following Inventory Management menu is displayed:
+
+1. Update Inventory
+2. View Product by ID
+3. Alerts
+4. Reports
+5. Apply Discount
+6. Report Defective Product
+7. Add New Category
+8. Add New Product
+9. Delete Product
+10. Create Supplier Order
+11. Receive Shipment
+0. Exit
+
+Inventory Functions
+An authorized user can:
+* **Manage Stock:** Adjust shelf and warehouse quantities for existing products (Option 1).
+* **View Alerts:** Check for products that have dropped below their defined minimum quantity threshold (Option 3).
+* **Generate Reports:** Access categorical inventory reports, defective item logs, and supplier order histories (Option 4).
+* **Manage Promotions:** Apply discount percentages to products for specific date ranges (Option 5).
+* **Report Defective Items:** Log damaged or expired products, removing them from active inventory (Option 6).
+
+Supplier Orders & Automation
+* **Manual Orders:** Create immediate or scheduled orders (Once, Weekly, Monthly) from specific suppliers (Option 10).
+* **Automatic Orders:** The system routinely checks inventory levels. If a product drops below its threshold, the module automatically queries the Supplier System for the best supplier and generates a `PENDING` order.
+* **Receive Shipment:** When physical stock arrives, mark pending orders as received to automatically update the warehouse quantities (Option 11).
+
+Additional Notes
+* Products are categorized using a 3-level hierarchy (Main, Sub, Sub-Sub).
+* To close the inventory system and return to the main wrapper, select `0 - Exit`.
 
 ## Requirements
 
