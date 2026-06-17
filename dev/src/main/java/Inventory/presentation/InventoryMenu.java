@@ -1,8 +1,8 @@
 package Inventory.presentation;
 
-import Inventory.DB.DBDataInit;
-import Inventory.DB.DatabaseConnection;
-import Inventory.DB.SchemaCreator;
+import Inventory.DB.config.DBDataInit;
+import Inventory.DB.config.DatabaseConnection;
+import Inventory.DB.config.SchemaCreator;
 import Inventory.dto.SupplierOrderDTO;
 import Inventory.service.InventoryService;
 import Inventory.domain.Product;

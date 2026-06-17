@@ -1,4 +1,4 @@
-package Inventory.DB;
+package Inventory.DB.config;
 
 import java.sql.*;
 

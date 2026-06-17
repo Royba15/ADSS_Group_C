@@ -1,6 +1,6 @@
 package Inventory.DB.impl;
 
-import Inventory.DB.DatabaseConnection;
+import Inventory.DB.config.DatabaseConnection;
 import Inventory.DB.dao.ProductDAO;
 import Inventory.dto.ProductDTO;
 
