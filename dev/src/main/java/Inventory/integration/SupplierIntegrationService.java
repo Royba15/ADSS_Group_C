@@ -1,7 +1,7 @@
 package Inventory.integration;
 
-import Inventory.DB.dao.SupplierOrderDAO;
-import Inventory.DB.impl.JdbcSupplierOrderDAO;
+import Inventory.data.dao.SupplierOrderDAO;
+import Inventory.data.impl.JdbcSupplierOrderDAO;
 import Inventory.domain.Product;
 import Inventory.domain.SupplierOrder;
 import Inventory.domain.OrderStatus;

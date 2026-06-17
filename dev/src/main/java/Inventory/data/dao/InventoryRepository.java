@@ -1,4 +1,4 @@
-package Inventory.DB.dao;
+package Inventory.data.dao;
 
 import Inventory.dto.CategoryDTO;
 import Inventory.dto.DefectiveItemDTO;

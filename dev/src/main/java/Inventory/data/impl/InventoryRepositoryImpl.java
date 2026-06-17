@@ -1,9 +1,9 @@
-package Inventory.DB.impl;
+package Inventory.data.impl;
 
-import Inventory.DB.dao.CategoryDAO;
-import Inventory.DB.dao.DefectiveItemDAO;
-import Inventory.DB.dao.InventoryRepository;
-import Inventory.DB.dao.ProductDAO;
+import Inventory.data.dao.CategoryDAO;
+import Inventory.data.dao.DefectiveItemDAO;
+import Inventory.data.dao.InventoryRepository;
+import Inventory.data.dao.ProductDAO;
 import Inventory.dto.CategoryDTO;
 import Inventory.dto.DefectiveItemDTO;
 import Inventory.dto.ProductDTO;

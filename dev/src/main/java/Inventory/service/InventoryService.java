@@ -1,7 +1,7 @@
 package Inventory.service;
 
-import Inventory.DB.dao.InventoryRepository;
-import Inventory.DB.impl.InventoryRepositoryImpl;
+import Inventory.data.dao.InventoryRepository;
+import Inventory.data.impl.InventoryRepositoryImpl;
 import Inventory.integration.SupplierIntegrationService;
 import Inventory.domain.*;
 import Inventory.dto.CategoryDTO;

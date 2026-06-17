@@ -1,7 +1,7 @@
-package Inventory.DB.impl;
+package Inventory.data.impl;
 
-import Inventory.DB.config.DatabaseConnection;
-import Inventory.DB.dao.SupplierOrderDAO;
+import Inventory.data.config.DatabaseConnection;
+import Inventory.data.dao.SupplierOrderDAO;
 import Inventory.dto.SupplierOrderDTO;
 
 import java.sql.*;

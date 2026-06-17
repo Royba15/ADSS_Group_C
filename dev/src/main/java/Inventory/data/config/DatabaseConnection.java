@@ -1,4 +1,4 @@
-package Inventory.DB.config;
+package Inventory.data.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
