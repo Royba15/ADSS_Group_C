@@ -1,44 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="ADSS_Group_C:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c3c55004-4497-4746-bc64-855b39ce37ce" name="Changes" comment="DAO + docs directory">
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/data/config/DBDataInit.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/data/config/DatabaseConnection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/data/config/SchemaCreator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/data/dao/CategoryDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/data/dao/DefectiveItemDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/data/dao/InventoryRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/data/dao/ProductDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/data/dao/SupplierOrderDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/data/impl/InventoryRepositoryImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/data/impl/JdbcCategoryDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/data/impl/JdbcDefectiveItemDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/data/impl/JdbcProductDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/data/impl/JdbcSupplierOrderDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/domain/Category.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/domain/CategoryReport.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/domain/DefectiveItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/domain/DefectiveReport.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/domain/DiscountPromotion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/domain/InventoryLevel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/domain/InventoryReport.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/domain/OrderReport.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/domain/OrderStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/domain/Product.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/domain/SupplierOrder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/dto/CategoryDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/dto/DefectiveItemDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/dto/ProductDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/dto/SupplierOrderDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/integration/SupplierIntegrationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/presentation/ConsolePrinter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/presentation/InventoryMenu.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Inventory/service/InventoryService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/src/main/java/Suppliers/service/SupplierMockService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/manifest-fat.mf" beforeDir="false" afterPath="$PROJECT_DIR$/dev/manifest-fat.mf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/manifest.mf" beforeDir="false" afterPath="$PROJECT_DIR$/dev/manifest.mf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/data/DatabaseConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/data/DatabaseConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/data/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/data/DatabaseConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/data/DatabaseInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/data/DatabaseInitializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/data/DatabaseSetup.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/data/DatabaseSetup.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/data/EmployeeDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/data/EmployeeDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/data/RoleDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/data/RoleDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/data/ScheduleDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/data/ScheduleDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/domain/AvailabilitySubmission.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/AvailabilitySubmission.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/domain/Branch.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/Branch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/domain/Delivery.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/Delivery.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/domain/DeliveryMock.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/DeliveryMock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/domain/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/Driver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/domain/Employee.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/Employee.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/domain/Shift.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/Shift.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/domain/ShiftSlot.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/ShiftSlot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/domain/ShiftType.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/ShiftType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/domain/StaffingRequirement.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/StaffingRequirement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/domain/TruckType.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/TruckType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/domain/WeeklySchedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/domain/WeeklySchedule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/presentation/DataInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/presentation/DataInitializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/presentation/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/presentation/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/repository/DaoEmployeeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/repository/DaoEmployeeRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/repository/DaoRoleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/repository/DaoRoleRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/repository/DaoScheduleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/repository/DaoScheduleRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/repository/DaoSystemStateRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/repository/DaoSystemStateRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/repository/EmployeeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/repository/EmployeeRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/repository/RoleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/repository/RoleRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/repository/ScheduleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/repository/ScheduleRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/repository/SystemStateRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/repository/SystemStateRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/service/EmployeeManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/service/EmployeeManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/service/RoleRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/service/RoleRegistry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/src/service/ShiftHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/HR/service/ShiftHistory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/test/UnitTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/test/UnitTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/data/DatabaseConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/data/DatabaseConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/data/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/data/DatabaseConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/data/DatabaseInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/data/DatabaseInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/data/DatabaseSetup.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/data/DatabaseSetup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/data/EmployeeDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/data/EmployeeDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/data/RoleDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/data/RoleDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/data/ScheduleDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/data/ScheduleDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/data/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/data/schema.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/domain/AvailabilitySubmission.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/domain/AvailabilitySubmission.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/domain/Branch.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/domain/Branch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/domain/Delivery.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/domain/Delivery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/domain/DeliveryMock.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/domain/DeliveryMock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/domain/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/domain/Driver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/domain/Employee.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/domain/Employee.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/domain/Shift.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/domain/Shift.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/domain/ShiftSlot.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/domain/ShiftSlot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/domain/ShiftType.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/domain/ShiftType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/domain/StaffingRequirement.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/domain/StaffingRequirement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/domain/TruckType.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/domain/TruckType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/domain/WeeklySchedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/domain/WeeklySchedule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/presentation/DataInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/presentation/DataInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/presentation/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/presentation/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/repository/DaoEmployeeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/repository/DaoEmployeeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/repository/DaoRoleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/repository/DaoRoleRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/repository/DaoScheduleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/repository/DaoScheduleRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/repository/DaoSystemStateRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/repository/DaoSystemStateRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/repository/EmployeeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/repository/EmployeeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/repository/RoleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/repository/RoleRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/repository/ScheduleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/repository/ScheduleRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/repository/SystemStateRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/repository/SystemStateRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/service/EmployeeManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/service/EmployeeManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/service/RoleRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/service/RoleRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/src/HR/service/ShiftHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/src/main/java/HR/service/ShiftHistory.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,27 +124,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Application.OutputGenerator.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Test1.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Test2.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Test3.executor&quot;: &quot;Run&quot;,
-    &quot;Application.TestRunner.executor&quot;: &quot;Run&quot;,
-    &quot;Application.UnitTests.executor&quot;: &quot;Run&quot;,
-    &quot;Application.main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/yuval/OneDrive/Desktop/לימודים/שנה ב/סמסטר ד/ניתוצ/HW1/ADSS_Group_C&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "Application.OutputGenerator.executor": "Run",
+    "Application.Test1.executor": "Run",
+    "Application.Test2.executor": "Run",
+    "Application.Test3.executor": "Run",
+    "Application.TestRunner.executor": "Run",
+    "Application.UnitTests.executor": "Run",
+    "Application.main.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "assignment2-submission",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/yuval/OneDrive/Desktop/לימודים/שנה ב/סמסטר ד/ניתוצ/HW1/ADSS_Group_C/lib/sqlite-jdbc-3.53.2.0.jar",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\yuval\OneDrive\Desktop\לימודים\שנה ב\סמסטר ד\ניתוצ\HW1\ADSS_Group_C\dev\src\main\java" />
@@ -112,7 +153,7 @@
       <recent name="C:\Users\yuval\OneDrive\Desktop\לימודים\שנה ב\סמסטר ד\ניתוצ\HW1\ADSS_Group_C\dev\src" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.main">
+  <component name="RunManager">
     <configuration name="TestRunner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="TestRunner" />
       <module name="SuperLiSystem" />
@@ -126,6 +167,15 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
+      <method v="2" />
     </configuration>
     <list>
       <item itemvalue="Application.main" />

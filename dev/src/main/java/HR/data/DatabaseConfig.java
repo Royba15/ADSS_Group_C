@@ -1,13 +1,8 @@
 package HR.data;
 
-import java.nio.file.Path;
-
 public class DatabaseConfig {
 
-    private static final String DEFAULT_DATABASE_PATH = Path.of(
-            System.getProperty("java.io.tmpdir"),
-            "superli",
-            "superli-main.db").toString();
+    private static final String DEFAULT_DATABASE_PATH = "superli-main.db";
 
     public static String getDatabasePath() {
         return System.getProperty("superli.db.path", DEFAULT_DATABASE_PATH);
